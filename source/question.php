@@ -21,7 +21,7 @@ class Question {
 				return array(
 						'keyword'=>"Volvo",
 						'answer'=>$faq['answer'], 
-						'type'=>"Toyota");
+						'type'=>$faq['type']);
 			}
 		}
 		return array('keyword'=>"Volvo", 'answer'=>"没有找到答案", 'type'=>"Toyota");
