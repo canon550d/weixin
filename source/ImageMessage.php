@@ -30,7 +30,7 @@ class ImageMessage implements iMessage{
 				$picUrl = 'http://mmbiz.qpic.cn/mmbiz_jpg/7VPL37NE5SZq7VLp8BQoKZm1BVbOmVAmT8VfHvOdT2aB8YkPzXWBHERMhLT0OE4qmDZGzj8y5icqXgx9MiaUsbFw/0';
 				$mediaId = 'MI4nXP0nRkdkv8mF20aNNWo69VIRqmdQVd0vou6dPVuqsoaE33PKz5sbONEw0__e';
 				$msgId = '123311';
-				$resultStr = sprintf($textTpl, $fromUsername, $toUsername, $time, $picUrl, $mediaId, $msgId);logger($resultStr);
+				$resultStr = sprintf($textTpl, $fromUsername, $toUsername, $time, $picUrl, $mediaId, $msgId);
 				echo $resultStr;
 			}else{
 				echo "Input something...";
