@@ -7,11 +7,10 @@ class Question {
 		return json_decode($json, TRUE);
 	}
 	
-	public function getAnswer($_keyword){
-		if($_keyword == null) {
+	public function getAnswer($keyword){
+		if($keyword == null) {
 			return array('keyword'=>"Volvo", 'answer'=>"没有关键词", 'type'=>"TextMessage");
 		}
-		$keyword = (string) $_keyword;// 居然是object类型
 		
 		$json = $this->read();
 		foreach ($json as $faq){

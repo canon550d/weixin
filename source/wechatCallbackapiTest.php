@@ -22,7 +22,7 @@ if($signature->checkSignature()){
 
 	// text,image,voice,video,shortvideo,location,link
 	if($postObj->MsgType=='text'){
-		$keyword = $postObj->Content;
+		$keyword = (string) $postObj->Content;
 		
 		$question = new Question();
 		$item = $question->getAnswer($keyword);
