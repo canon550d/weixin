@@ -4,7 +4,7 @@ include_once 'DefaultMessage.php';
 
 class ImageTextMessage extends DefaultMessage implements iMessage{
 	
-	public function responseMsg() {
+	public function responseMsg($data) {
 		$postStr = $this->getPostStr();
 	
 		//extract post data
@@ -19,26 +19,13 @@ class ImageTextMessage extends DefaultMessage implements iMessage{
 							<FromUserName><![CDATA[%s]]></FromUserName>
 							<CreateTime>%s</CreateTime>
 							<MsgType><![CDATA[news]]></MsgType>
-							<ArticleCount>2</ArticleCount>
-							<Articles>
-							<item>
-							<Title><![CDATA[title1]]></Title>
-							<Description><![CDATA[description1]]></Description>
-							<PicUrl><![CDATA[%s]]></PicUrl>
-							<Url><![CDATA[http://www.baidu.com]]></Url>
-							</item>
-							<item>
-							<Title><![CDATA[title]]></Title>
-							<Description><![CDATA[description]]></Description>
-							<PicUrl><![CDATA[picurl]]></PicUrl>
-							<Url><![CDATA[url]]></Url>
-							</item>
-							</Articles>
+							<ArticleCount>%s</ArticleCount>
+							<Articles>%s</Articles>
 							</xml>";
 			if(true) {
-				$picUrl = 'http://mmbiz.qpic.cn/mmbiz_jpg/7VPL37NE5SZq7VLp8BQoKZm1BVbOmVAmT8VfHvOdT2aB8YkPzXWBHERMhLT0OE4qmDZGzj8y5icqXgx9MiaUsbFw/0';
-				
-				$resultStr = sprintf($textTpl, $fromUsername, $toUsername, $time, $picUrl, $mediaId, $msgId);
+				$count = count($data['answer']);
+				$articles = $this->getTempl($data['answer']);
+				$resultStr = sprintf($textTpl, $fromUsername, $toUsername, $time, $count, $articles);
 				echo $resultStr;
 			}else{
 				echo "Input something...";
@@ -47,6 +34,15 @@ class ImageTextMessage extends DefaultMessage implements iMessage{
 			echo "未找到";
 		}
 	}
+	private function getTempl($items){
+		$textTpl = "<item><Title><![CDATA[%s]]></Title><Description><![CDATA[%s]]></Description><PicUrl><![CDATA[%s]]></PicUrl><Url><![CDATA[%s]]></Url></item>";
+		$text = '';
+		foreach ($items as $item){
+			$text .= sprintf($textTpl, $item['title'], $item['description'], $item['picurl'], $item['url']);
+		}
+		return $text;
+	}
+	
 	private function logger($content) {
 		file_put_contents("log.html", date('Y-d-d H:i:s ').$content."\r\n<br/>\r\n", FILE_APPEND);
 	}

@@ -3,7 +3,7 @@ include_once 'imessage.php';
 
 class ImageMessage implements iMessage{
 	
-	public function responseMsg() {
+	public function responseMsg($data) {
 		//get post data, May be due to the different environments
 		$postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
 	

@@ -8,7 +8,7 @@ class DefaultMessage implements iMessage {
 		return $postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
 	}
 	
-	public function responseMsg(){
+	public function responseMsg($data){
 	}
 	
 	/**

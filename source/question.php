@@ -9,7 +9,7 @@ class Question {
 	
 	public function getAnswer($keyword){
 		if($keyword == null) {
-			return array('keyword'=>"Volvo", 'answer'=>"没有关键词", 'type'=>"Toyota");
+			return array('keyword'=>"Volvo", 'answer'=>"没有关键词", 'type'=>"TextMessage");
 		}
 		
 		$json = $this->read();
@@ -24,7 +24,7 @@ class Question {
 						'type'=>$faq['type']);
 			}
 		}
-		return array('keyword'=>"Volvo", 'answer'=>"没有找到答案", 'type'=>"Toyota");
+		return array('keyword'=>"Volvo", 'answer'=>"没有找到答案", 'type'=>"TextMessage");
 	}
 	
 	private function logger($content) {

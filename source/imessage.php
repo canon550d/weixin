@@ -1,5 +1,5 @@
 <?php
 interface iMessage {
-	public function responseMsg();
+	public function responseMsg($data);
 }
 ?>

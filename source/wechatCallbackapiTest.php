@@ -33,12 +33,13 @@ if($signature->checkSignature()){
 		$className = $item['type'];
 		$myclass = new ReflectionClass($className);
 		$message = $myclass->newInstanceArgs();
+		$message->responseMsg($item);
 		
 		//$message = new ImageTextMessage();
 		//$message->responseMsg();
-		$answer = $item['answer'];
+		//$answer = $item['answer'];
 		//$message = new TextMessage();
-		$message->responseText($answer);
+		//$message->responseText($answer);
 	
 	}else if($postObj->MsgType=='image'){
 		$message = new TextMessage();

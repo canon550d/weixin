@@ -4,8 +4,8 @@ include_once 'DefaultMessage.php';
 
 class TextMessage extends DefaultMessage implements iMessage{
 	
-	public function responseMsg() {
-		$this->responseText(null);
+	public function responseMsg($data) {
+		$this->responseText($data['answer']);
 	}
 	
 	public function responseText($content){
