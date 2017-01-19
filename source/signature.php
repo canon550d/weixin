@@ -13,14 +13,12 @@ class Signature {
 	public function checkSignature() {
 		// you must define TOKEN by yourself
 		if ($this->getToken() == null) {
-			logger('TOKEN is not defined!');
 			throw new Exception('TOKEN is not defined!');
 		}
 	
 		$signature = $_GET["signature"];
 		$timestamp = $_GET["timestamp"];
 		$nonce = $_GET["nonce"];
-		logger('['.$signature.']['.$timestamp.']['.$nonce.']');
 	
 		$token = $this->getToken();
 		$tmpArr = array($token, $timestamp, $nonce);
