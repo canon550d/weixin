@@ -27,19 +27,10 @@ if($signature->checkSignature()){
 		$question = new Question();
 		$item = $question->getAnswer($keyword);
 		
-// 		if(!isset($item)){
-// 			exit;
-// 		}
 		$className = $item['type'];
 		$myclass = new ReflectionClass($className);
 		$message = $myclass->newInstanceArgs();
 		$message->responseMsg($item);
-		
-		//$message = new ImageTextMessage();
-		//$message->responseMsg();
-		//$answer = $item['answer'];
-		//$message = new TextMessage();
-		//$message->responseText($answer);
 	
 	}else if($postObj->MsgType=='image'){
 		$message = new TextMessage();
