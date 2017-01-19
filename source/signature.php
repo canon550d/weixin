@@ -3,11 +3,15 @@ class Signature {
 	private $token;
 	
 	private function getToken(){
+		/*
 		if(!isset($this->token)){
 			$config = parse_ini_file ('weixin.ini', true);
 			$this->token = $config['Weixin']['token'];
 		}
 		return $this->token;
+		*/
+		require_once 'config.php';
+		return TOKEN;
 	}
 	
 	public function checkSignature() {
