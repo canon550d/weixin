@@ -16,8 +16,7 @@ class TextMessage extends DefaultMessage implements iMessage{
 			$postObj = $this->getPostObj();
 			$fromUsername = $postObj->FromUserName;
 			$toUsername = $postObj->ToUserName;
-			$keyword = trim($postObj->Content);
-			$time = time();
+
 			$textTpl = "<xml>
 							<ToUserName><![CDATA[%s]]></ToUserName>
 							<FromUserName><![CDATA[%s]]></FromUserName>
@@ -26,15 +25,14 @@ class TextMessage extends DefaultMessage implements iMessage{
 							<Content><![CDATA[%s]]></Content>
 							<FuncFlag>0</FuncFlag>
 							</xml>";
-				
-			$contentStr = "no keyword!";
-			if($content!=null){
-				$contentStr = $content;
-			}elseif(!empty( $keyword )) {
-				//TODO search($keyword)
-				$contentStr = "Welcome to wechat world!";
-			}
+			
+			$time = time();
 			$msgType = "text";
+			$contentStr = "no keyword!";
+			if(!empty( $content )) {
+				$contentStr = $content;
+			}
+			
 			$resultStr = sprintf($textTpl, $fromUsername, $toUsername, $time, $msgType, $contentStr);
 			echo $resultStr;
 		}else {
