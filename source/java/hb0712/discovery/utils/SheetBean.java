@@ -1,35 +1,43 @@
 package hb0712.discovery.utils;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.xml.sax.InputSource;
 
 public class SheetBean {
 	// RootElement
 		Element element = new Element("data");
 		Logger logger = Logger.getLogger(SheetBean.class);
+		String configName;
 
 		public SheetBean() {
 		}
 
 		public SheetBean(String configName) {
+			this.configName = configName;
 			Reader is = null;
 			try {
-				InputStream input = new ClassPathResource(configName).getInputStream();
+				InputStream input = new FileSystemResource(configName).getInputStream();
 				is = new InputStreamReader(input, "UTF-8");
 				element = new SAXBuilder().build(new InputSource(is)).getRootElement();
 			} catch (UnsupportedEncodingException e) {
@@ -51,6 +59,23 @@ public class SheetBean {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+			}
+		}
+		
+		public void save(Document doc){
+			XMLOutputter xmlopt = new XMLOutputter();
+			try {
+				File file = new FileSystemResource(configName).getFile();
+//				FileWriter writer = new FileWriter(file);
+				OutputStream output = new FileOutputStream(file);
+				Writer writer = new OutputStreamWriter(output, "UTF-8");
+				Format fm = Format.getPrettyFormat();
+				xmlopt.setFormat(fm);
+				xmlopt.output(doc, writer);
+				writer.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 

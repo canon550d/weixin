@@ -1,10 +1,15 @@
 package hb0712.discovery.pojo;
 
+import java.util.Date;
+
+import javax.persistence.Entity;
+
+@Entity
 public class Article {
 	// 对象物理属性
 	private String id;
 	private String fileName;
-	private String time;
+	private Date time;
 
 	// 对象业务属性
 	private String title;//标题
@@ -26,10 +31,10 @@ public class Article {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
-	public String getTime() {
+	public Date getTime() {
 		return time;
 	}
-	public void setTime(String time) {
+	public void setTime(Date time) {
 		this.time = time;
 	}
 	public String getTitle() {

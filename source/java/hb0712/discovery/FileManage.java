@@ -31,10 +31,11 @@ public class FileManage {
 	}
 	
 	public static void main(String[] args) {
-		SheetBean sb = new SheetBean("hb0712\\discovery\\sheet.xml");
+		SheetBean sb = new SheetBean("E:\\github\\discovery\\src\\hb0712\\discovery\\sheet.xml");
 		ArticleManage manage = ArticleManage.instence().build(sb);
 		List<Article> list_article = manage.getArticles();
-		FileManage fileManage = new FileManage();fileManage.save(list_article);
+		FileManage fileManage = new FileManage();
+//		fileManage.save(list_article);
 		// 生成所有的文章页面
 		for(Article article:list_article){
 			fileManage.save(article);
@@ -42,18 +43,21 @@ public class FileManage {
 		}
 		System.out.println("共计："+sb.getjobs().length);
 
-		fileManage.save("index.vm", "index.html", "index");
-		fileManage.save("about.vm", "about.html", "about");
+//		fileManage.save("index.vm", "index.html", "index");
+//		fileManage.save("about.vm", "about.html", "about");
 	}
 	
 	// 文章保存成html
 	public void save(Article article){
 		VelocityContext context = new VelocityContext();
 		context.put("nav", "column");
+		context.put("article", article);
+		
 		context.put("thumbnail", article.getThumbnail());
 		context.put("title", article.getTitle());
 		context.put("description", article.getDescription());
 		context.put("content", article.getContent());
+		
 		save("article.vm", article.getFileName(), context);
 	}
 	
