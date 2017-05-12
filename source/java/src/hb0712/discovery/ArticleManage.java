@@ -62,16 +62,29 @@ public class ArticleManage {
 	public Article save(Article article, SheetBean sb){
 		Element element = sb.getRoot();
 		
-		String id = this.getNewId(element);System.out.println(id);
+		String id = this.getNewId(element);
 		article.setId(id);
 		
 		Element j = this.addArticle();
-		this.setArticle(j, article);System.out.println("tian jia");
+		this.setArticle(j, article);
 		element.addContent(j);
 		
 		sb.save(element.getDocument());
 
 		return article;
+	}
+	
+	public boolean delete(String id, SheetBean sb){
+		Element element = sb.getRoot();
+		try {
+			
+			Object node = XPath.selectSingleNode(element, "article[id="+id+"]");
+			element.removeContent((Element)node);
+			sb.save(element.getDocument());
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		}
+		return true;
 	}
 	
 	public ArticleManage build(SheetBean sb) {

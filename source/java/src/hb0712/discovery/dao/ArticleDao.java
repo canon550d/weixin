@@ -9,4 +9,5 @@ public interface ArticleDao {
 	public Article getArticle(String id);
 	public Article edit(Article article);
 	public Article save(Article article);
+	public boolean delete(String id);
 }

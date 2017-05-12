@@ -34,7 +34,9 @@
       <td><a target="_blank" href="preview.aspx?id=${article.id}" title="">${article.title}</a> <strong></strong></td>
       <td>${article.fileName}</td>
       <td>${article.tags}</td>
-      <td><a href="edit.aspx?id=${article.id}" title="">edit</a></td>
+      <td><a href="edit.aspx?id=${article.id}" title="">edit</a>
+        <a class="delete is-small" href="delete.aspx?id=${article.id}" title=""></a>
+      </td>
     </tr>
   </c:forEach>
   </tbody>

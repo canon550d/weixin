@@ -29,4 +29,8 @@ public class ArticleServiceImpl implements ArticleService {
 	public Article save(Article article) {
 		return articleDao.save(article);
 	}
+
+	public boolean delete(String id) {
+		return articleDao.delete(id);
+	}
 }

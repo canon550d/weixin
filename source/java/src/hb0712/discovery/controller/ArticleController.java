@@ -78,6 +78,13 @@ public class ArticleController {
 		return "edit";
 	}
 	
+	@RequestMapping("/delete")
+	public String delete(String id, 
+			HttpServletRequest request, HttpSession httpSession){
+		articleService.delete(id);
+		return "redirect:index.aspx";
+	}
+	
 	@RequestMapping("/preview")
 	public String preview (String id,
 			Map<String,Object> model,

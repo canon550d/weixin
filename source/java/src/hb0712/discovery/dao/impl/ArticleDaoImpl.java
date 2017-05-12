@@ -37,4 +37,10 @@ public class ArticleDaoImpl implements ArticleDao{
 		manage.save(article, sb);
 		return article;
 	}
+	
+	public boolean delete(String id){
+		ArticleManage manage = ArticleManage.instence().build(sb);
+		manage.delete(id, sb);
+		return true;
+	}
 }

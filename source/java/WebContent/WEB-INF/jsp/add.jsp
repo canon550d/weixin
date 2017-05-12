@@ -17,7 +17,13 @@
 <!-- <script type="text/plain" id="myEditor" style="width:780px;height:240px;"></script> -->
 <div>±Í«©£∫<input type="text" name="tags" value='${article.tags}' /></div>
 <input type="submit" value="Ã·Ωª"/>
-</form></div></div></div></section>
+</form></div>
+<div class="column">
+<figure class="image is-128x128">
+  <img src="http://bulma.io/images/placeholders/128x128.png">
+</figure>
+</div>
+</div></div></section>
 
   <script type="text/javascript">
   $(document).ready(function() {
