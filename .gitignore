@@ -1,0 +1,19 @@
+*weixin.ini
+*faq.js
+*faq.xml
+*log.html
+*config.php
+*.jar
+source/html/*
+source/java/WebContent/ext
+source/java/WebContent/img
+source/java/WebContent/img/*
+source/java/WebContent/css
+source/java/WebContent/css/*
+source/java/WebContent/WEB-INF/.gitignore
+
+# Eclipse Project Files #
+.settings
+.classpath
+*.buildpath
+*.project

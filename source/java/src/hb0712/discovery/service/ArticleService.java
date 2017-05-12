@@ -11,4 +11,6 @@ public interface ArticleService {
 	public Article getArticle(String id);
 	
 	public Article edit(Article article);
+	
+	public Article save(Article article);
 }

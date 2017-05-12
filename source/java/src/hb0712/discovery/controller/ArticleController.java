@@ -3,6 +3,7 @@ package hb0712.discovery.controller;
 import hb0712.discovery.pojo.Article;
 import hb0712.discovery.service.ArticleService;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -28,15 +29,49 @@ public class ArticleController {
 		return "index";
 	}
 	
+	@RequestMapping("/add")
+	public String add(String title, String description, String content, String tags, String fileName, String thumbnail,
+			Map<String,Object> model,
+			HttpServletRequest request, HttpSession httpSession){
+		
+		String id = null;
+		if(StringUtils.isNotEmpty(content)){
+			Article article = new Article();
+			article.setFileName(fileName);
+			article.setTitle(title);
+			article.setDescription(description);
+			article.setContent(content);
+			article.setTags(tags);
+			article.setThumbnail(thumbnail);
+			article.setTime(new Date());
+			
+			articleService.save(article);
+			id = article.getId();
+			
+			return "redirect:index.aspx";
+		}
+		Article article = new Article();
+		article.setFileName(fileName);
+		model.put("article", article);
+		return "add";
+	}
+	
 	@RequestMapping("/edit")
-	public String edit(String id, String content,
+	public String edit(String id, String title, String description, String content, String tags, String fileName, String thumbnail,
 			Map<String,Object> model,
 			HttpServletRequest request, HttpSession httpSession){
 		if(StringUtils.isNotEmpty(content)){
 			Article article = new Article();
 			article.setId(id);
+			article.setFileName(fileName);
+			article.setTitle(title);
+			article.setDescription(description);
 			article.setContent(content);
+			article.setTags(tags);
+			article.setThumbnail(thumbnail);
+			
 			articleService.edit(article);
+			return "redirect:index.aspx";
 		}
 		Article article = articleService.getArticle(id);
 		model.put("article", article);

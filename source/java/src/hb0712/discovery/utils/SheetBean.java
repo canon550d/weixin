@@ -24,6 +24,9 @@ import org.jdom.xpath.XPath;
 import org.springframework.core.io.FileSystemResource;
 import org.xml.sax.InputSource;
 
+/*
+ * 是一个XML文件，文件要有写入和读取
+ */
 public class SheetBean {
 	// RootElement
 		Element element = new Element("data");

@@ -8,4 +8,5 @@ public interface ArticleDao {
 	public List<Article> getArticles();
 	public Article getArticle(String id);
 	public Article edit(Article article);
+	public Article save(Article article);
 }

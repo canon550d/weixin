@@ -31,4 +31,10 @@ public class ArticleDaoImpl implements ArticleDao{
 		manage.edit(article, sb);
 		return article;
 	}
+	
+	public Article save(Article article){
+		ArticleManage manage = ArticleManage.instence().build(sb);
+		manage.save(article, sb);
+		return article;
+	}
 }

@@ -28,7 +28,7 @@
 			p:prefix="/WEB-INF/jsp/" p:suffix=".jsp" p:order="1"/>
 			
 	<bean id="sheetBean" class="hb0712.discovery.utils.SheetBean">
-		<constructor-arg name="configName" value="E:\github\discovery\src\hb0712\discovery\sheet.xml"/>
+		<constructor-arg name="configName" value="E:\github\weixin\source\java\src\hb0712\discovery\sheet.xml"/>
 	</bean>
 
 </beans>

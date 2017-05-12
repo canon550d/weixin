@@ -25,4 +25,8 @@ public class ArticleServiceImpl implements ArticleService {
 	public Article edit(Article article) {
 		return articleDao.edit(article);
 	}
+	
+	public Article save(Article article) {
+		return articleDao.save(article);
+	}
 }
