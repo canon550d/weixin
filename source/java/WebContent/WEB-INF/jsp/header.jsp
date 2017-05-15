@@ -34,7 +34,7 @@
       <div class="container">
         <ul>
           <li><a href="index.aspx">首页</a></li>
-          <li><a href="gallery/index.aspx">日记</a></li>
+          <li><a href="gallery/index.aspx">相册</a></li>
         </ul>
       </div>
     </nav>

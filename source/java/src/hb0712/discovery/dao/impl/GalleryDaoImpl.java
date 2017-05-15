@@ -1,34 +1,30 @@
 package hb0712.discovery.dao.impl;
 
+import hb0712.discovery.GalleryManage;
 import hb0712.discovery.dao.GalleryDao;
 import hb0712.discovery.pojo.Gallery;
+import hb0712.discovery.utils.SheetBean;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
-
-import com.sina.sae.storage.SaeStorage;
-import com.sina.sae.storage.StorageUtil;
 
 @Repository
 public class GalleryDaoImpl implements GalleryDao{
+	@Autowired
+	@Qualifier("gallerySheetBean")
+	private SheetBean sb;
 
 	public List<Gallery> getGallery() {
-		String accessKey = "";
-		String secretKey = "";
-		String appName = "";
-		String domain = "";
-		String fileName = "";
-		SaeStorage storage = new SaeStorage(accessKey, secretKey, appName);
-		
-		String url = storage.getUrl(domain, fileName);
-		System.out.println(url);
-		System.out.println("");
-		List<String> list = storage.getList(domain);
-		System.out.println(list.size());
-		
-
-		return null;
+		GalleryManage manage = GalleryManage.instence().build(sb);
+		return manage.getGallery();
+	}
+	
+	public Gallery getGallery(String id){
+		GalleryManage manage = GalleryManage.instence().build(sb);
+		return manage.getGallery(id);
 	}
 
 	public static void main(String[] args) {

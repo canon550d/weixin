@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface GalleryDao {
 	public List<Gallery> getGallery();
+	
+	public Gallery getGallery(String id);
 }

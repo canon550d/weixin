@@ -5,10 +5,10 @@
 <%@ include file="../header.jsp"%>
 <section class="section"><div class="container">
 <div class="columns">
-  <c:forEach items="${gallery}" var="g" varStatus="status">
+  <c:forEach items="${gallery.images}" var="g" varStatus="status">
   <div class="column">
     <figure class="image is-128x128">
-      <a href="view.aspx?id=${g.id}"><img src="http://bulma.io/images/placeholders/128x128.png"></a>
+      <img src="http://bulma.io/images/placeholders/128x128.png">
       <p>${g.intro}</p>
     </figure>
   </div>

@@ -26,4 +26,13 @@ public class GalleryController {
 		model.put("gallery", list);
 		return "gallery/list";
 	}
+	
+	@RequestMapping("/gallery/view")
+	public String view(String id,
+			Map<String,Object> model,
+			HttpServletRequest request, HttpSession httpSession){
+		Gallery gallery = galleryService.getGallery(id);
+		model.put("gallery", gallery);
+		return "gallery/view";
+	}
 }

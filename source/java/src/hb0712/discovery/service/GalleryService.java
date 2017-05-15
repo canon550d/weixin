@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface GalleryService {
 	public List<Gallery> getGallery();
+	public Gallery getGallery(String id);
 }

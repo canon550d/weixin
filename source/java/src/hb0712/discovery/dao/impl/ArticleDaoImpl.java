@@ -3,6 +3,7 @@ package hb0712.discovery.dao.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import hb0712.discovery.ArticleManage;
@@ -13,6 +14,7 @@ import hb0712.discovery.utils.SheetBean;
 @Repository
 public class ArticleDaoImpl implements ArticleDao{
 	@Autowired
+	@Qualifier("articleSheetBean")
 	private SheetBean sb;
 
 	public List<Article> getArticles() {

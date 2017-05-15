@@ -41,7 +41,7 @@ public class FileManage {
 			fileManage.save(article);
 			System.out.println(article.getFileName());
 		}
-		System.out.println("共计："+sb.getjobs().length);
+//		System.out.println("共计："+sb.getjobs().length);
 
 //		fileManage.save("index.vm", "index.html", "index");
 //		fileManage.save("about.vm", "about.html", "about");
