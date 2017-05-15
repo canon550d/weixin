@@ -31,7 +31,7 @@ public class FileManage {
 	}
 	
 	public static void main(String[] args) {
-		SheetBean sb = new SheetBean("E:\\github\\discovery\\src\\hb0712\\discovery\\sheet.xml");
+		SheetBean sb = new SheetBean("E:\\github\\weixin\\source\\java\\src\\hb0712\\discovery\\sheet.xml");
 		ArticleManage manage = ArticleManage.instence().build(sb);
 		List<Article> list_article = manage.getArticles();
 		FileManage fileManage = new FileManage();
