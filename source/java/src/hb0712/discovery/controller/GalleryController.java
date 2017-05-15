@@ -35,4 +35,12 @@ public class GalleryController {
 		model.put("gallery", gallery);
 		return "gallery/view";
 	}
+	
+	public String add(){
+		return "gallery/add";
+	}
+	
+	public String addImage(){
+		return "gallery/addImage";
+	}
 }

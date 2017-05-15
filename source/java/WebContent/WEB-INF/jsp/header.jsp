@@ -33,8 +33,8 @@
     <nav class="tabs is-boxed">
       <div class="container">
         <ul>
-          <li><a href="index.aspx">首页</a></li>
-          <li><a href="gallery/index.aspx">相册</a></li>
+          <li><a href="${contextPath}/index.aspx">首页</a></li>
+          <li><a href="${contextPath}/gallery/index.aspx">相册</a></li>
         </ul>
       </div>
     </nav>
