@@ -23,6 +23,7 @@ public class GalleryManage {
 	public Gallery getGallery(String id){
 		for(Gallery a:galleries){
 			if(a.getId().equals(id)){
+				
 				return a;
 			}
 		}
@@ -92,6 +93,10 @@ public class GalleryManage {
 			}
 		}
 		return this;
+	}
+	
+	private void getOOxx(){
+		
 	}
 	
 	private String array2string(String[] array, String separator){
