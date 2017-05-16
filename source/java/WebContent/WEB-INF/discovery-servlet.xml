@@ -28,9 +28,9 @@
 			p:prefix="/WEB-INF/jsp/" p:suffix=".jsp" p:order="1"/>
 			
 	<bean id="articleSheetBean" class="hb0712.discovery.utils.SheetBean">
-		<constructor-arg name="configName" value="E:\github\weixin\source\java\src\hb0712\discovery\sheet.xml"/>
+		<constructor-arg name="filePath" value="E:\github\weixin\source\java\src\hb0712\discovery\sheet.xml"/>
 	</bean>
 	<bean id="gallerySheetBean" class="hb0712.discovery.utils.SheetBean">
-		<constructor-arg name="configName" value="E:\github\weixin\source\java\src\hb0712\discovery\Gallery.xml"/>
+		<constructor-arg name="filePath" value="E:\github\weixin\source\java\src\hb0712\discovery\Gallery.xml"/>
 	</bean>
 </beans>

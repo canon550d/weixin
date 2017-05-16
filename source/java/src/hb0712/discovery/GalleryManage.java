@@ -41,10 +41,10 @@ public class GalleryManage {
 	}
 	
 	public Image save(Image i, SheetBean sb){
-		String id = sb.getNewId("images/image/id");System.out.println(id);
+		String id = sb.getNewId("images/image/id");
 		i.setId(id);
 		
-		Element element = sb.getRoot().getChild("images");
+		Element element = getImageElement(sb, id).getChild("images");
 		Element j = this.newImage(i);
 		element.addContent(j);
 		sb.save(element.getDocument());
@@ -135,5 +135,10 @@ public class GalleryManage {
 		g.setName(j.getChild("name").getText());
 		g.setIntro(j.getChild("intro").getText());
 		g.setImages(new ArrayList<Image>());
+	}
+	
+	private Element getImageElement(SheetBean sb, String i){
+		String imagePath = sb.getFilePath().replace("Gallery.xml", "image."+i+".xml");
+		return sb.open(imagePath);
 	}
 }
