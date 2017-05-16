@@ -7,6 +7,7 @@ import hb0712.discovery.utils.SheetBean;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.xpath.XPath;
@@ -26,6 +27,28 @@ public class GalleryManage {
 			}
 		}
 		return null;
+	}
+	
+	public Gallery save(Gallery g, SheetBean sb){
+		String id = sb.getNewId("galleries/gallery/id");
+		g.setId(id);
+		
+		Element element = sb.getRoot().getChild("galleries");
+		Element e = this.newGallery(g);
+		element.addContent(e);
+		sb.save(element.getDocument());
+		return g;
+	}
+	
+	public Image save(Image i, SheetBean sb){
+		String id = sb.getNewId("images/image/id");System.out.println(id);
+		i.setId(id);
+		
+		Element element = sb.getRoot().getChild("images");
+		Element j = this.newImage(i);
+		element.addContent(j);
+		sb.save(element.getDocument());
+		return i;
 	}
 	
 	public static GalleryManage instence(){
@@ -71,7 +94,32 @@ public class GalleryManage {
 		return this;
 	}
 	
-	public void setGallery(Image image, Element j){
+	private String array2string(String[] array, String separator){
+		return StringUtils.join(array, separator);
+	}
+	
+	private Element newImage(Image i){
+		Element image = new Element("image");
+		
+		image.addContent(new Element("id").setText(i.getId()));
+		image.addContent(new Element("path").setText(i.getPath()));
+		image.addContent(new Element("type").setText(i.getType()));
+		image.addContent(new Element("intro").setText(i.getIntro()));
+		String ids = array2string(i.getGid(), ",");
+		image.addContent(new Element("gallery").setText(ids));
+		return image;
+	}
+	
+	private Element newGallery(Gallery g){
+		Element gallery = new Element("gallery");
+		
+		gallery.addContent(new Element("id").setText(g.getId()));
+		gallery.addContent(new Element("name").setText(g.getName()));
+		gallery.addContent(new Element("intro").setText(g.getIntro()));
+		return gallery;
+	}
+	
+	private void setGallery(Image image, Element j){
 		image.setPath(j.getChild("path").getText());
 		image.setIntro(j.getChild("intro").getText());
 		
@@ -82,8 +130,9 @@ public class GalleryManage {
 		}
 	}
 	
-	public void setGallery(Gallery g, Element j){
+	private void setGallery(Gallery g, Element j){
 		g.setId(j.getChild("id").getText());
+		g.setName(j.getChild("name").getText());
 		g.setIntro(j.getChild("intro").getText());
 		g.setImages(new ArrayList<Image>());
 	}

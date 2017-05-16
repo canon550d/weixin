@@ -134,6 +134,22 @@ public class SheetBean {
 			phone.setText(value);
 			element.addContent(phone);
 		}
+		
+		public String getNewId(String path){
+			String lastid = null;
+			try {
+				List ids = XPath.selectNodes(element, path);
+				
+				if(ids!=null && ids.size()>0){
+					lastid = ((Element)ids.get(ids.size()-1)).getText();
+					Integer newId = Integer.valueOf(lastid) + 1;
+					return newId.toString();
+				}
+			} catch (JDOMException e) {
+				e.printStackTrace();
+			}
+			return lastid;
+		}
 
 		public String toString() {
 			XMLOutputter outputter = new XMLOutputter(Format.getRawFormat());

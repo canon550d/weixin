@@ -1,6 +1,7 @@
 package hb0712.discovery.controller;
 
 import hb0712.discovery.pojo.Gallery;
+import hb0712.discovery.pojo.Image;
 import hb0712.discovery.service.GalleryService;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,11 +38,36 @@ public class GalleryController {
 		return "gallery/view";
 	}
 	
-	public String add(){
+	@RequestMapping("/gallery/add")
+	public String add(String name, String intro,
+			Map<String,Object> model,
+			HttpServletRequest request, HttpSession httpSession){
+		if(StringUtils.isNotEmpty(name)){
+			Gallery g = new Gallery();
+			g.setName(name);
+			g.setIntro(intro);
+			galleryService.save(g);
+			return "redirect:index.aspx";
+		}
 		return "gallery/add";
 	}
 	
-	public String addImage(){
+	@RequestMapping("/gallery/addImage")
+	public String addImage(String[] gid, String path, String type, String intro,
+			Map<String,Object> model,
+			HttpServletRequest request, HttpSession httpSession){
+		if(StringUtils.isNotEmpty(path)){
+			Image i = new Image();
+			i.setPath(path);
+			i.setType(type);
+			i.setIntro(intro);
+			i.setGid(gid);
+			
+			galleryService.save(i);
+			return "redirect:index.aspx";
+		}
+		List<Gallery> list = galleryService.getGallery();
+		model.put("galleries", list);
 		return "gallery/addImage";
 	}
 }

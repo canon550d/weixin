@@ -3,6 +3,7 @@ package hb0712.discovery.dao.impl;
 import hb0712.discovery.GalleryManage;
 import hb0712.discovery.dao.GalleryDao;
 import hb0712.discovery.pojo.Gallery;
+import hb0712.discovery.pojo.Image;
 import hb0712.discovery.utils.SheetBean;
 
 import java.util.List;
@@ -25,6 +26,18 @@ public class GalleryDaoImpl implements GalleryDao{
 	public Gallery getGallery(String id){
 		GalleryManage manage = GalleryManage.instence().build(sb);
 		return manage.getGallery(id);
+	}
+	
+	public Gallery save(Gallery g){
+		GalleryManage manage = GalleryManage.instence().build(sb);
+		manage.save(g, sb);
+		return g;
+	}
+	
+	public Image save(Image i){
+		GalleryManage manage = GalleryManage.instence().build(sb);
+		manage.save(i, sb);
+		return i;
 	}
 
 	public static void main(String[] args) {

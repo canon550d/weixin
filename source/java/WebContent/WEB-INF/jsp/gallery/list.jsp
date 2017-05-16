@@ -4,6 +4,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ include file="../header.jsp"%>
 <section class="section"><div class="container">
+<a href="add.aspx">add</a>
+<a href="addImage.aspx">addImage</a>
+<br/>
 <div class="columns">
   <c:forEach items="${gallery}" var="g" varStatus="status">
   <div class="column">

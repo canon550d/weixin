@@ -2,6 +2,7 @@ package hb0712.discovery.service.impl;
 
 import hb0712.discovery.dao.GalleryDao;
 import hb0712.discovery.pojo.Gallery;
+import hb0712.discovery.pojo.Image;
 import hb0712.discovery.service.GalleryService;
 
 import java.util.List;
@@ -20,5 +21,13 @@ public class GalleryServiceImpl implements GalleryService {
 
 	public Gallery getGallery(String id){
 		return galleryDao.getGallery(id);
+	}
+	
+	public Gallery save(Gallery g){
+		return galleryDao.save(g);
+	}
+	
+	public Image save(Image i){
+		return galleryDao.save(i);
 	}
 }
