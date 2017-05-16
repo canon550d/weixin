@@ -31,16 +31,16 @@ public class SheetBean {
 	// RootElement
 		Element element = new Element("data");
 		Logger logger = Logger.getLogger(SheetBean.class);
-		String configName;
+		String filePath;
 
 		public SheetBean() {
 		}
 
-		public SheetBean(String configName) {
-			this.configName = configName;
+		public SheetBean(String filePath) {
+			this.filePath = filePath;
 			Reader is = null;
 			try {
-				InputStream input = new FileSystemResource(configName).getInputStream();
+				InputStream input = new FileSystemResource(filePath).getInputStream();
 				is = new InputStreamReader(input, "UTF-8");
 				element = new SAXBuilder().build(new InputSource(is)).getRootElement();
 			} catch (UnsupportedEncodingException e) {
@@ -68,7 +68,7 @@ public class SheetBean {
 		public void save(Document doc){
 			XMLOutputter xmlopt = new XMLOutputter();
 			try {
-				File file = new FileSystemResource(configName).getFile();
+				File file = new FileSystemResource(filePath).getFile();
 //				FileWriter writer = new FileWriter(file);
 				OutputStream output = new FileOutputStream(file);
 				Writer writer = new OutputStreamWriter(output, "UTF-8");
@@ -154,5 +154,13 @@ public class SheetBean {
 		public String toString() {
 			XMLOutputter outputter = new XMLOutputter(Format.getRawFormat());
 			return outputter.outputString(element);
+		}
+		
+		public String getFilePath() {
+			return filePath;
+		}
+
+		public void setFilePath(String filePath) {
+			this.filePath = filePath;
 		}
 }
