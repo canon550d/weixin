@@ -9,5 +9,6 @@ public interface GalleryService {
 	public List<Gallery> getGallery();
 	public Gallery getGallery(String id);
 	public Gallery save(Gallery g);
+	public Gallery edit(Gallery g);
 	public Image save(Image g);
 }

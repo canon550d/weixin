@@ -12,5 +12,7 @@ public interface GalleryDao {
 	
 	public Gallery save(Gallery g);
 	
+	public Gallery edit(Gallery g);
+	
 	public Image save(Image i);
 }

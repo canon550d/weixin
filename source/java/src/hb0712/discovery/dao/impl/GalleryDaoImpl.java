@@ -35,6 +35,12 @@ public class GalleryDaoImpl implements GalleryDao{
 		return g;
 	}
 	
+	public Gallery edit(Gallery g){
+		GalleryManage manage = GalleryManage.instence();
+		manage.edit(g, sb);
+		return g;
+	}
+	
 	public Image save(Image i){
 		GalleryManage manage = GalleryManage.instence();
 		manage.save(i, sb);

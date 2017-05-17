@@ -13,6 +13,7 @@
     <figure class="image is-128x128">
       <a href="view.aspx?id=${g.id}"><img src="http://bulma.io/images/placeholders/128x128.png"></a>
       <p>${g.intro}</p>
+      <p><a href="edit.aspx?id=${g.id}">edit</a></p>
     </figure>
   </div>
   </c:forEach>

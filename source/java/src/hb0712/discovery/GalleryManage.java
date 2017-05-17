@@ -28,10 +28,19 @@ public class GalleryManage {
 		return null;
 	}
 	
+	public Gallery edit(Gallery g, SheetBean sb){
+		Element element = sb.getRoot();
+		String id = g.getId();
+		Element g_element = sb.getElement("galleries/gallery[id="+id+"]");
+		this.setGallery(g, g_element);
+		sb.save(element.getDocument());
+		return g;
+	}
+	
 	public Gallery save(Gallery g, SheetBean sb){
 		String id = sb.getNewId("galleries/gallery/id");
 		g.setId(id);
-		
+		//新建一个image.x.xml文件
 		String imagePath = this.getImagePath(sb, id);
 		sb.save(imagePath);
 		
@@ -40,44 +49,6 @@ public class GalleryManage {
 		element.addContent(e);
 		sb.save(element.getDocument());
 		return g;
-	}
-	
-	// 跟图片有关的都要另外放了
-	public void getImages(SheetBean sb, String gid){
-		String file = this.getImagePath(sb, gid);
-		Element element = sb.open(file);
-		List nodes = null;
-		try {
-			nodes = XPath.selectNodes(element, "image");
-		} catch (JDOMException e) {
-			e.printStackTrace();
-		}
-		List<Image> images = new ArrayList<Image>();
-		if(nodes!=null && nodes.size()>0){
-			for(int i=0;i<nodes.size();i++){
-				Element j = (Element)nodes.get(i);
-				
-				Image image = new Image();
-				setImage(image, j);
-				images.add(image);
-			}
-		}
-		getGallery(gid).setImages(images);
-	}
-	
-	public Image save(Image i, SheetBean sb){
-		String gid = i.getGallery().getId();
-		String file = this.getImagePath(sb, gid);
-		Element element = sb.open(file);
-		
-		String id = this.getNewId(element, "image/id");
-		i.setId(id);
-		
-		
-		Element j = this.newImage(i);
-		element.addContent(j);
-		sb.save(element.getDocument(), file);
-		return i;
 	}
 	
 	public static GalleryManage instence(){
@@ -130,29 +101,11 @@ public class GalleryManage {
 		return gallery;
 	}
 	
-	private void setImage(Image image, Element j){
-		image.setId(j.getChild("id").getText());
-		image.setPath(j.getChild("path").getText());
-		image.setIntro(j.getChild("intro").getText());
-		
-//		String galleryIds = j.getChild("gallery").getText();
-//		String[] ids = galleryIds.split(",");
-//		for(String id:ids){
-//			getGallery(id).getImages().add(image);
-//		}
-	}
-	
 	private void setGallery(Gallery g, Element j){
 		g.setId(j.getChild("id").getText());
 		g.setName(j.getChild("name").getText());
 		g.setIntro(j.getChild("intro").getText());
 		g.setImages(new ArrayList<Image>());
-	}
-	
-	private String getImagePath(SheetBean sb, String i){
-		String imagePath = sb.getFilePath().replace("Gallery.xml", "image."+i+".xml");
-		System.out.println(imagePath);
-		return imagePath;
 	}
 	
 	private String getNewId(Element element, String path){
@@ -169,5 +122,68 @@ public class GalleryManage {
 			e.printStackTrace();
 		}
 		return lastid;
+	}
+	
+	
+	
+	// 跟图片有关的都要另外放了
+	public void getImages(SheetBean sb, String gid){
+		String file = this.getImagePath(sb, gid);
+		Element element = sb.open(file);
+		List nodes = null;
+		try {
+			nodes = XPath.selectNodes(element, "image");
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		}
+		List<Image> images = new ArrayList<Image>();
+		if(nodes!=null && nodes.size()>0){
+			for(int i=0;i<nodes.size();i++){
+				Element j = (Element)nodes.get(i);
+				
+				Image image = new Image();
+				setImage(image, j);
+				images.add(image);
+			}
+		}
+		getGallery(gid).setImages(images);
+	}
+	
+	public Image save(Image i, SheetBean sb){
+		String gid = i.getGallery().getId();
+		String file = this.getImagePath(sb, gid);
+		Element element = sb.open(file);
+		
+		String id = this.getNewId(element, "image/id");
+		i.setId(id);
+		
+		
+		Element j = this.newImage(i);
+		element.addContent(j);
+		sb.save(element.getDocument(), file);
+		
+		Element galleries = sb.getRoot().getChild("galleries");
+		Element gallery = sb.getElement("galleries/gallery[id="+id+"]");
+		gallery.getChild("images").setText(gallery.getChild("images").getText());
+		sb.save(galleries.getDocument());
+		return i;
+	}
+	
+	private void setImage(Image image, Element j){
+		image.setId(j.getChild("id").getText());
+		image.setPath(j.getChild("path").getText());
+		image.setIntro(j.getChild("intro").getText());
+		
+//		String galleryIds = j.getChild("gallery").getText();
+//		String[] ids = galleryIds.split(",");
+//		for(String id:ids){
+//			getGallery(id).getImages().add(image);
+//		}
+	}
+	
+	private String getImagePath(SheetBean sb, String i){
+		String imagePath = sb.getFilePath().replace("Gallery.xml", "image."+i+".xml");
+		System.out.println(imagePath);
+		return imagePath;
 	}
 }

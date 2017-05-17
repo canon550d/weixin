@@ -27,6 +27,10 @@ public class GalleryServiceImpl implements GalleryService {
 		return galleryDao.save(g);
 	}
 	
+	public Gallery edit(Gallery g){
+		return galleryDao.edit(g);
+	}
+	
 	public Image save(Image i){
 		return galleryDao.save(i);
 	}

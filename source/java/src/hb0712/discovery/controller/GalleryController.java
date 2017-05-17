@@ -52,6 +52,23 @@ public class GalleryController {
 		return "gallery/add";
 	}
 	
+	@RequestMapping("/gallery/edit")
+	public String edit(String id, String name, String intro,
+			Map<String,Object> model,
+			HttpServletRequest request, HttpSession httpSession){
+		if(StringUtils.isNotEmpty(name)){
+			Gallery g = new Gallery();
+			g.setId(id);
+			g.setName(name);
+			g.setIntro(intro);
+			galleryService.edit(g);
+			return "redirect:index.aspx";
+		}
+		Gallery gallery = galleryService.getGallery(id);
+		model.put("gallery", gallery);
+		return "gallery/edit";
+	}
+	
 	@RequestMapping("/gallery/addImage")
 	public String addImage(String gid, String path, String type, String intro,
 			Map<String,Object> model,

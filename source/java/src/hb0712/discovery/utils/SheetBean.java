@@ -108,13 +108,15 @@ public class SheetBean {
 		return element;
 	}
 	
-	public String getName() {
-		return getElement("account");
-	}
-	
-	
-	public String[] getjobs(){
-		return getElements("article");
+	public Element getElement(String xpathName){
+		Element node = null;
+		try {
+			node = (Element) XPath.selectSingleNode(element, xpathName);
+			return node;
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	private String[] getElements(String xpathName){
@@ -136,7 +138,7 @@ public class SheetBean {
 		return names;
 	}
 		
-	private String getElement(String xpathName) {
+	private String getElementText(String xpathName) {
 		Element node = null;
 		try {
 			node = (Element) XPath.selectSingleNode(element, xpathName);
