@@ -13,6 +13,7 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -90,6 +91,17 @@ public class SheetBean {
 	
 	public void save(Document doc){
 		save(doc, this.filePath);
+	}
+	
+	public void save(String filePath){
+		String data = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><data></data>";
+		File file = new FileSystemResource(filePath).getFile();
+		try {
+			FileUtils.writeStringToFile(file, data, fileCode);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public Element getRoot() {

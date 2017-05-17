@@ -32,6 +32,9 @@ public class GalleryManage {
 		String id = sb.getNewId("galleries/gallery/id");
 		g.setId(id);
 		
+		String imagePath = this.getImagePath(sb, id);
+		sb.save(imagePath);
+		
 		Element element = sb.getRoot().getChild("galleries");
 		Element e = this.newGallery(g);
 		element.addContent(e);
