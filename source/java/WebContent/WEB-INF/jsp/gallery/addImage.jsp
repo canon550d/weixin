@@ -9,7 +9,7 @@
 <div>图片类型：<input type="text" name="type" value='${image.type}' /></div>
 <div>简一一介：<input type="text" name="intro" value='${image.intro}' /></div>
 <div>相一一册：<c:forEach items="${galleries}" var="gallery" varStatus="status">
-<label><input type="checkbox" name="gid" value="${gallery.id}"/>${gallery.name}</label>
+<label><input type="radio" name="gid" value="${gallery.id}"/>${gallery.name}</label>
 </c:forEach></div>
 <input type="submit" value="提交"/>
 </form></div></div>

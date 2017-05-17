@@ -7,7 +7,6 @@ import hb0712.discovery.utils.SheetBean;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.xpath.XPath;
@@ -23,7 +22,6 @@ public class GalleryManage {
 	public Gallery getGallery(String id){
 		for(Gallery a:galleries){
 			if(a.getId().equals(id)){
-				
 				return a;
 			}
 		}
@@ -41,14 +39,41 @@ public class GalleryManage {
 		return g;
 	}
 	
+	// 跟图片有关的都要另外放了
+	public void getImages(SheetBean sb, String gid){
+		String file = this.getImagePath(sb, gid);
+		Element element = sb.open(file);
+		List nodes = null;
+		try {
+			nodes = XPath.selectNodes(element, "image");
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		}
+		List<Image> images = new ArrayList<Image>();
+		if(nodes!=null && nodes.size()>0){
+			for(int i=0;i<nodes.size();i++){
+				Element j = (Element)nodes.get(i);
+				
+				Image image = new Image();
+				setImage(image, j);
+				images.add(image);
+			}
+		}
+		getGallery(gid).setImages(images);
+	}
+	
 	public Image save(Image i, SheetBean sb){
-		String id = sb.getNewId("images/image/id");
+		String gid = i.getGallery().getId();
+		String file = this.getImagePath(sb, gid);
+		Element element = sb.open(file);
+		
+		String id = this.getNewId(element, "image/id");
 		i.setId(id);
 		
-		Element element = getImageElement(sb, id).getChild("images");
+		
 		Element j = this.newImage(i);
 		element.addContent(j);
-		sb.save(element.getDocument());
+		sb.save(element.getDocument(), file);
 		return i;
 	}
 	
@@ -78,29 +103,8 @@ public class GalleryManage {
 			}
 		}
 		
-		try {
-			nodes = XPath.selectNodes(element, "images/image");
-		} catch (JDOMException e) {
-			e.printStackTrace();
-		}
-		List<Image> images = new ArrayList<Image>();
-		if(nodes!=null && nodes.size()>0){
-			for(int i=0;i<nodes.size();i++){
-				Element j = (Element)nodes.get(i);
-				
-				Image image = new Image();
-				setGallery(image, j);
-			}
-		}
+
 		return this;
-	}
-	
-	private void getOOxx(){
-		
-	}
-	
-	private String array2string(String[] array, String separator){
-		return StringUtils.join(array, separator);
 	}
 	
 	private Element newImage(Image i){
@@ -110,8 +114,7 @@ public class GalleryManage {
 		image.addContent(new Element("path").setText(i.getPath()));
 		image.addContent(new Element("type").setText(i.getType()));
 		image.addContent(new Element("intro").setText(i.getIntro()));
-		String ids = array2string(i.getGid(), ",");
-		image.addContent(new Element("gallery").setText(ids));
+		image.addContent(new Element("gallery").setText(i.getGallery().getId()));
 		return image;
 	}
 	
@@ -124,15 +127,16 @@ public class GalleryManage {
 		return gallery;
 	}
 	
-	private void setGallery(Image image, Element j){
+	private void setImage(Image image, Element j){
+		image.setId(j.getChild("id").getText());
 		image.setPath(j.getChild("path").getText());
 		image.setIntro(j.getChild("intro").getText());
 		
-		String galleryIds = j.getChild("gallery").getText();
-		String[] ids = galleryIds.split(",");
-		for(String id:ids){
-			getGallery(id).getImages().add(image);
-		}
+//		String galleryIds = j.getChild("gallery").getText();
+//		String[] ids = galleryIds.split(",");
+//		for(String id:ids){
+//			getGallery(id).getImages().add(image);
+//		}
 	}
 	
 	private void setGallery(Gallery g, Element j){
@@ -142,8 +146,25 @@ public class GalleryManage {
 		g.setImages(new ArrayList<Image>());
 	}
 	
-	private Element getImageElement(SheetBean sb, String i){
+	private String getImagePath(SheetBean sb, String i){
 		String imagePath = sb.getFilePath().replace("Gallery.xml", "image."+i+".xml");
-		return sb.open(imagePath);
+		System.out.println(imagePath);
+		return imagePath;
+	}
+	
+	private String getNewId(Element element, String path){
+		String lastid = null;
+		try {
+			List ids = XPath.selectNodes(element, path);
+			
+			if(ids!=null && ids.size()>0){
+				lastid = ((Element)ids.get(ids.size()-1)).getText();
+				Integer newId = Integer.valueOf(lastid) + 1;
+				return newId.toString();
+			}
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		}
+		return lastid;
 	}
 }

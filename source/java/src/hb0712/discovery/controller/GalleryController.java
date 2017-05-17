@@ -53,15 +53,20 @@ public class GalleryController {
 	}
 	
 	@RequestMapping("/gallery/addImage")
-	public String addImage(String[] gid, String path, String type, String intro,
+	public String addImage(String gid, String path, String type, String intro,
 			Map<String,Object> model,
 			HttpServletRequest request, HttpSession httpSession){
+		Gallery g = null;
+		if(StringUtils.isNotEmpty(gid)){
+			g = galleryService.getGallery(gid);
+		}
 		if(StringUtils.isNotEmpty(path)){
 			Image i = new Image();
 			i.setPath(path);
 			i.setType(type);
 			i.setIntro(intro);
 			i.setGid(gid);
+			i.setGallery(g);
 			
 			galleryService.save(i);
 			return "redirect:index.aspx";

@@ -71,18 +71,13 @@ public class SheetBean {
 		return null;
 	}
 	
-	public String getFileFload(){
-		int i = this.filePath.lastIndexOf("\\");
-		return this.filePath.substring(0, i);
-	}
-		
-	public void save(Document doc){
+	public void save(Document doc, String filePath){
 		XMLOutputter xmlopt = new XMLOutputter();
 		try {
 			File file = new FileSystemResource(filePath).getFile();
 //			FileWriter writer = new FileWriter(file);
 			OutputStream output = new FileOutputStream(file);
-			Writer writer = new OutputStreamWriter(output, "UTF-8");
+			Writer writer = new OutputStreamWriter(output, fileCode);
 			Format fm = Format.getPrettyFormat();
 			xmlopt.setFormat(fm);
 			xmlopt.output(doc, writer);
@@ -91,6 +86,10 @@ public class SheetBean {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void save(Document doc){
+		save(doc, this.filePath);
 	}
 
 	public Element getRoot() {
