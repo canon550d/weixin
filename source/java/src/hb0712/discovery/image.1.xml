@@ -24,4 +24,19 @@
     <intro>Bei Jing 4</intro>
     <gallery>2,3</gallery>
   </image>
+  <image>
+    <id>5</id>
+    <path>http://img11.360buyimg.com/n1/jfs/t3412/251/720973532/340584/cd61b14/58130f20N734924ae.jpg</path>
+    <type>jpg</type>
+    <intro>5555</intro>
+    <gallery>1</gallery>
+  </image>
+  <image>
+    <id>6</id>
+    <path>http://img11.360buyimg.com/n1/jfs/t3412/251/720973532/340584/cd61b14/58130f20N734924ae.jpg</path>
+    <type>jpg</type>
+    <intro>xyq</intro>
+    <gallery>1</gallery>
+  </image>
 </data>
+
