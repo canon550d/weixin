@@ -7,6 +7,7 @@ import hb0712.discovery.utils.SheetBean;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.xpath.XPath;
@@ -32,7 +33,7 @@ public class GalleryManage {
 		Element element = sb.getRoot();
 		String id = g.getId();
 		Element g_element = sb.getElement("galleries/gallery[id="+id+"]");
-		this.setGallery(g, g_element);
+		this.setGallery2Element(g_element, g);
 		sb.save(element.getDocument());
 		return g;
 	}
@@ -49,6 +50,43 @@ public class GalleryManage {
 		element.addContent(e);
 		sb.save(element.getDocument());
 		return g;
+	}
+	
+	public boolean delete(String id, SheetBean sb){
+		return false;
+	}
+	
+	private void updateGalleryIamge(Element j, String id){
+		String images = j.getChild("images").getText();
+		if(StringUtils.isEmpty(images)){
+			images = id;
+		}else{
+			images += "," + id;
+		}
+		j.getChild("images").setText(images);
+	}
+	
+	private Element newGallery(Gallery g){
+		Element gallery = new Element("gallery");
+		
+		gallery.addContent(new Element("id").setText(g.getId()));
+		gallery.addContent(new Element("name").setText(g.getName()));
+		gallery.addContent(new Element("intro").setText(g.getIntro()));
+		return gallery;
+	}
+	
+	private void setGallery(Gallery g, Element j){
+		g.setId(j.getChild("id").getText());
+		g.setName(j.getChild("name").getText());
+		g.setIntro(j.getChild("intro").getText());
+		g.setImages(new ArrayList<Image>());
+	}
+	
+	private void setGallery2Element(Element j, Gallery g){
+		j.getChild("id").setText(g.getId());
+		j.getChild("name").setText(g.getName());
+		j.getChild("intro").setText(g.getIntro());
+		
 	}
 	
 	public static GalleryManage instence(){
@@ -81,48 +119,6 @@ public class GalleryManage {
 		return this;
 	}
 	
-	private Element newImage(Image i){
-		Element image = new Element("image");
-		
-		image.addContent(new Element("id").setText(i.getId()));
-		image.addContent(new Element("path").setText(i.getPath()));
-		image.addContent(new Element("type").setText(i.getType()));
-		image.addContent(new Element("intro").setText(i.getIntro()));
-		image.addContent(new Element("gallery").setText(i.getGallery().getId()));
-		return image;
-	}
-	
-	private Element newGallery(Gallery g){
-		Element gallery = new Element("gallery");
-		
-		gallery.addContent(new Element("id").setText(g.getId()));
-		gallery.addContent(new Element("name").setText(g.getName()));
-		gallery.addContent(new Element("intro").setText(g.getIntro()));
-		return gallery;
-	}
-	
-	private void setGallery(Gallery g, Element j){
-		g.setId(j.getChild("id").getText());
-		g.setName(j.getChild("name").getText());
-		g.setIntro(j.getChild("intro").getText());
-		g.setImages(new ArrayList<Image>());
-	}
-	
-	private String getNewId(Element element, String path){
-		String lastid = null;
-		try {
-			List ids = XPath.selectNodes(element, path);
-			
-			if(ids!=null && ids.size()>0){
-				lastid = ((Element)ids.get(ids.size()-1)).getText();
-				Integer newId = Integer.valueOf(lastid) + 1;
-				return newId.toString();
-			}
-		} catch (JDOMException e) {
-			e.printStackTrace();
-		}
-		return lastid;
-	}
 	
 	
 	
@@ -157,16 +153,32 @@ public class GalleryManage {
 		String id = this.getNewId(element, "image/id");
 		i.setId(id);
 		
-		
 		Element j = this.newImage(i);
 		element.addContent(j);
 		sb.save(element.getDocument(), file);
 		
-		Element galleries = sb.getRoot().getChild("galleries");
-		Element gallery = sb.getElement("galleries/gallery[id="+id+"]");
-		gallery.getChild("images").setText(gallery.getChild("images").getText());
+		Element galleries = sb.getRoot();
+		Element g = sb.getElement("galleries/gallery[id="+gid+"]");
+		this.updateGalleryIamge(g, id);
 		sb.save(galleries.getDocument());
+		
 		return i;
+	}
+	
+	private String getNewId(Element element, String path){
+		String lastid = null;
+		try {
+			List ids = XPath.selectNodes(element, path);
+			
+			if(ids!=null && ids.size()>0){
+				lastid = ((Element)ids.get(ids.size()-1)).getText();
+				Integer newId = Integer.valueOf(lastid) + 1;
+				return newId.toString();
+			}
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		}
+		return lastid;
 	}
 	
 	private void setImage(Image image, Element j){
@@ -179,6 +191,17 @@ public class GalleryManage {
 //		for(String id:ids){
 //			getGallery(id).getImages().add(image);
 //		}
+	}
+	
+	private Element newImage(Image i){
+		Element image = new Element("image");
+		
+		image.addContent(new Element("id").setText(i.getId()));
+		image.addContent(new Element("path").setText(i.getPath()));
+		image.addContent(new Element("type").setText(i.getType()));
+		image.addContent(new Element("intro").setText(i.getIntro()));
+		image.addContent(new Element("gallery").setText(i.getGallery().getId()));
+		return image;
 	}
 	
 	private String getImagePath(SheetBean sb, String i){
