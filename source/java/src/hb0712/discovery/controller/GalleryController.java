@@ -93,6 +93,32 @@ public class GalleryController {
 		return "gallery/addImage";
 	}
 	
+	@RequestMapping("/gallery/image/edit")
+	public String editImage(String gid, String id, String path, String type, String intro,
+			Map<String,Object> model,
+			HttpServletRequest request, HttpSession httpSession){
+		Gallery g = null;
+		if(StringUtils.isNotEmpty(gid)){
+			g = galleryService.getGallery(gid);
+		}
+		if(StringUtils.isNotEmpty(path)){
+			Image img = new Image();
+			img.setId(id);
+			img.setPath(path);
+			img.setType(type);
+			img.setIntro(intro);
+			img.setGid(gid);
+			img.setGallery(g);
+			galleryService.edit(img);
+			return "redirect:../index.aspx";
+		}
+		Image image = galleryService.getImage(gid, id);
+		model.put("image", image);
+		List<Gallery> list = galleryService.getGallery();
+		model.put("galleries", list);
+		return "gallery/editImage";
+	}
+	
 	@RequestMapping("/gallery/image/delete")
 	public String deleteImage(String gid, String id,
 			Map<String,Object> model,

@@ -22,9 +22,20 @@ public class ImageDaoImpl implements ImageDao {
 		return manage.getImages(sb, gid);
 	}
 	
+	public Image edit(Image img){
+		GalleryManage manage = GalleryManage.instence();
+		manage.edit(img, sb);
+		return img;
+	}
+	
 	public boolean delete(String gid, String id){
 		GalleryManage manage = GalleryManage.instence();
 		manage.delete(gid, id, sb);
 		return true;
+	}
+	
+	public Image getImage(String gid, String id){
+		GalleryManage manage = GalleryManage.instence();
+		return manage.getImage(gid, id, sb);
 	}
 }

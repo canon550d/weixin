@@ -41,8 +41,14 @@ public class GalleryServiceImpl implements GalleryService {
 		return imageDao.delete(gid, id);
 	}
 	
-	
+	public Image getImage(String gid, String id){
+		return imageDao.getImage(gid, id);
+	}
 	public Image save(Image i){
 		return galleryDao.save(i);
+	}
+
+	public Image edit(Image i) {
+		return imageDao.edit(i);
 	}
 }

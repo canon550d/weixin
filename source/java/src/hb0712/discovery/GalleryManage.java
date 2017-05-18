@@ -1,5 +1,6 @@
 package hb0712.discovery;
 
+import hb0712.discovery.pojo.Article;
 import hb0712.discovery.pojo.Gallery;
 import hb0712.discovery.pojo.Image;
 import hb0712.discovery.utils.SheetBean;
@@ -142,6 +143,27 @@ public class GalleryManage {
 		return images;
 	}
 	
+	public Image getImage(String gid, String id, SheetBean sb){
+		String imagePath = this.getImagePath(sb, gid);
+		sb.setRoot(imagePath);
+		Element j = sb.getElement("image[id="+id+"]");
+		
+		Image image = new Image();
+		setImage(image, j);
+		return image;
+	}
+	
+	public Image edit(Image i, SheetBean sb){
+		String imagePath = this.getImagePath(sb, i.getGallery().getId());
+		sb.setRoot(imagePath);
+		
+		Element element = sb.getRoot();
+		Element j = sb.getElement("image[id="+i.getId()+"]");
+		setImage2Element(j, i);
+		sb.save(element.getDocument());
+		return i;
+	}
+	
 	public Image save(Image i, SheetBean sb){
 		String gid = i.getGallery().getId();
 		String file = this.getImagePath(sb, gid);
@@ -165,7 +187,6 @@ public class GalleryManage {
 	public boolean delete(String gid, String id, SheetBean sb){
 		String imagePath = this.getImagePath(sb, gid);
 		sb.setRoot(imagePath);
-		System.out.println(imagePath);
 		
 		Element element = sb.getRoot();
 		try {
@@ -195,11 +216,19 @@ public class GalleryManage {
 		return lastid;
 	}
 	
+	private void setImage2Element(Element j, Image image){
+		j.getChild("id").setText(image.getId());
+		j.getChild("path").setText(image.getPath());
+		j.getChild("type").setText(image.getType());
+		j.getChild("intro").setText(image.getIntro());
+	}
+	
 	private void setImage(Image image, Element j){
 		image.setId(j.getChild("id").getText());
 		image.setPath(j.getChild("path").getText());
+		image.setType(j.getChildText("type"));
 		image.setIntro(j.getChild("intro").getText());
-		
+		image.setGallery(getGallery(j.getChild("gallery").getText()));
 //		String galleryIds = j.getChild("gallery").getText();
 //		String[] ids = galleryIds.split(",");
 //		for(String id:ids){

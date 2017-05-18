@@ -10,7 +10,9 @@ public interface GalleryService {
 	public Gallery getGallery(String id);
 	public Gallery save(Gallery g);
 	public Gallery edit(Gallery g);
-	public boolean delete(String gid, String id);
 	
+	public boolean delete(String gid, String id);
+	public Image getImage(String gid, String id);
+	public Image edit(Image image);
 	public Image save(Image g);
 }
