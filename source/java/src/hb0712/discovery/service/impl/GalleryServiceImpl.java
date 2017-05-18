@@ -24,7 +24,9 @@ public class GalleryServiceImpl implements GalleryService {
 	}
 
 	public Gallery getGallery(String id){
-		return galleryDao.getGallery(id);
+		Gallery gallery = galleryDao.getGallery(id);
+		imageDao.getImages(id);
+		return gallery;
 	}
 	
 	public Gallery save(Gallery g){

@@ -119,7 +119,7 @@ public class GalleryManage {
 	
 	
 	// 跟图片有关的都要另外放了
-	public void getImages(SheetBean sb, String gid){
+	public List<Image> getImages(SheetBean sb, String gid){
 		String file = this.getImagePath(sb, gid);
 		Element element = sb.open(file);
 		List nodes = null;
@@ -139,6 +139,7 @@ public class GalleryManage {
 			}
 		}
 		getGallery(gid).setImages(images);
+		return images;
 	}
 	
 	public Image save(Image i, SheetBean sb){
@@ -162,11 +163,20 @@ public class GalleryManage {
 	}
 	
 	public boolean delete(String gid, String id, SheetBean sb){
-		String imagePath = sb.getFilePath() + "image."+gid+".xml";
+		String imagePath = this.getImagePath(sb, gid);
+		sb.setRoot(imagePath);
 		System.out.println(imagePath);
+		
 		Element element = sb.getRoot();
-//		Element g = sb.getElement("galleries/gallery[id="+gid+"]");
-		return false;
+		try {
+			
+			Object node = XPath.selectSingleNode(element, "image[id="+id+"]");
+			element.removeContent((Element)node);
+			sb.save(element.getDocument());
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		}
+		return true;
 	}
 	
 	private String getNewId(Element element, String path){
@@ -209,8 +219,16 @@ public class GalleryManage {
 	}
 	
 	private String getImagePath(SheetBean sb, String i){
-		String imagePath = sb.getFilePath().replace("Gallery.xml", "image."+i+".xml");
-		System.out.println(imagePath);
-		return imagePath;
+//		String imagePath = sb.getFilePath().replace("Gallery.xml", "image."+i+".xml");
+//		System.out.println(imagePath);
+		setImagePath(sb);
+		return imagePath + "image."+i+".xml";
 	}
+	
+	private void setImagePath(SheetBean sb){
+		if(StringUtils.isEmpty(imagePath))
+			this.imagePath = sb.getFilePath();
+	}
+	
+	private String imagePath;
 }

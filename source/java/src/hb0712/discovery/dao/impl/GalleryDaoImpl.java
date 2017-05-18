@@ -25,7 +25,6 @@ public class GalleryDaoImpl implements GalleryDao{
 	
 	public Gallery getGallery(String id){
 		GalleryManage manage = GalleryManage.instence().build(sb);
-		manage.getImages(sb, id);
 		return manage.getGallery(id);
 	}
 	

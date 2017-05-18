@@ -42,7 +42,16 @@ public class SheetBean {
 		this.filePath = filePath;
 		this.element = this.open(filePath);
 	}
-		
+	
+	public Element getRoot() {
+		return element;
+	}
+	
+	public void setRoot(String filePath){
+		this.filePath = filePath;
+		this.element = this.open(filePath);
+	}
+	
 	public Element open(String filePath) {
 		Reader is = null;
 		try {
@@ -102,10 +111,6 @@ public class SheetBean {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-
-	public Element getRoot() {
-		return element;
 	}
 	
 	public Element getElement(String xpathName){
