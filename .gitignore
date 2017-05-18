@@ -10,6 +10,8 @@ source/java/WebContent/img
 source/java/WebContent/img/*
 source/java/WebContent/css
 source/java/WebContent/css/*
+source/java/WebContent/work
+source/java/WebContent/work/*
 source/java/WebContent/WEB-INF/.gitignore
 
 # Eclipse Project Files #
