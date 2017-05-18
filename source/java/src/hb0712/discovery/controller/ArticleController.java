@@ -1,7 +1,9 @@
 package hb0712.discovery.controller;
 
 import hb0712.discovery.pojo.Article;
+import hb0712.discovery.pojo.Gallery;
 import hb0712.discovery.service.ArticleService;
+import hb0712.discovery.service.GalleryService;
 
 import java.util.Date;
 import java.util.List;
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ArticleController {
 	@Autowired
 	private ArticleService articleService;
+	@Autowired
+	private GalleryService galleryService;
 
 	@RequestMapping("/index")
 	public String index(Map<String,Object> model,
@@ -53,6 +57,9 @@ public class ArticleController {
 		Article article = new Article();
 		article.setFileName(fileName);
 		model.put("article", article);
+		
+		List<Gallery> list = galleryService.getGallery();
+		model.put("galleries", list);
 		return "add";
 	}
 	

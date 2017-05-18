@@ -3,7 +3,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ include file="header.jsp"%>
-<section class="section"><div class="container"><div class="columns"><div class="column"><form action="add.aspx">
+<section class="section"><div class="container"><div class="columns">
+<div class="column"><form action="add.aspx">
 <input type="hidden" name="id" value="${article.id}"/>
 <div>文件名称：<input type="text" name="fileName" value='${article.fileName}' /></div>
 <div>更新时间：<input type="text" name="time" value='<fmt:formatDate value="${article.time}" pattern="yyyy-MM-dd HH:mm:ss" />' /></div>
@@ -18,10 +19,19 @@
 <div>标签：<input type="text" name="tags" value='${article.tags}' /></div>
 <input type="submit" value="提交"/>
 </form></div>
-<div class="column">
-<figure class="image is-128x128">
-  <img class="gallery" src="http://bulma.io/images/placeholders/128x128.png">
-</figure>
+<div class="column is-2 column-gallery">
+  <figure class="image is-128x128">
+    <img class="gallery" src="http://bulma.io/images/placeholders/128x128.png">
+    <img class="gallery" src="http://bulma.io/images/placeholders/128x128.png">
+    <img class="gallery" src="http://bulma.io/images/placeholders/128x128.png">
+  </figure>
+</div>
+<div class="column is-1">
+<aside class="menu">
+  <ul class="menu-list"><c:forEach items="${galleries}" var="g" varStatus="status">
+    <li><a data-gid="${g.id}" >${g.name}</a></li>
+  </c:forEach></ul>
+</aside>
 </div>
 </div></div></section>
 
@@ -36,6 +46,20 @@
     });
     $(".gallery").click(function() {
         um.setContent('<img src="'+$(this).attr("src")+'" />', true)
+    });
+    $(".menu-list a").click(function() {
+        $(".menu-list a").attr("class", "");
+        $(this).attr("class", "is-active");
+        $.post("gallery/image/list.aspx", { gid: $(this).attr("data-gid"), time: "2pm" }, function(data,status){
+            var html = '';console.info(data.length);
+            for(var i=0;i<data.length;i++){
+                html += '<figure class="image is-128x128">';
+                html += '<img class="gallery" src="'+data[i].path+'">';
+                html += '</figure>';console.info(data[i].id);
+            }
+            
+            $(".column-gallery").html(html);
+        },"json");
     });
   });
   </script>

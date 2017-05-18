@@ -1,6 +1,5 @@
 package hb0712.discovery;
 
-import hb0712.discovery.pojo.Article;
 import hb0712.discovery.pojo.Gallery;
 import hb0712.discovery.pojo.Image;
 import hb0712.discovery.utils.SheetBean;
@@ -189,14 +188,10 @@ public class GalleryManage {
 		sb.setRoot(imagePath);
 		
 		Element element = sb.getRoot();
-		try {
-			
-			Object node = XPath.selectSingleNode(element, "image[id="+id+"]");
-			element.removeContent((Element)node);
-			sb.save(element.getDocument());
-		} catch (JDOMException e) {
-			e.printStackTrace();
-		}
+		Element node = sb.getElement("image[id="+id+"]");
+		element.removeContent(node);
+		sb.save(element.getDocument());
+
 		return true;
 	}
 	
@@ -248,8 +243,6 @@ public class GalleryManage {
 	}
 	
 	private String getImagePath(SheetBean sb, String i){
-//		String imagePath = sb.getFilePath().replace("Gallery.xml", "image."+i+".xml");
-//		System.out.println(imagePath);
 		setImagePath(sb);
 		return imagePath + "image."+i+".xml";
 	}

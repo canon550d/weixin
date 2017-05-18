@@ -14,6 +14,9 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.gson.Gson;
 
 @Controller
 public class GalleryController {
@@ -91,6 +94,23 @@ public class GalleryController {
 		List<Gallery> list = galleryService.getGallery();
 		model.put("galleries", list);
 		return "gallery/addImage";
+	}
+	
+	@RequestMapping("/gallery/image/list")
+	@ResponseBody
+	public String listImage(String gid,
+			Map<String,Object> model,
+			HttpServletRequest request, HttpSession httpSession){
+		Gallery g = galleryService.getGallery(gid);
+		if(g != null){
+			Gson gson = new Gson();
+			List<Image> list = g.getImages();
+			for(Image i:list){
+				i.setGallery(null);
+			}
+			return gson.toJson(g.getImages());
+		}
+		return null;
 	}
 	
 	@RequestMapping("/gallery/image/edit")
