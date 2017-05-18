@@ -93,11 +93,11 @@ public class GalleryController {
 		return "gallery/addImage";
 	}
 	
-	@RequestMapping("/gallery/deleteImage")
-	public String addImage(String id,
+	@RequestMapping("/gallery/image/delete")
+	public String deleteImage(String gid, String id,
 			Map<String,Object> model,
 			HttpServletRequest request, HttpSession httpSession){
-		galleryService.delete(id);
-		return "redirect:index.aspx";
+		galleryService.delete(gid, id);
+		return "redirect:../index.aspx";
 	}
 }

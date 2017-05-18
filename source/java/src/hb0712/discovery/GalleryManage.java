@@ -52,10 +52,6 @@ public class GalleryManage {
 		return g;
 	}
 	
-	public boolean delete(String id, SheetBean sb){
-		return false;
-	}
-	
 	private void updateGalleryIamge(Element j, String id){
 		String images = j.getChild("images").getText();
 		if(StringUtils.isEmpty(images)){
@@ -163,6 +159,14 @@ public class GalleryManage {
 		sb.save(galleries.getDocument());
 		
 		return i;
+	}
+	
+	public boolean delete(String gid, String id, SheetBean sb){
+		String imagePath = sb.getFilePath() + "image."+gid+".xml";
+		System.out.println(imagePath);
+		Element element = sb.getRoot();
+//		Element g = sb.getElement("galleries/gallery[id="+gid+"]");
+		return false;
 	}
 	
 	private String getNewId(Element element, String path){

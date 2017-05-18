@@ -14,7 +14,5 @@ public interface GalleryDao {
 	
 	public Gallery edit(Gallery g);
 	
-	public boolean delete(String id);
-	
 	public Image save(Image i);
 }

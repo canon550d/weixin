@@ -33,4 +33,7 @@
 	<bean id="gallerySheetBean" class="hb0712.discovery.utils.SheetBean">
 		<constructor-arg name="filePath" value="E:\github\weixin\source\java\src\hb0712\discovery\Gallery.xml"/>
 	</bean>
+	<bean id="imageSheetBean" class="hb0712.discovery.utils.SheetBean">
+		<property name="filePath" value="E:\github\weixin\source\java\src\hb0712\discovery\"/>
+	</bean>
 </beans>

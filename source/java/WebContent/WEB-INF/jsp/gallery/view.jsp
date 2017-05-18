@@ -11,6 +11,7 @@
     <figure class="image is-128x128">
       <img src="${i.path}">
       <p>${i.intro}</p>
+      <p><a href="image/delete.aspx?gid=${gallery.id}&id=${i.id}">delete</a></p>
     </figure>
   </div>
   </c:forEach>

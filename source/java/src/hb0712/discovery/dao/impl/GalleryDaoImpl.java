@@ -41,12 +41,6 @@ public class GalleryDaoImpl implements GalleryDao{
 		return g;
 	}
 	
-	public boolean delete(){
-		GalleryManage manage = GalleryManage.instence();
-		manage.delete(id);
-		return true;
-	}
-	
 	public Image save(Image i){
 		GalleryManage manage = GalleryManage.instence();
 		manage.save(i, sb);
