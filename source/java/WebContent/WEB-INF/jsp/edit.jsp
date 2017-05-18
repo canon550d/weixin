@@ -28,6 +28,9 @@
     $("#wiki").submit(function(e){
         $("#content").val(UM.getEditor('myEditor').getContent());
     });
+    $(".gallery").click(function() {
+        um.setContent('<img src="'+$(this).attr("src")+'" />', true)
+    });
   });
   </script>
 <%@ include file="footer.jsp"%>

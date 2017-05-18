@@ -20,7 +20,7 @@
 </form></div>
 <div class="column">
 <figure class="image is-128x128">
-  <img src="http://bulma.io/images/placeholders/128x128.png">
+  <img class="gallery" src="http://bulma.io/images/placeholders/128x128.png">
 </figure>
 </div>
 </div></div></section>
@@ -33,6 +33,9 @@
     
     $("#wiki").submit(function(e){
         $("#content").val(UM.getEditor('myEditor').getContent());
+    });
+    $(".gallery").click(function() {
+        um.setContent('<img src="'+$(this).attr("src")+'" />', true)
     });
   });
   </script>
