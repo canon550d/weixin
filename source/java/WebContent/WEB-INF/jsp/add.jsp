@@ -44,7 +44,7 @@
     $("#wiki").submit(function(e){
         $("#content").val(UM.getEditor('myEditor').getContent());
     });
-    $(".gallery").click(function() {
+    $(".column-gallery").on('click', 'img', function() {
         um.setContent('<img src="'+$(this).attr("src")+'" />', true)
     });
     $(".menu-list a").click(function() {
@@ -55,7 +55,7 @@
             for(var i=0;i<data.length;i++){
                 html += '<figure class="image is-128x128">';
                 html += '<img class="gallery" src="'+data[i].path+'">';
-                html += '</figure>';console.info(data[i].id);
+                html += '</figure>';
             }
             
             $(".column-gallery").html(html);
