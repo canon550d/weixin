@@ -82,6 +82,9 @@ public class ArticleController {
 		}
 		Article article = articleService.getArticle(id);
 		model.put("article", article);
+		
+		List<Gallery> list = galleryService.getGallery();
+		model.put("galleries", list);
 		return "edit";
 	}
 	
