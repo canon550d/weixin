@@ -5,6 +5,9 @@ $storage = new Storage();
 
 $bucket = "travel";
 $uri = $_GET['uri'];
+$uri = urldecode($uri);
+$preview = $_GET['preview'];
+$view = $_GET['view'];
 $method = "";
 $seconds ="";
 
@@ -13,12 +16,29 @@ $file = $storage->getUrl($bucket, $uri);
 $f = new SaeFetchurl();
 $img_data = $f->fetch( $file);
 
-$img= new SaeImage();
-$img->setData($img_data);
+if(isset($preview)){
+	$img= new SaeImage();
+	$img->setData($img_data);
+	
+	$rule = '16,24,32,48,64,96,128';
+	if(strpos($rule, $preview) === false){
+		$preview = '32';
+	}
+	$img->resize($preview);
+	$content = $img->exec();
+	
+	header('content-type:image/jpg;');
+	echo $content;
 
-$img->resize(200,200);
-$content = $img->exec();
+}elseif(isset($view)){
+	header('content-type:image/jpg;');
+	echo $img_data;
 
-header('content-type:image/jpg;');
-echo $content;
+}else{
+	header("Content-type: application/octet-stream");
+	header("Content-Transfer-Encoding: binary");
+	header('content-disposition:attachment;filename='. basename($file));
+// 	header('content-length:'. filesize($file));
+	echo $img_data;
+}
 ?>
