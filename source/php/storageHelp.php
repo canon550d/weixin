@@ -13,8 +13,10 @@ $seconds ="";
 
 $file = $storage->getUrl($bucket, $uri);
 
-$f = new SaeFetchurl();
-$img_data = $f->fetch( $file);
+// $f = new SaeFetchurl();
+// $img_data = $f->fetch( $file);
+$object = $storage->getObject($bucket, $uri);
+$img_data = $object->body;
 
 if(isset($preview)){
 	$img= new SaeImage();
@@ -38,7 +40,7 @@ if(isset($preview)){
 	header("Content-type: application/octet-stream");
 	header("Content-Transfer-Encoding: binary");
 	header('content-disposition:attachment;filename='. basename($file));
-// 	header('content-length:'. filesize($file));
+	header('content-length:'. $object->headers['size']);
 	echo $img_data;
 }
 ?>
