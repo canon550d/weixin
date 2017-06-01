@@ -20,7 +20,7 @@ if(isset($preview)){
 	$img= new SaeImage();
 	$img->setData($img_data);
 	
-	$rule = '16,24,32,48,64,96,128';
+	$rule = '16,24,32,48,64,96,128,192,256,384,512';
 	if(strpos($rule, $preview) === false){
 		$preview = '32';
 	}

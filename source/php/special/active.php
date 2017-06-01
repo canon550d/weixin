@@ -77,12 +77,12 @@ $bucket = "travel";
     <div class="columns">
 
       <div class="column">
-        <div class="">
+        <div class="gal">
 <?php 
 $num = 1;
 foreach ($pres as $pre){// 读取每个目录下的文件
 	$imgs = $storage->getBucket($bucket, $pre);
-	echo $pre, ' (', count($imgs),')<br/>';
+	//echo $pre, ' (', count($imgs),')<br/>';
 	foreach($imgs as $img){//
 		//echo '-- '; print_r($img); echo '<br/>';
 		$show = true;
@@ -92,14 +92,14 @@ foreach ($pres as $pre){// 读取每个目录下的文件
 				break;
 			}
 		}
-		if($show){
+		if($show && $num <=5){
 			$num += 1;
 			echo '--', basename($img['name']), '<br/>';
 ?>
 
               <figure class="image is-4by3">
                 <a href="javascript:void(0)"><!-- ../storageHelp.php?uri=<?php echo urlencode($img['name']);?> -->
-                  <img src="../storageHelp.php?uri=<?php echo urlencode($img['name']);?>&preview=128" alt="Image" lazyload></a>
+                  <img src="../storageHelp.php?uri=<?php echo urlencode($img['name']);?>&preview=192" alt="Image" lazyload></a>
               </figure>
 
 <?php
@@ -112,6 +112,12 @@ foreach ($pres as $pre){// 读取每个目录下的文件
     </div>
   </div>
 </section>
+
+<nav class="pagination is-centered">
+  <ul class="pagination-list">
+    <li><a class="pagination-link">More</a></li>
+  </ul>
+</nav>
 
 <footer class="footer">
   <div class="container">
@@ -136,10 +142,10 @@ foreach ($pres as $pre){// 读取每个目录下的文件
 
 <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.4.js"></script>
 <script type="text/javascript" src="../html/js/common.js"></script>
-<script type="text/javascript">
+<script type="text/javascript">var pageNum = 1;
   $(document).ready(function() {
-    $("img").click(function() {
-      $src = $(this).attr("src").replace('preview','view');
+    $(".gal").on('click', 'img', function() {
+      $src = $(this).attr("src").replace('192','512');
       $(".modal").addClass("is-active");
       $(".modal img").attr("src", $src);
     });
@@ -147,7 +153,27 @@ foreach ($pres as $pre){// 读取每个目录下的文件
     $(".modal-close").click(function() {
       $(".modal").removeClass("is-active");
     });
+    $(".pagination a").click(function() {
+      pageNum += 1;
+      $.post("../storageService.php",{
+        page:pageNum
+      },function(result){
+        $(".gal").append(getOst(result));
+      },"json");
+    });
   });
+
+function getOst(data){
+	if (data == null || typeof(data.list) == "undefined" || typeof(data.list.length) == "undefined") {
+		alert('没有更多了');
+		return "";
+	}
+	var html = '';
+	for(var i=0;i<data.list.length;i++){
+		html += '--'+data.list[i].substring(9)+'<figure class="image is-4by3"><a href="javascript:void(0)"><img src="../storageHelp.php?uri='+data.list[i]+'&preview=192" alt="Image" lazyload></a></figure>';
+	}
+	return html;
+}
 </script>
 </body>
 </html>
