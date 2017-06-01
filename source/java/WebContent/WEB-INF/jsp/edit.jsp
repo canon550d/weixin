@@ -17,7 +17,17 @@
 <!-- <script type="text/plain" id="myEditor" style="width:780px;height:240px;"></script> -->
 <div>±Í«©£∫<input type="text" name="tags" value='${article.tags}' /></div>
 <input type="submit" value="Ã·Ωª"/>
-</form></div></div></div></section>
+</form></div>
+<div class="column is-2 column-gallery">
+</div>
+<div class="column is-1">
+<aside class="menu">
+  <ul class="menu-list"><c:forEach items="${galleries}" var="g" varStatus="status">
+    <li><a data-gid="${g.id}" >${g.name}</a></li>
+  </c:forEach></ul>
+</aside>
+</div>
+</div></div></section>
 
   <script type="text/javascript">
   $(document).ready(function() {
