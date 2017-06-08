@@ -94,9 +94,9 @@ foreach ($pres as $pre){// 读取每个目录下的文件
 		}
 		if($show && $num <=5){
 			$num += 1;
-			echo '--', basename($img['name']), '<br/>';
+			echo '--<a href="../storageHelp.php?uri='.urlencode($img['name']).'">下载</a>', basename($img['name']), '<br/>';
 ?>
-
+<?php /*echo $storage->getTempUrl($bucket, $img['name'], 'GET', '600');*/ ?>
               <figure class="image is-4by3">
                 <a href="javascript:void(0)"><!-- ../storageHelp.php?uri=<?php echo urlencode($img['name']);?> -->
                   <img src="../storageHelp.php?uri=<?php echo urlencode($img['name']);?>&preview=192" alt="Image" lazyload></a>
@@ -170,7 +170,9 @@ function getOst(data){
 	}
 	var html = '';
 	for(var i=0;i<data.list.length;i++){
-		html += '--'+data.list[i].substring(9)+'<figure class="image is-4by3"><a href="javascript:void(0)"><img src="../storageHelp.php?uri='+data.list[i]+'&preview=192" alt="Image" lazyload></a></figure>';
+		html += '--<a href="../storageHelp.php?uri='+data.list[i]+'">下载</a>'
+			+data.list[i].substring(9)
+			+'<figure class="image is-4by3"><a href="javascript:void(0)"><img src="../storageHelp.php?uri='+data.list[i]+'&preview=192" alt="Image" lazyload></a></figure>';
 	}
 	return html;
 }

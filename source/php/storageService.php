@@ -1,7 +1,15 @@
 <?php
 use sinacloud\sae\Storage as Storage;
 
-$config = parse_ini_file ('daochen.ini', true);
+$name = $_GET['name'];
+if(isset($name))
+	$name .= '.ini';
+else
+	$name = 'empty.ini';
+if(!file_exists($name))
+	$name = 'empty.ini';
+
+$config = parse_ini_file ($name, true);
 if(isset($config)){
 	$prefixes = $config['gallery']['prefix'];
 	$excludes = $config['gallery']['exclude'];
@@ -33,7 +41,7 @@ $num = 0;
 
 foreach ($pres as $pre){// 读取每个目录下的文件
 	$imgs = $storage->getBucket($bucket, $pre);
-	if($num>$min && $num<=$max){
+	if($num>=$min && $num<$max){
 		//echo $pre, '(', count($imgs),')<br/>';
 		$data['info'][$num%5] = $pre.'('. count($imgs) .')';
 	}
@@ -47,7 +55,7 @@ foreach ($pres as $pre){// 读取每个目录下的文件
 			}
 		}
 		if($show){
-			if($num>$min && $num<=$max){
+			if($num>=$min && $num<$max){
 				$data['list'][] = $img['name'];
 			}
 			$num += 1;
