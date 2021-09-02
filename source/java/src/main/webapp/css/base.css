@@ -27,9 +27,15 @@
     /* border-right: 1px solid #807c7c; */
     box-sizing: border-box;
 }
+.main aside .menu-wrap{
+    height:100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
 .main aside .menu {
     width: 100%;
     border-right:0;
+    margin-bottom:20px;
 }
 
 .main .main-header {
@@ -84,4 +90,11 @@
     white-space:nowrap;
     overflow: hidden;
     text-overflow:ellipsis;
+}
+.el-scrollbar {
+    height: 100%;
+}
+.el-scrollbar__wrap {
+    overflow: scroll;overflow-x: hidden;
+    height: 100%;
 }
