@@ -14,7 +14,7 @@
   <div id="app">
     <el-container class="main">
       <el-aside :width="tabWidth+'px'">
-        <div>
+        <el-scrollbar><!-- <div class="menu-wrap">  -->
           <div class="isClossTab">图片管理</div>
 
           <el-menu router :class="'menu'" 
@@ -41,7 +41,7 @@
             </el-menu-item>  -->
           </el-menu>
 
-        </div>
+        </el-scrollbar><!-- </div> -->
       </el-aside>
       <el-container>
         <el-header class="main-header">
