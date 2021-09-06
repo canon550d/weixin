@@ -27,3 +27,10 @@
   </tr>
 </c:forEach>
 </table>
+
+<div class="page">
+  <a href="?page=1">第一页</a>
+  <a href="?page=<c:out value='${page.previous}'/>">上一页</a>
+  <a href="?page=<c:out value='${page.next}'/>">下一页</a>
+  <a href="?page=<c:out value='${page.last}'/>">最后一页</a>
+</div>

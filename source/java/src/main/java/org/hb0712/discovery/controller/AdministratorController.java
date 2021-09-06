@@ -13,6 +13,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.hb0712.discovery.dao.impl.Page;
+import org.hb0712.discovery.pojo.Camera;
 import org.hb0712.discovery.pojo.Image;
 import org.hb0712.discovery.service.ImageService;
 import org.jboss.logging.Logger;
@@ -52,11 +54,16 @@ public class AdministratorController {
 	
 	@RequestMapping("/admin/image/index")
 	public String imageIndex(Map<String,Object> model,
-			String orderby,
+			String orderby, Page page,
 			HttpServletRequest request) {
 		logger.info(orderby);
 		if(orderby==null) {
-			List<Image> list = imageService.list();
+			if(page==null) {
+				page = new Page();
+			}
+			model.put("page", page);
+			
+			List<Image> list = imageService.list(page);
 			model.put("list", list);
 		} else {//if("time".equals(orderby)) 
 			List<Image> list = imageService.listOrderBy(orderby);
@@ -91,6 +98,27 @@ public class AdministratorController {
 			return "/image/admin_success";
 		}
 		return "/image/admin_edit";
+	}
+	
+	@RequestMapping("/admin/image/rescan")
+	public String imageReScan(Map<String,Object> model,
+			String path,
+			HttpServletRequest request) {
+		if ("GET".equals(request.getMethod())) {
+			
+		} else if ("POST".equals(request.getMethod())) {
+			Collection<File> files = imageService.scan(path);
+			
+			for(File file:files) {
+				Image image = imageService.getImageByName(file.getName());
+				if(image!=null) {
+					image.setPath(file.getPath());
+					imageService.save(image);
+				}
+			}
+		}
+		
+		return "/image/admin_scan";
 	}
 	
 	@RequestMapping("/admin/image/scan")
@@ -137,13 +165,54 @@ public class AdministratorController {
 				image.setTime(getTime(_c));
 				image.setPath(_b);
 				image.setDescription(_d);
-				System.out.println(image);
+//				System.out.println(image);
+				Camera camera = imageService.getCamera(maker[i], model[i]);
+				if(camera!=null) {
+					image.setCamera(camera);
+				}
+				imageService.update(image);
 			}
 			System.out.println(name[i]);
 			i++;
 		}
 		
-		return "/image/admin_scan";
+		return "redirect:/admin/image/scan.aspx";
+	}
+	
+	@RequestMapping("/admin/camera/index")
+	public String cameraIndex(Map<String,Object> model,
+			String orderby,
+			HttpServletRequest request) {
+		List<Camera> list = imageService.cameralist();
+		model.put("list", list);
+		return "/image/camera_index";
+	}
+	
+	@RequestMapping("/admin/camera/create")
+	public String cameraCreate(Map<String,Object> model,
+			Camera camera,
+			HttpServletRequest request) {
+		if("POST".equals(request.getMethod())) {
+			logger.info(camera.getMaker() );
+			imageService.update(camera);
+		}
+		return "/image/camera_create";
+	}
+	
+	@RequestMapping("/admin/camera/edit")
+	public String cameraEdit(Map<String,Object> model,
+			Camera camera, String id,
+			HttpServletRequest request) {
+		if ("GET".equals(request.getMethod())) {
+			Camera edit_camera = imageService.getCamera(id);
+			model.put("camera", edit_camera);
+			logger.info(edit_camera.toString());
+		} else if ("POST".equals(request.getMethod())) {
+			logger.info("description:"+camera.toString());
+			imageService.save(camera);
+			return "/image/admin_success";
+		}
+		return "/image/camera_edit";
 	}
 	
 	private Date getTime(String date) {
@@ -182,6 +251,12 @@ public class AdministratorController {
 				}
 				if("ExifSubIFDDirectory".equalsIgnoreCase( directory.getClass().getSimpleName() )){
 					String time = directory.getString(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
+					if(time!=null && time.length()>0) {
+						if (time.indexOf(" ")>-1) {
+							int blankIndex = time.indexOf(" ");
+							time = time.substring(0, blankIndex).replaceAll(":", "-") + time.substring(blankIndex);
+						}
+					}
 					lines.put("time", time);
 				}
 			}

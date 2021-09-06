@@ -2,14 +2,12 @@ package org.hb0712.discovery.pojo;
 
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -17,10 +15,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Table(name = "image")
 public class Image {
 	private Integer id;
-	private String name;
-	private Date time;
+	private String name;//文件名
+	private Date time;//拍摄时间
 	private String description;
-	private String path;
+	private String path;//路径
+	private Integer rate;//评分
+	private Camera camera;//相机
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +36,7 @@ public class Image {
 	public void setName(String name) {
 		this.name = name;
 	}
-	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	public Date getTime() {
 		return time;
 	}
@@ -61,7 +61,19 @@ public class Image {
 	public void setPath(String path) {
 		this.path = path;
 	}
-	
+	public Integer getRate() {
+		return rate;
+	}
+	public void setRate(Integer rate) {
+		this.rate = rate;
+	}
+	@ManyToOne
+	public Camera getCamera() {
+		return camera;
+	}
+	public void setCamera(Camera camera) {
+		this.camera = camera;
+	}
 	public String toString() {
 		return this.getId() + "|" + this.getName() + "|" + this.getPath() + "|" + this.getDescription() + "|" + this.getTime();
 	}

@@ -4,12 +4,16 @@ import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.io.FileUtils;
-import org.hb0712.discovery.controller.AdministratorController;
 import org.hb0712.discovery.dao.ImageDao;
+import org.hb0712.discovery.dao.impl.Page;
+import org.hb0712.discovery.pojo.Camera;
 import org.hb0712.discovery.pojo.Image;
 import org.hb0712.discovery.service.ImageService;
 import org.jboss.logging.Logger;
@@ -23,15 +27,41 @@ public class ImageServiceImpl implements ImageService{
 	@Autowired
 	public ImageDao imageDao;
 	
-	public List<Image> list(){
-		return imageDao.list();
+	public List<Image> list(Page page){
+		return imageDao.list(page);
 	}
 	public List<Image> listOrderBy(String orderby){
 		return imageDao.listOrderBy(orderby);
 	}
 	
-	public List<Date> listTime() {
-		return imageDao.listTime();
+	public Set<String> listTime() {
+		List<Date> list = imageDao.listTime();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Set<String> dates = new TreeSet<String>(new Comparator<String>() {
+			public int compare(String o1, String o2) {
+				int num=o2.compareTo(o1);
+				return num;
+			}
+		});
+		for (Date d:list) {
+			String sd = sdf.format(d);
+			dates.add(sd);
+		}
+		return dates;
+	}
+	
+	public Set<String> listYear(Set<String> dates) {
+		Set<String> years = new TreeSet<String>(new Comparator<String>() {
+			public int compare(String o1, String o2) {
+				int num=o2.compareTo(o1);
+				return num;
+			}
+		});
+		for (String date:dates) {
+			String y = date.substring(0, 4);
+			years.add(y);
+		}
+		return years;
 	}
 	
 	public List<Image> list(String date) {
@@ -59,6 +89,9 @@ public class ImageServiceImpl implements ImageService{
 	public Image getImage(int id) {
 		return imageDao.getImage(id);
 	}
+	public Image getImageByName(String name) {
+		return imageDao.getImageByName(name);
+	}
 	public Image getImage(String name, String path) {
 		return imageDao.getImage(name, path);
 	}
@@ -74,5 +107,21 @@ public class ImageServiceImpl implements ImageService{
 	
 	public boolean save(Image image) {
 		return imageDao.save(image);
+	}
+	
+	public List<Camera> cameralist(){
+		return imageDao.cameralist();
+	}
+	public Camera getCamera(String id) {
+		return imageDao.getCamera(id);
+	}
+	public Camera getCamera(String maker, String model) {
+		return imageDao.getCamera(maker, model);
+	}
+	public boolean update(Camera camera) {
+		return imageDao.update(camera);
+	}
+	public boolean save(Camera camera) {
+		return imageDao.save(camera);
 	}
 }

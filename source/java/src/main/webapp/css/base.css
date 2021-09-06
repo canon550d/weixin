@@ -91,6 +91,9 @@
     overflow: hidden;
     text-overflow:ellipsis;
 }
+.el-rate {
+   margin-left: 32px;
+}
 .el-scrollbar {
     height: 100%;
 }

@@ -5,7 +5,7 @@
 
 路径：
 <form method="post">
-<input type="text" name="path" value="" />
+<input type="text" name="path" value="" style="width:550px"/>
 <input type="submit" value="扫描"/>
 </form>
 

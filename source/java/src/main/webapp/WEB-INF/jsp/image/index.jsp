@@ -19,7 +19,7 @@
 
           <el-menu router :class="'menu'" 
                  :default-active="$route.path"
-                 :default-openeds=["1"]
+                 <%--:default-openeds=["1"]--%>
                  class="el-menu-vertical-demo"
                  @select="handleSelect"
                  @open="handleOpen"
@@ -30,10 +30,20 @@
                  active-text-color="#ffd04b">
             <el-submenu index="1">
               <span slot="title">影集</span>
+              <%--
               <el-menu-item :index="'/albums/'+item" v-for="item in timeflow" :key="'/albums/'+item">
                 <i class="el-icon-folder"></i>
                 <span slot="title">{{item}}</span>
               </el-menu-item>
+              --%>
+              <div v-for="year in timeflow2">
+                {{year}}
+                <el-menu-item :index="'/albums/'+item" v-for="item in timeflow" :key="'/albums/'+item" v-if="item.indexOf(year)>-1">
+                  <i class="el-icon-folder"></i>
+                  <span slot="title">{{item}}</span>
+                </el-menu-item>
+              </div>
+
             </el-submenu>
             <!-- <el-menu-item :index="item.path" v-for="item in menuInfo" :key="item.path">
               <i :class="item.icon"></i>
@@ -58,7 +68,7 @@
         <el-main>
           <el-breadcrumb separator="/" class="crumbs">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>查询</el-breadcrumb-item>
+            <el-breadcrumb-item>照片</el-breadcrumb-item>
           </el-breadcrumb>
           <div>
           
@@ -80,6 +90,23 @@
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script type="x-template" id="albums">
+<div class="demo-image__preview">
+  <div class="el-my-card" v-for="(img, index) in myimages" :key="index">
+    <el-image :src="img.src" :preview-src-list="srclist"
+        style="width: 160px; height: 160px;" fit="cover" class="wocaoimg" lazy></el-image>
+    <div class="el-my-message">
+      <span v-if="index<9" style="width:30px;display:inline-block;">00{{index+1}}</span>
+      <span v-else-if="index<100 && index>=9" style="width:30px;display:inline-block;">0{{index+1}}</span>
+      <span v-else style="width:30px;display:inline-block;">{{index+1}}</span>
+      <span style="font-size:12px;display:inline-block;">{{img.name}}</span>
+      <div style="font-size:12px;margin-left:34px;">{{img.time}}</div>
+      <el-rate v-model="img.rate"></el-rate>
+      {{img.description}}
+    </div>
+  </div>
+</div>
+</script>
 <script>
   
   const Home = {
@@ -151,7 +178,7 @@
           }
         },
         
-        template: '<div class="demo-image__preview"><div class="el-my-card" v-for="(img, index) in myimages" :key="index"><el-image :src="img.src" :preview-src-list="srclist" style="width: 160px; height: 160px;" fit="cover" class="wocaoimg" lazy></el-image><div class="el-my-message">{{index+1}} {{img.description}}</div></div></div>'
+        template: "#albums"
   }
   const routes = [
      { path:'/', component: Home},
@@ -172,6 +199,7 @@
           isCollapse: false,
           //时间轴
           timeflow:[],
+          timeflow2:[],
           photos:[],//时间线中某一天的图片
           date:"",
           //影集
@@ -199,7 +227,7 @@
           axios.get("data/timeflow.aspx")
             .then(response => {
               this.timeflow = response.data.timeflow;
-
+              this.timeflow2 = response.data.timeflow2;
               this.date = this.$route.path.replace("/albums/","");
 
               console.info("初始化页面");
@@ -220,10 +248,10 @@
       watch: {
         $route(to, from) {
             for (i in this.albums){
-                if((this.albums[i].path) == this.$route.path){
-                  this.list = this.albums[i].images;
-                }
+              if((this.albums[i].path) == this.$route.path){
+                this.list = this.albums[i].images;
               }
+            }
         }
       },
       router,
