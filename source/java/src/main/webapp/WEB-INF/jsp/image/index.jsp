@@ -15,7 +15,7 @@
     <el-container class="main">
       <el-aside :width="tabWidth+'px'">
         <el-scrollbar><!-- <div class="menu-wrap">  -->
-          <div class="isClossTab">图片管理</div>
+          <div class="isClossTab">相片管理</div>
 
           <el-menu router :class="'menu'" 
                  :default-active="$route.path"
@@ -29,7 +29,7 @@
                  text-color="#fff"
                  active-text-color="#ffd04b">
             <el-submenu index="1">
-              <span slot="title">影集</span>
+              <span slot="title">相片</span>
               <%--
               <el-menu-item :index="'/albums/'+item" v-for="item in timeflow" :key="'/albums/'+item">
                 <i class="el-icon-folder"></i>
@@ -38,12 +38,19 @@
               --%>
               <div v-for="year in timeflow2">
                 {{year}}
-                <el-menu-item :index="'/albums/'+item" v-for="item in timeflow" :key="'/albums/'+item" v-if="item.indexOf(year)>-1">
+                <el-menu-item :index="'/images/'+item" v-for="item in timeflow" :key="'/images/'+item" v-if="item.indexOf(year)>-1">
                   <i class="el-icon-folder"></i>
                   <span slot="title">{{item}}</span>
                 </el-menu-item>
               </div>
 
+            </el-submenu>
+            <el-submenu index="2">
+              <span slot="title">相册</span>
+              <el-menu-item :index="'/albums/'+item.id" v-for="item in albums" :key="'/albums/'+item.id">
+                <i class="el-icon-folder"></i>
+                <span slot="title">{{item.name}}</span>
+              </el-menu-item>
             </el-submenu>
             <!-- <el-menu-item :index="item.path" v-for="item in menuInfo" :key="item.path">
               <i :class="item.icon"></i>
@@ -72,7 +79,7 @@
           </el-breadcrumb>
           <div>
           
-            <router-view :part-info="list" :date="date"></router-view>
+            <router-view :part-info="list" :params="params"></router-view>
             
           </div>
         </el-main>
@@ -123,11 +130,12 @@
         data: function() {
           return {
             myimages: [],//图片列表，小图、预览图
+            id:1
           }
         },
         methods: {
           getImages() {
-            axios.get("list.aspx?date="+this.date)
+            axios.get("list.aspx?album="+this.id)
               .then(response => {
                 this.myimages = response.data.images;
               }).catch(function (error) {
@@ -163,7 +171,7 @@
                 console.log(error);
             });*/
         },
-        props:["partInfo","date"],
+        props:["partInfo","params"],
         
         watch:{
           $route(to, from) {
@@ -173,16 +181,63 @@
               this.myimages = this.partInfo;
               
           },
-          date(){
+          params(val){
+              console.info("params:"+val);
+              this.id = val.replace("/albums/","");
               this.getImages();
           }
         },
         
         template: "#albums"
   }
+  const Images = {
+        data: function() {return {
+          myimages: [],//图片列表，小图、预览图
+          date:""
+        }},
+        methods: {
+          getImages() {
+            axios.get("list.aspx?date="+this.date)
+              .then(response => {
+                   this.myimages = response.data.images;
+              }).catch(function (error) {
+                   console.log(error);
+              });
+          },
+        },
+        computed: {
+          srclist: function(){
+            var srcs = [];//大图
+            for (j in this.myimages){
+              srcs[j] = this.myimages[j].src;
+            }
+            return srcs;
+          }
+        },
+        mounted () {
+        
+        },
+        watch:{
+          $route(to, from) {
+              //console.info(this.$route.path +"|"+this.partInfo.length);
+          },
+          partInfo(){
+              this.myimages = this.partInfo;
+              console.info(this.partInfo);
+          },
+          params(val){
+              console.info("params:"+val);
+              this.date = val.replace("/images/","");
+              this.getImages();
+          }
+        },
+        props:["partInfo","params"],
+        template: "#albums"
+  }
   const routes = [
      { path:'/', component: Home},
-     { path:'/albums/:id', component:Albums, props:true}
+     { path:'/albums/:id', component:Albums, props:true},
+     { path:'/images/:date', component:Images, props:true}
   ]
   const router = new VueRouter({
     routes
@@ -200,8 +255,10 @@
           //时间轴
           timeflow:[],
           timeflow2:[],
+          album:[],
           photos:[],//时间线中某一天的图片
-          date:"",
+          params:"",
+          date:"",//准备删除
           //影集
           albums:[],
           //分页数据
@@ -219,7 +276,8 @@
         },
         handleSelect(key, keyPath) {
           //console.info(key, keyPath);
-          this.date = key.replace("/albums/","");
+          //this.date = key.replace("/images/","");
+          this.params = key;
         }
 
       },
@@ -228,7 +286,9 @@
             .then(response => {
               this.timeflow = response.data.timeflow;
               this.timeflow2 = response.data.timeflow2;
-              this.date = this.$route.path.replace("/albums/","");
+              this.albums = response.data.albums;
+              //this.date = this.$route.path.replace("/images/","");
+              this.params = this.$route.path;
 
               console.info("初始化页面");
             })
@@ -247,9 +307,11 @@
       },
       watch: {
         $route(to, from) {
+            console.info("初始化");
             for (i in this.albums){
               if((this.albums[i].path) == this.$route.path){
                 this.list = this.albums[i].images;
+                
               }
             }
         }

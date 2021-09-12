@@ -20,7 +20,7 @@
 			<value>com.mysql.jdbc.Driver</value>
 		</property>
 		<property name="jdbcUrl">
-			<value>jdbc:mysql://192.168.1.129:3306/pwrl?characterEncoding=utf-8</value>
+			<value>jdbc:mysql://192.168.28.34:3306/weather?characterEncoding=utf-8</value>
 		</property>
 		<property name="user">
 			<value>root</value>
@@ -55,6 +55,8 @@
 		<property name="annotatedClasses">
 			<list>
 				<value>org.hb0712.discovery.pojo.Image</value>
+				<value>org.hb0712.discovery.pojo.Camera</value>
+				<value>org.hb0712.discovery.pojo.Album</value>
 			</list>
 		</property>
 	</bean>

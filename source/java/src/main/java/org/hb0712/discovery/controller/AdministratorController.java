@@ -14,8 +14,11 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.hb0712.discovery.dao.impl.Page;
+import org.hb0712.discovery.pojo.Album;
 import org.hb0712.discovery.pojo.Camera;
 import org.hb0712.discovery.pojo.Image;
+import org.hb0712.discovery.service.AlbumService;
+import org.hb0712.discovery.service.CameraService;
 import org.hb0712.discovery.service.ImageService;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +33,6 @@ import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
-import com.drew.metadata.Tag;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 
@@ -40,6 +42,10 @@ public class AdministratorController {
 	
 	@Autowired
 	private ImageService imageService;
+	@Autowired
+	private CameraService cameraService;
+	@Autowired
+	private AlbumService albumService;
 
 	@ResponseBody
 	@RequestMapping("/admin/image/preView")
@@ -70,7 +76,7 @@ public class AdministratorController {
 			model.put("list", list);
 		}
 		
-		return "/image/admin_index";
+		return "/admin/image/index";
 	}
 	
 	@RequestMapping("/admin/image/create")
@@ -81,7 +87,7 @@ public class AdministratorController {
 			logger.info(image.getName() + " path.length:"+image.getPath().length());
 			imageService.update(image);
 		}
-		return "/image/admin_create";
+		return "/admin/image/create";
 	}
 	
 	@RequestMapping("/admin/image/edit")
@@ -97,7 +103,7 @@ public class AdministratorController {
 			imageService.save(image);
 			return "/image/admin_success";
 		}
-		return "/image/admin_edit";
+		return "/admin/image/edit";
 	}
 	
 	@RequestMapping("/admin/image/rescan")
@@ -118,7 +124,7 @@ public class AdministratorController {
 			}
 		}
 		
-		return "/image/admin_scan";
+		return "/admin/image/scan";
 	}
 	
 	@RequestMapping("/admin/image/scan")
@@ -143,7 +149,7 @@ public class AdministratorController {
 			}
 			model.put("list", list);
 		}
-		return "/image/admin_scan";
+		return "/admin/image/scan";
 	}
 	
 	@RequestMapping("/admin/image/savescan")
@@ -166,7 +172,7 @@ public class AdministratorController {
 				image.setPath(_b);
 				image.setDescription(_d);
 //				System.out.println(image);
-				Camera camera = imageService.getCamera(maker[i], model[i]);
+				Camera camera = cameraService.getCamera(maker[i], model[i]);
 				if(camera!=null) {
 					image.setCamera(camera);
 				}
@@ -183,9 +189,9 @@ public class AdministratorController {
 	public String cameraIndex(Map<String,Object> model,
 			String orderby,
 			HttpServletRequest request) {
-		List<Camera> list = imageService.cameralist();
+		List<Camera> list = cameraService.cameralist();
 		model.put("list", list);
-		return "/image/camera_index";
+		return "/admin/camera/index";
 	}
 	
 	@RequestMapping("/admin/camera/create")
@@ -194,9 +200,9 @@ public class AdministratorController {
 			HttpServletRequest request) {
 		if("POST".equals(request.getMethod())) {
 			logger.info(camera.getMaker() );
-			imageService.update(camera);
+			cameraService.update(camera);
 		}
-		return "/image/camera_create";
+		return "/admin/camera/create";
 	}
 	
 	@RequestMapping("/admin/camera/edit")
@@ -204,15 +210,56 @@ public class AdministratorController {
 			Camera camera, String id,
 			HttpServletRequest request) {
 		if ("GET".equals(request.getMethod())) {
-			Camera edit_camera = imageService.getCamera(id);
+			Camera edit_camera = cameraService.getCamera(id);
 			model.put("camera", edit_camera);
 			logger.info(edit_camera.toString());
 		} else if ("POST".equals(request.getMethod())) {
 			logger.info("description:"+camera.toString());
-			imageService.save(camera);
+			cameraService.save(camera);
 			return "/image/admin_success";
 		}
-		return "/image/camera_edit";
+		return "/admin/camera/edit";
+	}
+	
+	@RequestMapping("/admin/album/index")
+	public String albumIndex(Map<String,Object> model,
+			Page page,
+			HttpServletRequest request) {
+		if(page==null) {
+			page = new Page();
+		}
+		List<Album> list = albumService.list(page);
+		model.put("list", list);
+		model.put("page", page);
+		return "/admin/album/index";
+	}
+	
+	@RequestMapping("/admin/album/create")
+	public String albumCreate(Map<String,Object> model,
+			Album album,
+			HttpServletRequest request) {
+		if("POST".equals(request.getMethod())) {
+			albumService.update(album);
+		}
+		return "/admin/album/create";
+	}
+	
+	@RequestMapping("/admin/album/edit")
+	public String albumEdit(Map<String,Object> model,
+			Album album, String id, String[] images_id,
+			HttpServletRequest request) {
+		if ("GET".equals(request.getMethod())) {
+			Album edit_album = albumService.getAlbum(id);
+			model.put("album", edit_album);
+			logger.info("++++"+edit_album.getImages().size());
+		} else if ("POST".equals(request.getMethod())) {
+			logger.info("description:"+images_id.length);
+			List<Image> images = imageService.list(images_id);logger.info(images.get(0).getName());
+			album.setImages(images);
+			albumService.save(album);
+			return "/image/admin_success";
+		}
+		return "/admin/album/edit";
 	}
 	
 	private Date getTime(String date) {

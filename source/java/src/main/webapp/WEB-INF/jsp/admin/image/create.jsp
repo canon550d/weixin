@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ include file="../menu.jsp"%>
 <form method="post">
   <div>名称：<input type="text" name="name" value=""/></div>
   <div>地址：<input type="text" name="path" value="" style="width:500px"/></div>

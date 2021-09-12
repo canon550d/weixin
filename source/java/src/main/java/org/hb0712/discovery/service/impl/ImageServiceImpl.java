@@ -30,6 +30,27 @@ public class ImageServiceImpl implements ImageService{
 	public List<Image> list(Page page){
 		return imageDao.list(page);
 	}
+	
+	public Image getImage(String id) {
+		int int_id = Integer.valueOf(id);
+		return imageDao.getImage(int_id);
+	}
+	
+	public boolean update(Image image) {
+		return imageDao.update(image);
+	}
+	
+	public boolean save(Image image) {
+		return imageDao.save(image);
+	}
+	
+	public List<Image> list(String[] ids){
+		Integer[] int_ids = new Integer[ids.length];
+		for(int i=0;i<ids.length;i++) {
+			int_ids[i] = Integer.valueOf(ids[i]);
+		}
+		return imageDao.list(int_ids);
+	}
 	public List<Image> listOrderBy(String orderby){
 		return imageDao.listOrderBy(orderby);
 	}
@@ -95,33 +116,5 @@ public class ImageServiceImpl implements ImageService{
 	public Image getImage(String name, String path) {
 		return imageDao.getImage(name, path);
 	}
-	
-	public Image getImage(String id) {
-		int int_id = Integer.valueOf(id);
-		return imageDao.getImage(int_id);
-	}
-	
-	public boolean update(Image image) {
-		return imageDao.update(image);
-	}
-	
-	public boolean save(Image image) {
-		return imageDao.save(image);
-	}
-	
-	public List<Camera> cameralist(){
-		return imageDao.cameralist();
-	}
-	public Camera getCamera(String id) {
-		return imageDao.getCamera(id);
-	}
-	public Camera getCamera(String maker, String model) {
-		return imageDao.getCamera(maker, model);
-	}
-	public boolean update(Camera camera) {
-		return imageDao.update(camera);
-	}
-	public boolean save(Camera camera) {
-		return imageDao.save(camera);
-	}
+
 }

@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Page {
 	private int previous;
-	private int page;
+	private int page=1;
 	private int next;
 	private int last;
 	

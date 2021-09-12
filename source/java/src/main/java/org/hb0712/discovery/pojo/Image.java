@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -21,6 +22,7 @@ public class Image {
 	private String path;//路径
 	private Integer rate;//评分
 	private Camera camera;//相机
+	private Album album;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,6 +75,14 @@ public class Image {
 	}
 	public void setCamera(Camera camera) {
 		this.camera = camera;
+	}
+	@ManyToOne
+	@JoinColumn(name = "album_id")
+	public Album getAlbum() {
+		return album;
+	}
+	public void setAlbum(Album album) {
+		this.album = album;
 	}
 	public String toString() {
 		return this.getId() + "|" + this.getName() + "|" + this.getPath() + "|" + this.getDescription() + "|" + this.getTime();
