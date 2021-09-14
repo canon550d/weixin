@@ -1,14 +1,19 @@
 package org.hb0712.discovery.pojo;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -23,6 +28,7 @@ public class Image {
 	private Integer rate;//评分
 	private Camera camera;//相机
 	private Album album;
+	private List<Export> exports;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -76,13 +82,30 @@ public class Image {
 	public void setCamera(Camera camera) {
 		this.camera = camera;
 	}
-	@ManyToOne
-	@JoinColumn(name = "album_id")
-	public Album getAlbum() {
-		return album;
+//	@ManyToOne
+//	@JoinColumn(name = "album_id")
+//	public Album getAlbum() {
+//		return album;
+//	}
+//	public void setAlbum(Album album) {
+//		this.album = album;
+//	}
+	
+	@OneToMany(mappedBy = "image", fetch=FetchType.EAGER)
+	public List<Export> getExports() {
+		return exports;
 	}
-	public void setAlbum(Album album) {
-		this.album = album;
+	public void setExports(List<Export> exports) {
+		this.exports = exports;
+	}
+	@Transient
+	public boolean hasExports() {
+		if(this.exports==null)
+			return false;
+		if(this.exports.size()>0) {
+			return true;
+		}
+		return false;
 	}
 	public String toString() {
 		return this.getId() + "|" + this.getName() + "|" + this.getPath() + "|" + this.getDescription() + "|" + this.getTime();

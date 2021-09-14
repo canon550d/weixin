@@ -6,8 +6,10 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hb0712.discovery.dao.ImageDao;
+import org.hb0712.discovery.pojo.Export;
 import org.hb0712.discovery.pojo.Image;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
@@ -98,5 +100,13 @@ public class ImageDaoImpl extends DefaultDaoImpl<Image> implements ImageDao{
 		super.save(image);
 		return true;
 	}
-
+	public boolean save(Export export) {
+		Session session = getSessionFactory().openSession();
+		Transaction ts = session.beginTransaction();
+		logger.info("my name:" + export);
+		session.save(export);
+		ts.commit();
+		session.close();
+		return true;
+	}
 }

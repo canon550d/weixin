@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.hb0712.discovery.dao.impl.Page;
 import org.hb0712.discovery.pojo.Album;
 import org.hb0712.discovery.pojo.Camera;
+import org.hb0712.discovery.pojo.Export;
 import org.hb0712.discovery.pojo.Image;
 import org.hb0712.discovery.service.AlbumService;
 import org.hb0712.discovery.service.CameraService;
@@ -53,7 +54,13 @@ public class AdministratorController {
 			String id,
 			HttpServletRequest request) throws IOException {
 		Image image = imageService.getImage(Integer.valueOf(id));
-		Resource resource = new FileSystemResource(image.getPath());
+		String imgpath = null;
+		if(image.hasExports()) {
+			imgpath = image.getExports().get(0).getPath();
+		} else {
+			imgpath = image.getPath();
+		}
+		Resource resource = new FileSystemResource(imgpath);
 		byte[] fileData = FileCopyUtils.copyToByteArray(resource.getInputStream());
 		return fileData;
 	}
@@ -92,15 +99,24 @@ public class AdministratorController {
 	
 	@RequestMapping("/admin/image/edit")
 	public String imageEdit(Map<String,Object> model,
-			Image image, String id,
+			Image image, String id, String export_path,
 			HttpServletRequest request) {
 		if ("GET".equals(request.getMethod())) {
 			Image edit_image = imageService.getImage(id);
 			model.put("image", edit_image);
 			logger.info(edit_image.toString());
 		} else if ("POST".equals(request.getMethod())) {
-			logger.info("description:"+image.toString());
-			imageService.save(image);
+			logger.info(id);
+			Image edit_image = imageService.getImage(id);
+			Export e = new Export();
+			e.setPath(export_path);
+			e.setImage(edit_image);
+			imageService.save(e);
+			edit_image.getExports().add(e);
+			edit_image.setName(image.getName());
+			edit_image.setPath(image.getPath());
+			edit_image.setRate(image.getRate());
+			imageService.save(edit_image);
 			return "/image/admin_success";
 		}
 		return "/admin/image/edit";

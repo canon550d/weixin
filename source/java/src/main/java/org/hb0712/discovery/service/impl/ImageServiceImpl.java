@@ -14,6 +14,7 @@ import org.apache.commons.io.FileUtils;
 import org.hb0712.discovery.dao.ImageDao;
 import org.hb0712.discovery.dao.impl.Page;
 import org.hb0712.discovery.pojo.Camera;
+import org.hb0712.discovery.pojo.Export;
 import org.hb0712.discovery.pojo.Image;
 import org.hb0712.discovery.service.ImageService;
 import org.jboss.logging.Logger;
@@ -117,4 +118,7 @@ public class ImageServiceImpl implements ImageService{
 		return imageDao.getImage(name, path);
 	}
 
+	public boolean save(Export export) {
+		return imageDao.save(export);
+	}
 }

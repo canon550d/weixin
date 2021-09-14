@@ -13,6 +13,7 @@
     <td>日期</td>
     <td>描述</td>
     <td>路径</td>
+    <td>输出</td>
     <td>查看</td>
     <td>修改</td>
   </tr>
@@ -23,6 +24,7 @@
     <td><fmt:formatDate value="${v.time}" pattern="yyyy-MM-dd"/></td>
     <td><c:out value="${v.description}" /></td>
     <td><c:out value="${v.path}" /></td>
+    <td><c:forEach items="${v.exports}" var="ev" varStatus="evs"><c:out value="${ev.path}" /><br/></c:forEach></td>
     <td><img src="preView.aspx?id=${v.id}" width="100px" height=""/></td>
     <td><a href="edit.aspx?id=${v.id}" target="_blank">修改</a></td>
   </tr>

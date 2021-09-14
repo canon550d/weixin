@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.hb0712.discovery.dao.impl.Page;
+import org.hb0712.discovery.pojo.Export;
 import org.hb0712.discovery.pojo.Image;
 
 public interface ImageService {
@@ -40,4 +41,6 @@ public interface ImageService {
 	public Set<String> listYear(Set<String> set);
 	//获取某一天的所有照片
 	public List<Image> list(String date);
+	
+	public boolean save(Export export);
 }
