@@ -156,20 +156,10 @@
           }
         },
         mounted () {
-          //this.myimages = this.partInfo;console.info(this.$route.path);
-            /*axios.get("list.aspx")
-            .then(response => {
-              console.info(this.$route.path);
-              for (i in response.data){
-                  if((response.data[i].path) == this.$route.path){
-                    this.myimages = response.data[i].images;
-                  }
-              }
-              console.info("初始化页面");
-            })
-            .catch(function (error) {
-                console.log(error);
-            });*/
+          console.info("this.route:"+this.$route.path);
+          this.id = this.$route.path.replace("/albums/","");
+          this.getImages();
+
         },
         props:["partInfo","params"],
         
@@ -215,7 +205,9 @@
           }
         },
         mounted () {
-        
+          console.info("this.route:"+this.$route.path);
+          this.date = this.$route.path.replace("/images/","");
+          this.getImages();
         },
         watch:{
           $route(to, from) {
@@ -288,9 +280,9 @@
               this.timeflow2 = response.data.timeflow2;
               this.albums = response.data.albums;
               //this.date = this.$route.path.replace("/images/","");
-              this.params = this.$route.path;
+              //this.params = this.$route.path;
 
-              console.info("初始化页面");
+              console.info("菜单栏参数赋值完毕");
             })
             .catch(function (error) {
                 console.log(error);
@@ -307,7 +299,7 @@
       },
       watch: {
         $route(to, from) {
-            console.info("初始化");
+            console.info(this.params);
             for (i in this.albums){
               if((this.albums[i].path) == this.$route.path){
                 this.list = this.albums[i].images;
