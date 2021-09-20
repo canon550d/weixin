@@ -9,6 +9,7 @@
     <td>ID</td>
     <td>品牌</td>
     <td>型号</td>
+    <td>数量</td>
     <td>描述</td>
     <td>修改</td>
   </tr>
@@ -17,9 +18,20 @@
     <td><c:out value="${v.id}" /></td>
     <td><c:out value="${v.maker}" /></td>
     <td><c:out value="${v.model}" /></td>
+    <td><c:forEach items="${data}" var="d" varStatus="ds">
+      <c:if test="${d.id==v.id}"><c:out value="${d.count}" /></c:if>
+      </c:forEach></td>
     <td><c:out value="${v.description}" /></td>
     <td><a href="edit.aspx?id=${v.id}" target="_blank">修改</a>
       <a href="../image/cache.aspx?id=${v.id}" target="_blank">缓存</a></td>
   </tr>
 </c:forEach>
+  <tr>
+    <td>合计</td>
+    <td></td>
+    <td></td>
+    <td><c:out value="${total}" /></td>
+    <td></td>
+    <td></td>
+  </tr>
 </table>

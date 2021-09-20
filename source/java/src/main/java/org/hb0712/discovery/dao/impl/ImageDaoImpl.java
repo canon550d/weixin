@@ -1,7 +1,10 @@
 package org.hb0712.discovery.dao.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -127,5 +130,21 @@ public class ImageDaoImpl extends DefaultDaoImpl<Image> implements ImageDao{
 		ts.commit();
 		session.close();
 		return true;
+	}
+	
+	public List<Map<String, String>> groupbyCamera() {
+		List<Map<String, String>> data = new ArrayList<Map<String, String>>();
+		Session session = sessionFactory.openSession();
+		Query query = session.createSQLQuery("select camera_id, count(*) from image group by camera_id");
+		List<?> list = query.list();
+		for(Object m:list) {
+			Object[] line = (Object[]) m;
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("id", line[0].toString());
+			map.put("count", line[1].toString());
+			data.add(map);
+		}
+		session.close();
+		return data;
 	}
 }

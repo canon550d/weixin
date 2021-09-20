@@ -3,6 +3,7 @@ package org.hb0712.discovery.service;
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.hb0712.discovery.dao.impl.Page;
@@ -32,6 +33,7 @@ public interface ImageService {
 	 * 扫描用到
 	 */
 	public Collection<File> scan(String path);
+	public Collection<File> scan(File directory);
 	public Image getImage(String name, String path);
 	public Image getImageByName(String name);
 
@@ -51,4 +53,6 @@ public interface ImageService {
 	public String[] getCachePath(int listsize);
 	
 	public boolean makeCache(String source, String target);
+	
+	public List<Map<String, String>> groupbyCamera();
 }

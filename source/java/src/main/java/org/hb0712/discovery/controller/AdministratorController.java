@@ -2,7 +2,9 @@ package org.hb0712.discovery.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.FileUtils;
 import org.hb0712.discovery.dao.impl.Page;
 import org.hb0712.discovery.pojo.Album;
 import org.hb0712.discovery.pojo.Camera;
@@ -56,7 +59,7 @@ public class AdministratorController {
 			HttpServletRequest request) throws IOException {
 		Image image = imageService.getImage(Integer.valueOf(id));
 		String imgpath = null;
-		if(image.hasExports()) {
+		if(image.hasExports() && image.getExports().get(0).getPath().length() > 0) {
 			imgpath = image.getExports().get(0).getPath();
 		} else {
 			imgpath = image.getPath();
@@ -98,7 +101,7 @@ public class AdministratorController {
 				
 				if(data!=null) {
 					for (int i=0;i<list.size();i++) {
-//						if(list.get(i).getCache()==null || list.get(i).getCache().length()<1) {
+						if(list.get(i).getCache()==null || list.get(i).getCache().length()<1) {
 							int dindex = (page.getPage() - 1) * page.getPageSize() + i;
 							String folder = camera.getPath() + data[dindex] + "\\";
 							File file = new File(folder);
@@ -112,7 +115,7 @@ public class AdministratorController {
 								imageService.save(list.get(i));
 							}
 							System.out.println("file:"+(dindex+1)+"|path:"+cache);
-//						}
+						}
 					}
 				}
 				
@@ -160,7 +163,7 @@ public class AdministratorController {
 	
 	@RequestMapping("/admin/image/edit")
 	public String imageEdit(Map<String,Object> model,
-			Image image, String id, String export_path,
+			Image image, String id, String export_path, String camera_id,
 			HttpServletRequest request) {
 		if ("GET".equals(request.getMethod())) {
 			Image edit_image = imageService.getImage(id);
@@ -169,11 +172,19 @@ public class AdministratorController {
 		} else if ("POST".equals(request.getMethod())) {
 			logger.info(id);
 			Image edit_image = imageService.getImage(id);
-			Export e = new Export();
-			e.setPath(export_path);
-			e.setImage(edit_image);
-			imageService.save(e);
-			edit_image.getExports().add(e);
+			if(edit_image.getCamera()==null || !edit_image.getCamera().getId().equals(camera_id)) {
+				Camera camera = cameraService.getCamera(camera_id);
+				edit_image.setCamera(camera);
+			}
+			if(export_path==null || export_path.length()<1) {
+				Export e = new Export();
+				e.setPath(export_path);
+				e.setImage(edit_image);
+				imageService.save(e);
+				edit_image.getExports().add(e);
+			} else {
+				edit_image.setExports(null);
+			}
 			edit_image.setName(image.getName());
 			edit_image.setPath(image.getPath());
 			edit_image.setRate(image.getRate());
@@ -204,15 +215,47 @@ public class AdministratorController {
 		return "/admin/image/scan";
 	}
 	
+	public static void main(String[] args) {
+		String path = "D:\\Sya\\Pictures\\WorkSpace\\Camera\\70D";
+		File directory = new File(path);
+		File[] s = directory.listFiles();
+		for(int i=0;i<s.length;i++) {
+			
+			System.out.println(s[i]);
+		}
+//		String[] extensions = new String[] {"jpg", "jpeg", "JPG", "png", "gif", "GIF"};
+//		Collection<File> listFiles = FileUtils.listFiles(directory, extensions, true);
+		System.out.println(123);
+	}
+	
 	@RequestMapping("/admin/image/scan")
 	public String imageScan(Map<String,Object> model,
-			String path,
+			String path, String next,
 			HttpServletRequest request) {
 		
 		if(path==null) {
 			model.put("image", "E:\\Sya\\图片\\Image\\2015-01-13\\IMG_7788.JPG");
 		}else {
-			Collection<File> files = imageService.scan(path);
+			File child_path = null;
+			int n = 0;
+			if(next!=null && next.length()>0) {
+				n = Integer.valueOf(next);
+			}
+			File directory = new File(path);
+			File[] childs = directory.listFiles();
+			for(int i=0;i<childs.length;i++) {
+				if (childs[i].isDirectory() && i == n) {
+					child_path = childs[i];System.out.println(child_path.getPath());
+					next = String.valueOf(i+1);
+					break;
+				}
+			}
+			if(n<childs.length-1) {
+				model.put("next", next);
+				model.put("path", path);
+			}
+			
+			Collection<File> files = imageService.scan(child_path);System.out.println(files.size());
 			model.put("files", files);
 			
 			List<Map<String, String>> list = new ArrayList<Map<String, String>>();
@@ -224,15 +267,15 @@ public class AdministratorController {
 //				long time = file.lastModified();
 //				s.add(new Date(time));
 			}
-			model.put("list", list);
+			model.put("list", list);System.out.println(list.size());
 		}
 		return "/admin/image/scan";
 	}
 	
 	@RequestMapping("/admin/image/savescan")
-	public String imageSaveScan(
+	public String imageSaveScan(String next, String nextPath,
 			String[] index, String[] name, String[] time, String[] maker, String[] model, String[] description, String[] path,
-			HttpServletRequest request) {
+			HttpServletRequest request) throws UnsupportedEncodingException {
 		int i = 0;
 		Image image;
 		String _a , _b , _c, _d = null;
@@ -258,8 +301,11 @@ public class AdministratorController {
 			System.out.println(name[i]);
 			i++;
 		}
-		
-		return "redirect:/admin/image/scan.aspx";
+		if(nextPath!=null && nextPath.length()>0
+				&& next !=null && next.length()>0)
+			return "redirect:/admin/image/scan.aspx?path="+URLEncoder.encode(nextPath, "UTF-8")+"&next="+next;
+		else
+			return "redirect:/admin/image/scan.aspx";
 	}
 	
 	@RequestMapping("/admin/camera/index")
@@ -268,6 +314,13 @@ public class AdministratorController {
 			HttpServletRequest request) {
 		List<Camera> list = cameraService.cameralist();
 		model.put("list", list);
+		List<Map<String, String>> data = imageService.groupbyCamera();
+		model.put("data", data);
+		int i = 0;
+		for(Map<String, String> d:data) {
+			i = i + Integer.valueOf(d.get("count"));
+		}
+		model.put("total", i);
 		return "/admin/camera/index";
 	}
 	

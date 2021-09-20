@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -104,8 +105,16 @@ public class ImageServiceImpl extends FileServiceImpl implements ImageService{
 	}
 	
 	public Collection<File> scan(String path){
-		
 		File directory = new File(path);
+		String[] extensions = new String[] {"jpg", "jpeg", "JPG", "png", "gif", "GIF"};
+		Collection<File> listFiles = FileUtils.listFiles(directory, extensions, true);
+		
+		return listFiles;
+	}
+	
+	public Collection<File> scan(File directory){
+		
+//		File directory = new File(path);
 		String[] extensions = new String[] {"jpg", "jpeg", "JPG", "png", "gif", "GIF"};
 		Collection<File> listFiles = FileUtils.listFiles(directory, extensions, true);
 		
@@ -124,5 +133,9 @@ public class ImageServiceImpl extends FileServiceImpl implements ImageService{
 
 	public boolean save(Export export) {
 		return imageDao.save(export);
+	}
+	
+	public List<Map<String, String>> groupbyCamera() {
+		return imageDao.groupbyCamera();
 	}
 }

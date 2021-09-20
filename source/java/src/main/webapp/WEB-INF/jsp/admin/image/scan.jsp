@@ -13,6 +13,8 @@
 <c:if test="${files!=null}">
 扫描到下面的图片
 <form method="post" action="savescan.aspx">
+<input name="next" value="<c:out value='${next}'/>"/>
+<input name="nextPath" value="<c:out value='${path}'/>"/>
 <table border="1">
 <tr>
     <td><input type="checkbox" :checked="checkedAll" @click="checkAnti"/></td>
@@ -63,7 +65,7 @@ var vue = new Vue({
                 "model":"<c:out value='${meta.model}'/>",
                 "description":"",
                 "path":"<c:out value='${fn:replace(v.path, a, b)}'/>",
-                "checked": true
+                "checked": <c:if test="${meta.time==null}">false</c:if><c:if test="${meta.time!=null}">true</c:if>
             },</c:forEach>]
         }
     },
