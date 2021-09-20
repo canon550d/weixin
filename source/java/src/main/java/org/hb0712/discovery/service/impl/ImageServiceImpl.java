@@ -22,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ImageServiceImpl implements ImageService{
+public class ImageServiceImpl extends FileServiceImpl implements ImageService{
 	private Logger logger = Logger.getLogger(ImageServiceImpl.class);
 	
 	@Autowired
@@ -30,6 +30,10 @@ public class ImageServiceImpl implements ImageService{
 	
 	public List<Image> list(Page page){
 		return imageDao.list(page);
+	}
+	
+	public List<Image> list(Page page, String orderby, Camera camera){
+		return imageDao.list(page, orderby, camera);
 	}
 	
 	public Image getImage(String id) {

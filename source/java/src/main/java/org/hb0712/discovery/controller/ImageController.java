@@ -1,5 +1,7 @@
 package org.hb0712.discovery.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +42,7 @@ public class ImageController {
 	@RequestMapping("/image/list")
 	public String list(Map<String,Object> model,
 			String date, String album,
-			HttpServletRequest request) {
+			HttpServletRequest request) throws UnsupportedEncodingException {
 		
 		List<Image> list = null;
 		if(StringUtils.isNotEmpty(date)) {
@@ -51,6 +53,13 @@ public class ImageController {
 				list = obj_album.getImages();
 			}
 		}
+		for(Image l:list) {
+			if (l.getCache()!=null && l.getCache().length()>0) {
+				String c = URLEncoder.encode(l.getCache(), "UTF-8");
+				l.setCache(c);
+			}
+		}
+		
 		model.put("list", list);
 		
 		return "image/list";

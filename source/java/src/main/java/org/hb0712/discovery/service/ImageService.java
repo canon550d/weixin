@@ -6,12 +6,15 @@ import java.util.List;
 import java.util.Set;
 
 import org.hb0712.discovery.dao.impl.Page;
+import org.hb0712.discovery.pojo.Camera;
 import org.hb0712.discovery.pojo.Export;
 import org.hb0712.discovery.pojo.Image;
 
 public interface ImageService {
 
 	public List<Image> list(Page page);
+	
+	public List<Image> list(Page page, String orderby, Camera camera);
 	
 	public boolean update(Image image);
 	
@@ -43,4 +46,9 @@ public interface ImageService {
 	public List<Image> list(String date);
 	
 	public boolean save(Export export);
+	
+	
+	public String[] getCachePath(int listsize);
+	
+	public boolean makeCache(String source, String target);
 }

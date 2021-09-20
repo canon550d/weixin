@@ -100,7 +100,9 @@
 <script type="x-template" id="albums">
 <div class="demo-image__preview">
   <div class="el-my-card" v-for="(img, index) in myimages" :key="index">
-    <el-image :src="img.src" :preview-src-list="srclist"
+    <el-image :src="img.cache" 
+        :preview-src-list="bigImages"
+        @click="setBigimages(index)"
         style="width: 160px; height: 160px;" fit="cover" class="wocaoimg" lazy></el-image>
     <div class="el-my-message">
       <span v-if="index<9" style="width:30px;display:inline-block;">00{{index+1}}</span>
@@ -112,6 +114,7 @@
       {{img.description}}
     </div>
   </div>
+
 </div>
 </script>
 <script>
@@ -130,6 +133,7 @@
         data: function() {
           return {
             myimages: [],//图片列表，小图、预览图
+            bigImages:[],
             id:1
           }
         },
@@ -138,9 +142,26 @@
             axios.get("list.aspx?album="+this.id)
               .then(response => {
                 this.myimages = response.data.images;
+                this.bigImages = this.srclist2(0);
               }).catch(function (error) {
                 console.log(error);
               });
+          },
+          setBigimages(index){
+            console.info(index);
+            this.bigImages = this.srclist2(index);
+          },
+          srclist2(index) {
+            var srcs = [];//大图
+            for (j in this.myimages){
+              srcs[j] = this.myimages[j].src;
+            }
+            if (index == 0)
+              return srcs;
+            let start = srcs.splice(index);
+            let remain = srcs.splice(0, index);
+            let new_srclist = start.concat(remain);console.info(new_srclist);
+            return new_srclist;
           },
           getData2() {
             console.info("俺来了");
@@ -183,6 +204,7 @@
   const Images = {
         data: function() {return {
           myimages: [],//图片列表，小图、预览图
+          bigImages:[],
           date:""
         }},
         methods: {
@@ -190,10 +212,27 @@
             axios.get("list.aspx?date="+this.date)
               .then(response => {
                    this.myimages = response.data.images;
+                   this.bigImages = this.srclist2(0);
               }).catch(function (error) {
                    console.log(error);
               });
           },
+          setBigimages(index){
+            console.info(index);
+            this.bigImages = this.srclist2(index);
+          },
+          srclist2(index) {
+            var srcs = [];//大图
+            for (j in this.myimages){
+              srcs[j] = this.myimages[j].src;
+            }
+            if (index == 0)
+              return srcs;
+            let start = srcs.splice(index);
+            let remain = srcs.splice(0, index);
+            let new_srclist = start.concat(remain);console.info(new_srclist);
+            return new_srclist;
+          }
         },
         computed: {
           srclist: function(){

@@ -10,6 +10,7 @@ import org.hb0712.discovery.pojo.Image;
 
 public interface ImageDao{
 	public List<Image> list(Page page);
+	public List<Image> list(Page page, String orderby, Camera camera);
 	public List<Image> list(Integer[] ids);
 	public List<Image> listOrderBy(String orderby);
 	public List<Date> listTime();

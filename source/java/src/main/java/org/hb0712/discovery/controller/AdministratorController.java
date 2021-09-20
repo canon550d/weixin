@@ -2,6 +2,7 @@ package org.hb0712.discovery.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -63,6 +64,66 @@ public class AdministratorController {
 		Resource resource = new FileSystemResource(imgpath);
 		byte[] fileData = FileCopyUtils.copyToByteArray(resource.getInputStream());
 		return fileData;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/admin/image/preView2")
+	public byte[] imagePreView2(Map<String,Object> model,
+			String path,
+			HttpServletRequest request) throws IOException {
+		String image_path = URLDecoder.decode(path, "UTF-8");
+		Resource resource = new FileSystemResource(image_path);
+		byte[] fileData = FileCopyUtils.copyToByteArray(resource.getInputStream());
+		return fileData;
+	}
+	
+	@RequestMapping("/admin/image/cache")
+	public String imageCache(Map<String,Object> model,
+			Page page, String id,
+			HttpServletRequest request) {
+		if ("GET".equals(request.getMethod())) {
+			String[] data = null;
+			
+			String orderby = "name";
+			Camera camera = cameraService.getCamera(id);
+			
+			int p = 1;
+			page.setPage(p);
+			do {
+				List<Image> list = imageService.list(page, orderby, camera);
+				
+				if(p==1) {
+					data = imageService.getCachePath(page.getTotal());
+				}
+				
+				if(data!=null) {
+					for (int i=0;i<list.size();i++) {
+//						if(list.get(i).getCache()==null || list.get(i).getCache().length()<1) {
+							int dindex = (page.getPage() - 1) * page.getPageSize() + i;
+							String folder = camera.getPath() + data[dindex] + "\\";
+							File file = new File(folder);
+							if(!file.exists()){
+								file.mkdir();
+							}
+							String cache = folder + list.get(i).getName();
+							boolean result = imageService.makeCache(list.get(i).getPath(), cache);
+							if(result) {
+								list.get(i).setCache(cache);
+								imageService.save(list.get(i));
+							}
+							System.out.println("file:"+(dindex+1)+"|path:"+cache);
+//						}
+					}
+				}
+				
+				p = p+1;
+				page.setPage(p);
+				
+			} while (p-1<page.getLast());
+			
+		}
+		
+		return "/admin/image/cache";
 	}
 	
 	@RequestMapping("/admin/image/index")

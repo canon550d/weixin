@@ -25,6 +25,7 @@ public class Image {
 	private Date time;//拍摄时间
 	private String description;
 	private String path;//路径
+	private String cache;
 	private Integer rate;//评分
 	private Camera camera;//相机
 	private Album album;
@@ -68,6 +69,12 @@ public class Image {
 	}
 	public void setPath(String path) {
 		this.path = path;
+	}
+	public String getCache() {
+		return cache;
+	}
+	public void setCache(String cache) {
+		this.cache = cache;
 	}
 	public Integer getRate() {
 		return rate;

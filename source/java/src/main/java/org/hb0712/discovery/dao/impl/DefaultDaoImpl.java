@@ -17,7 +17,7 @@ public class DefaultDaoImpl<T> {
 	private Logger logger = LogManager.getLogger(DefaultDaoImpl.class);
 	
 	@Autowired
-	private SessionFactory sessionFactory;
+	protected SessionFactory sessionFactory;
 
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;

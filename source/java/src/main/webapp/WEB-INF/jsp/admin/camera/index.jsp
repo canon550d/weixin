@@ -18,7 +18,8 @@
     <td><c:out value="${v.maker}" /></td>
     <td><c:out value="${v.model}" /></td>
     <td><c:out value="${v.description}" /></td>
-    <td><a href="edit.aspx?id=${v.id}" target="_blank">修改</a></td>
+    <td><a href="edit.aspx?id=${v.id}" target="_blank">修改</a>
+      <a href="../image/cache.aspx?id=${v.id}" target="_blank">缓存</a></td>
   </tr>
 </c:forEach>
 </table>

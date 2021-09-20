@@ -13,6 +13,7 @@ public class Camera {
 	private String maker;
 	private String model;
 	private String description;
+	private String path;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,6 +41,10 @@ public class Camera {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	
+	public String getPath() {
+		return path;
+	}
+	public void setPath(String path) {
+		this.path = path;
+	}
 }
