@@ -13,6 +13,8 @@
 <c:if test="${files!=null}">
 扫描到下面的图片
 <form method="post" action="savescan.aspx">
+bucket_id:<input name="bucket_id" value="2"/>
+</br>
 <input name="next" value="<c:out value='${next}'/>"/>
 <input name="nextPath" value="<c:out value='${path}'/>"/>
 <table border="1">

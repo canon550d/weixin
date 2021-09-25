@@ -12,7 +12,11 @@
   <title>图片管理</title>
 </head>
 <body>
-<c:out value='${image.camera.model}'/>
+设备：<c:out value='${image.camera.model}'/>
+<br/>
+缓存：<c:out value='${image.cache}'/>
+<br/>
+bucket_id:<c:out value='${image.bucket_id}'/>
 <form method="post">
   <%-- <input type="text" name="id" value="<c:out value='${image.id}'/>"/> --%>
   <div>名称：<input type="text" name="name" value="<c:out value='${image.name}'/>"/></div>

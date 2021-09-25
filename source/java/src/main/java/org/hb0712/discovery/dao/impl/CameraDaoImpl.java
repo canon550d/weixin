@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 public class CameraDaoImpl extends DefaultDaoImpl<Camera> implements CameraDao{
 	public List<Camera> cameralist() {
 		Session session = sessionFactory.openSession();
-		Query query = session.createQuery("from Camera order by maker");
+		Query query = session.createQuery("from Camera order by type,maker");
 		List<Camera> list = query.list();
 		session.close();
 		return list;

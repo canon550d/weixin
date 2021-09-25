@@ -1,11 +1,15 @@
 package org.hb0712.discovery.pojo;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "export")
@@ -34,5 +38,9 @@ public class Export {
 	}
 	public void setImage(Image image) {
 		this.image = image;
+	}
+	@Transient
+	public String getURLEncoderPath () throws UnsupportedEncodingException {
+		return URLEncoder.encode(getPath(), "UTF-8");
 	}
 }

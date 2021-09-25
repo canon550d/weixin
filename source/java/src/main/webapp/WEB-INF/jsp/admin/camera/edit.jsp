@@ -16,6 +16,7 @@
   <input type="text" name="id" value="<c:out value='${camera.id}'/>"/>
   <div>名称：<input type="text" name="maker" value="<c:out value='${camera.maker}'/>"/></div>
   <div>地址：<input type="text" name="model" value="<c:out value='${camera.model}'/>" style="width:500px"/></div>
+  <div>类型：<input type="text" name="type" value="<c:out value='${camera.type}'/>" style="width:500px"/></div>
   <div>地址：<input type="text" name="path" value="<c:out value='${camera.path}'/>" style="width:500px"/></div>
   <div>描述：<input type="text" name="description" value="<c:out value='${camera.description}'/>" style="width:400px"/></div>
   <input type="submit" value="提交"/>

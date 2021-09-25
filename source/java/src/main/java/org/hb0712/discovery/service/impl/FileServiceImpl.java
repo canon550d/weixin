@@ -2,6 +2,7 @@ package org.hb0712.discovery.service.impl;
 
 import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,6 +28,9 @@ public class FileServiceImpl {
 	
 	public boolean makeCache(String source, String target) {
 		logger.info(source + " to " + target);
+		if(FileUtils.getFile(target).exists()) {
+			return true;
+		}
 		try {
 			Thumbnails.of(source).scale(0.20f).toFile(target);
 			return true;

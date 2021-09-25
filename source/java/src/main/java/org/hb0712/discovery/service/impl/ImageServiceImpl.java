@@ -138,4 +138,8 @@ public class ImageServiceImpl extends FileServiceImpl implements ImageService{
 	public List<Map<String, String>> groupbyCamera() {
 		return imageDao.groupbyCamera();
 	}
+	
+	public List<Map<String, String>> groupbyCamera2() {
+		return imageDao.groupbyCamera2();
+	}
 }

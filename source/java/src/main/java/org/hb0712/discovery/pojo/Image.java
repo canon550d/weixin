@@ -1,5 +1,7 @@
 package org.hb0712.discovery.pojo;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +29,7 @@ public class Image {
 	private String path;//路径
 	private String cache;
 	private Integer rate;//评分
+	private Integer bucket_id;
 	private Camera camera;//相机
 	private Album album;
 	private List<Export> exports;
@@ -82,7 +85,13 @@ public class Image {
 	public void setRate(Integer rate) {
 		this.rate = rate;
 	}
-	@ManyToOne
+	public Integer getBucket_id() {
+		return bucket_id;
+	}
+	public void setBucket_id(Integer bucket_id) {
+		this.bucket_id = bucket_id;
+	}
+	@ManyToOne(fetch = FetchType.LAZY)
 	public Camera getCamera() {
 		return camera;
 	}
@@ -98,7 +107,7 @@ public class Image {
 //		this.album = album;
 //	}
 	
-	@OneToMany(mappedBy = "image", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy = "image", fetch=FetchType.LAZY)
 	public List<Export> getExports() {
 		return exports;
 	}
@@ -106,7 +115,7 @@ public class Image {
 		this.exports = exports;
 	}
 	@Transient
-	public boolean hasExports() {
+	public boolean getGxports() {
 		if(this.exports==null)
 			return false;
 		if(this.exports.size()>0) {
@@ -114,6 +123,35 @@ public class Image {
 		}
 		return false;
 	}
+	@Transient
+	public boolean getExportsIsEmpty() {
+		return !getExportsIsNotEmpty();
+	}
+	@Transient
+	public boolean getExportsIsNotEmpty() {
+		if(this.exports==null)
+			return false;
+		if(this.exports.size()>0) {
+			boolean notEmptyPath = false;
+			for(Export e:exports) {
+				if(e.getPath()!=null && e.getPath().length()>0) {
+					notEmptyPath = true;
+					return notEmptyPath;
+				}
+			}
+		}
+		return false;
+	}
+	@Transient
+	public Export getFirstExport() {
+		return this.getExports().get(0);
+	}
+	
+	@Transient
+	public String getURLEncoderPath () throws UnsupportedEncodingException {
+		return URLEncoder.encode(getPath(), "UTF-8");
+	}
+	
 	public String toString() {
 		return this.getId() + "|" + this.getName() + "|" + this.getPath() + "|" + this.getDescription() + "|" + this.getTime();
 	}

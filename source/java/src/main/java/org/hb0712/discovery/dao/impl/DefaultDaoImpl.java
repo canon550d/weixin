@@ -2,11 +2,12 @@ package org.hb0712.discovery.dao.impl;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hb0712.discovery.pojo.Camera;
 import org.hb0712.discovery.pojo.Image;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -44,11 +45,33 @@ public class DefaultDaoImpl<T> {
 		query.setFirstResult(page.getStartPosition());
 		query.setMaxResults(page.getPageSize());
 		List<T> list = query.list();
-
+		
 		session.close();
 		return list;
 	}
 	
+	public List<T> list2(Session session, Page page){
+		String name = getSimpleName();
+		Query querycount = session.createQuery("select count(*) from "+name);
+		Long total = (Long) querycount.uniqueResult();
+		page.setTotal(total.intValue());
+		
+		Query query = session.createQuery("from "+name);
+		query.setFirstResult(page.getStartPosition());
+		query.setMaxResults(page.getPageSize());
+		List<T> list = query.list();
+		
+		return list;
+	}
+	
+	public List<T> SQLQuery(Session session, String sql, Map<String, Object> map, Class entityType) {
+		Query query = session.createSQLQuery(sql).addEntity(entityType);
+		for(String key:map.keySet()) {
+			query.setParameter(key, map.get(key));
+		}
+		List<T> list = query.list();
+		return list;
+	}
 	
 	public boolean update(T t) {
 		logger.info("my name:" + t);

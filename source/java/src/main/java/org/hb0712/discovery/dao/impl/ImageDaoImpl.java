@@ -1,5 +1,6 @@
 package org.hb0712.discovery.dao.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,6 +13,7 @@ import org.hb0712.discovery.dao.ImageDao;
 import org.hb0712.discovery.pojo.Camera;
 import org.hb0712.discovery.pojo.Export;
 import org.hb0712.discovery.pojo.Image;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -23,7 +25,16 @@ public class ImageDaoImpl extends DefaultDaoImpl<Image> implements ImageDao{
 	private Logger logger = LogManager.getLogger(ImageDaoImpl.class);
 	
 	public List<Image> list(Page page){
-		return super.list(page);
+		Session session = sessionFactory.openSession();
+		List<Image> list = super.list2(session, page);
+		for (Image i:list) {
+			Hibernate.initialize(i.getCamera());
+			for (Export e:i.getExports()) {
+				Hibernate.initialize(e);
+			}
+		}
+		session.close();
+		return list;
 	}
 	
 	public List<Image> list(Page page, String orderby, Camera camera){
@@ -54,12 +65,12 @@ public class ImageDaoImpl extends DefaultDaoImpl<Image> implements ImageDao{
 	
 	public List<Image> list(Date satrt, Date end){
 		Session session = sessionFactory.openSession();
-		Query query = session.createQuery("from Image i where i.time between :start and :end");
-		query.setParameter("start", satrt);//TemporalType.DATE
+		Query query = session.createSQLQuery("select * from image i join camera c on c.id = i.camera_id left join export e on e.image_id = i.id where i.time between :start and :end order by time").addEntity(Image.class);
+		query.setParameter("start", satrt);
 		query.setParameter("end", end);
 		List<Image> list = query.list();
-		logger.info("my name:" + list.get(0).getName());
 		session.close();
+		
 		return list;
 	}
 	
@@ -72,7 +83,21 @@ public class ImageDaoImpl extends DefaultDaoImpl<Image> implements ImageDao{
 	}
 	
 	public Image getImage(int id) {
-		return super.get(id);
+		Session session = sessionFactory.openSession();
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("id", id);
+		
+		String sql = "select * from image i join camera c on c.id = i.camera_id left join export e on e.image_id = i.id where i.id = :id";
+		List<Image> list = super.SQLQuery(session, sql, map, Image.class);
+		for (Image i:list) {
+			Hibernate.initialize(i.getCamera());
+			for (Export e:i.getExports()) {
+				Hibernate.initialize(e);
+			}
+		}
+		session.close();
+		return list.get(0);
+//		return null;
 	}
 	
 	public List<Image> list(Integer[] ids) {
@@ -136,6 +161,22 @@ public class ImageDaoImpl extends DefaultDaoImpl<Image> implements ImageDao{
 		List<Map<String, String>> data = new ArrayList<Map<String, String>>();
 		Session session = sessionFactory.openSession();
 		Query query = session.createSQLQuery("select camera_id, count(*) from image group by camera_id");
+		List<?> list = query.list();
+		for(Object m:list) {
+			Object[] line = (Object[]) m;
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("id", line[0].toString());
+			map.put("count", line[1].toString());
+			data.add(map);
+		}
+		session.close();
+		return data;
+	}
+	
+	public List<Map<String, String>> groupbyCamera2() {
+		List<Map<String, String>> data = new ArrayList<Map<String, String>>();
+		Session session = sessionFactory.openSession();
+		Query query = session.createSQLQuery("select camera_id, count(*) from image where cache is NULL group by camera_id");
 		List<?> list = query.list();
 		for(Object m:list) {
 			Object[] line = (Object[]) m;

@@ -59,7 +59,7 @@ public class AdministratorController {
 			HttpServletRequest request) throws IOException {
 		Image image = imageService.getImage(Integer.valueOf(id));
 		String imgpath = null;
-		if(image.hasExports() && image.getExports().get(0).getPath().length() > 0) {
+		if(image.getExportsIsNotEmpty()) {
 			imgpath = image.getExports().get(0).getPath();
 		} else {
 			imgpath = image.getPath();
@@ -74,7 +74,10 @@ public class AdministratorController {
 	public byte[] imagePreView2(Map<String,Object> model,
 			String path,
 			HttpServletRequest request) throws IOException {
+		path = new String(path.getBytes("ISO8859-1"), "UTF-8");
+		
 		String image_path = URLDecoder.decode(path, "UTF-8");
+		
 		Resource resource = new FileSystemResource(image_path);
 		byte[] fileData = FileCopyUtils.copyToByteArray(resource.getInputStream());
 		return fileData;
@@ -177,17 +180,18 @@ public class AdministratorController {
 				edit_image.setCamera(camera);
 			}
 			if(export_path==null || export_path.length()<1) {
-				Export e = new Export();
-				e.setPath(export_path);
-				e.setImage(edit_image);
-				imageService.save(e);
-				edit_image.getExports().add(e);
+//				Export e = new Export();
+//				e.setPath(export_path);
+//				e.setImage(edit_image);
+//				imageService.save(e);
+//				edit_image.getExports().add(e);
 			} else {
 				edit_image.setExports(null);
 			}
 			edit_image.setName(image.getName());
 			edit_image.setPath(image.getPath());
 			edit_image.setRate(image.getRate());
+			edit_image.setDescription(image.getDescription());
 			imageService.save(edit_image);
 			return "/image/admin_success";
 		}
@@ -273,7 +277,7 @@ public class AdministratorController {
 	}
 	
 	@RequestMapping("/admin/image/savescan")
-	public String imageSaveScan(String next, String nextPath,
+	public String imageSaveScan(String next, String nextPath, String bucket_id,
 			String[] index, String[] name, String[] time, String[] maker, String[] model, String[] description, String[] path,
 			HttpServletRequest request) throws UnsupportedEncodingException {
 		int i = 0;
@@ -291,6 +295,7 @@ public class AdministratorController {
 				image.setTime(getTime(_c));
 				image.setPath(_b);
 				image.setDescription(_d);
+				image.setBucket_id(Integer.valueOf(bucket_id));
 //				System.out.println(image);
 				Camera camera = cameraService.getCamera(maker[i], model[i]);
 				if(camera!=null) {
@@ -316,6 +321,9 @@ public class AdministratorController {
 		model.put("list", list);
 		List<Map<String, String>> data = imageService.groupbyCamera();
 		model.put("data", data);
+		List<Map<String, String>> data2 = imageService.groupbyCamera2();
+		model.put("data2", data2);
+		
 		int i = 0;
 		for(Map<String, String> d:data) {
 			i = i + Integer.valueOf(d.get("count"));

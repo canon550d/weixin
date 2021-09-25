@@ -24,4 +24,5 @@ public interface ImageDao{
 	public boolean save(Export export);
 	
 	public List<Map<String, String>> groupbyCamera();
+	public List<Map<String, String>> groupbyCamera2();
 }

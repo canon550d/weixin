@@ -54,6 +54,8 @@ public class ImageController {
 			}
 		}
 		for(Image l:list) {
+			String p = URLEncoder.encode(l.getPath(), "UTF-8");
+			l.setPath(p);
 			if (l.getCache()!=null && l.getCache().length()>0) {
 				String c = URLEncoder.encode(l.getCache(), "UTF-8");
 				l.setCache(c);

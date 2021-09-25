@@ -25,7 +25,10 @@
     <td><c:out value="${v.description}" /></td>
     <td><c:out value="${v.path}" /></td>
     <td><c:forEach items="${v.exports}" var="ev" varStatus="evs"><c:out value="${ev.path}" /><br/></c:forEach></td>
-    <td><img src="preView.aspx?id=${v.id}" width="100px" height=""/></td>
+    <td>
+      <c:if test='${v.exportsIsEmpty}'><img src="preView2.aspx?path=<c:out value='${v.URLEncoderPath}' />" width="100px" height=""/></c:if>
+      <c:if test='${v.exportsIsNotEmpty}'><img src="preView2.aspx?path=<c:out value='${v.firstExport.URLEncoderPath}' />" width="100px" height=""/></c:if>
+    </td>
     <td><a href="edit.aspx?id=${v.id}" target="_blank">修改</a></td>
   </tr>
 </c:forEach>

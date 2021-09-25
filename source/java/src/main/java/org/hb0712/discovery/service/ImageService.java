@@ -55,4 +55,5 @@ public interface ImageService {
 	public boolean makeCache(String source, String target);
 	
 	public List<Map<String, String>> groupbyCamera();
+	public List<Map<String, String>> groupbyCamera2();
 }
