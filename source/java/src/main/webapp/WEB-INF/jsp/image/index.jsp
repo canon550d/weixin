@@ -79,7 +79,7 @@
           </el-breadcrumb>
           <div>
           
-            <router-view :part-info="list" :params="params"></router-view>
+            <router-view :key="randomKey" :part-info="list" :params="params"></router-view>
             
           </div>
         </el-main>
@@ -278,6 +278,7 @@
       el: '#app',
       data: function() {
         return { 
+          activeDate : "",
           visible: false, 
           tabWidth: 200, 
           username:"图片管理员",
@@ -309,6 +310,7 @@
           //console.info(key, keyPath);
           //this.date = key.replace("/images/","");
           this.params = key;
+          this.randomKey = Math.random();
         }
 
       },
