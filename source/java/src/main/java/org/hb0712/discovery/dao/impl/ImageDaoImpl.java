@@ -1,6 +1,5 @@
 package org.hb0712.discovery.dao.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,7 +17,6 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
-
 
 @Repository
 public class ImageDaoImpl extends DefaultDaoImpl<Image> implements ImageDao{
@@ -65,12 +63,40 @@ public class ImageDaoImpl extends DefaultDaoImpl<Image> implements ImageDao{
 	
 	public List<Image> list(Date satrt, Date end){
 		Session session = sessionFactory.openSession();
-		Query query = session.createSQLQuery("select * from image i join camera c on c.id = i.camera_id left join export e on e.image_id = i.id where i.time between :start and :end order by time").addEntity(Image.class);
+		/*
+		Query query = session.createSQLQuery("select {i.*}, {c.*}, {e.*} from image i join camera c on c.id = i.camera_id left join export e on e.image_id = i.id where i.time between :start and :end order by time")
+				.addEntity("i",Image.class)
+				.addEntity("c",Camera.class)
+				.addEntity("e",Export.class);
 		query.setParameter("start", satrt);
 		query.setParameter("end", end);
-		List<Image> list = query.list();
+		
+		Set<Image> set = new HashSet<Image>();
+		List list = query.getResultList();
+		Iterator<Object> iterator = list.iterator();
+		while(iterator.hasNext()) {
+			Object[] o=(Object[]) iterator.next();
+			Image img = (Image) o[0];
+			if(set.contains(img)) {
+				// do nothing
+			} else {
+				set.add(img);
+			}
+		}
 		session.close();
 		
+		List<Image> result = new ArrayList<Image>(set);
+		return result;
+		*/
+		
+		/*
+		 * 因为Image里的fetch使用了FetchType.LAZY，所以为了避免N+1的问题，需要在hql的join后面增加fetch来查询
+		 * select distinct i 如果没有的话，会产生多条结果
+		 */
+		Query query = session.createQuery("select distinct i from Image i join fetch i.camera c join fetch i.exports e where i.time between :start and :end order by time");
+		query.setParameter("start", satrt);
+		query.setParameter("end", end);
+		List<Image> list = query.getResultList();
 		return list;
 	}
 	
