@@ -278,7 +278,7 @@
       el: '#app',
       data: function() {
         return { 
-          activeDate : "",
+          randomKey : "",
           visible: false, 
           tabWidth: 200, 
           username:"图片管理员",
