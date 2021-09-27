@@ -97,6 +97,7 @@ public class ImageDaoImpl extends DefaultDaoImpl<Image> implements ImageDao{
 		query.setParameter("start", satrt);
 		query.setParameter("end", end);
 		List<Image> list = query.getResultList();
+		session.close();
 		return list;
 	}
 	
