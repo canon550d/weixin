@@ -52,7 +52,7 @@ bucket_id:<input name="bucket_id" value="2"/>
 <c:set var="a" value="\\"/>
 <c:set var="b" value="\\\\"/>
 
-<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="js/vue.js"></script>
 <script>
 var vue = new Vue({
     el: '#app',

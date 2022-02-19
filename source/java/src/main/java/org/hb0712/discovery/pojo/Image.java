@@ -29,6 +29,7 @@ public class Image {
 	private String path;//路径
 	private String cache;
 	private Integer rate;//评分
+	private Integer state;
 	private Integer bucket_id;
 	private Camera camera;//相机
 	private Album album;
@@ -84,6 +85,12 @@ public class Image {
 	}
 	public void setRate(Integer rate) {
 		this.rate = rate;
+	}
+	public Integer getState() {
+		return state;
+	}
+	public void setState(Integer state) {
+		this.state = state;
 	}
 	public Integer getBucket_id() {
 		return bucket_id;

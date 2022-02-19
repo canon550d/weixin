@@ -18,7 +18,7 @@
   </tr>
 <c:forEach items="${list}" var="v" varStatus="vs">
   <tr>
-    <td><c:out value="${v.id}" /></td>
+    <td><c:out value="${vs.index+1}" /></td>
     <td><c:out value="${v.type}" /></td>
     <td><c:out value="${v.maker}" /></td>
     <td><c:out value="${v.model}" /></td>
@@ -31,7 +31,8 @@
     <td><c:out value="${v.path}" /></td>
     <td><c:out value="${v.description}" /></td>
     <td><a href="edit.aspx?id=${v.id}" target="_blank">修改</a>
-      <a href="../image/cache.aspx?id=${v.id}" target="_blank">缓存</a></td>
+      <a href="../image/cache.aspx?id=${v.id}" target="_blank">缓存</a>
+      <a href="../image/move.aspx?id=${v.id}" target="_blank">整理</a></td>
   </tr>
 </c:forEach>
   <tr>

@@ -3,6 +3,7 @@ package org.hb0712.discovery.service.impl;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
@@ -59,6 +60,14 @@ public class ImageServiceImpl extends FileServiceImpl implements ImageService{
 	}
 	public List<Image> listOrderBy(String orderby){
 		return imageDao.listOrderBy(orderby);
+	}
+	
+	public List<Image> listRepeat(String camera_id){
+		return imageDao.listRepeat(camera_id);
+	}
+	
+	public boolean listRepeatRemove(String[] id){
+		return imageDao.listRepeatRemove(id);
 	}
 	
 	public Set<String> listTime() {
@@ -119,6 +128,57 @@ public class ImageServiceImpl extends FileServiceImpl implements ImageService{
 		Collection<File> listFiles = FileUtils.listFiles(directory, extensions, true);
 		
 		return listFiles;
+	}
+	
+	public boolean moveFile(Camera camera, Page page, String orderby) {
+		String[] data = null;
+		
+		int p = 1;
+		do {
+			List<Image> list = imageDao.list(page, orderby, camera);
+			
+			if(p==1) {
+				data = getCachePath(page.getTotal());
+			}
+			
+			if(data!=null) {
+				for (int i=0;i<list.size();i++) {
+					String folder = camera.getPath();
+					if("mobile".equals(camera.getType())) {
+						folder = folder.replace("Cache", "WorkSpace\\Mobile");
+					} else {
+						folder = folder.replace("Cache", "WorkSpace\\Camera");
+					}
+					int j = (page.getPage() - 1) * page.getPageSize() + i;
+					folder = folder + data[j] + "\\";
+					
+					File newFolder = new File(folder);
+					if(!newFolder.exists()){
+						newFolder.mkdir();
+					}
+					
+					Image img = list.get(i);
+					String newPath = folder + img.getName();
+					if(!newPath.equals(img.getPath())) {
+						System.out.println((j+1) + " move file from " + img.getPath() + " to " + newPath);
+						
+						boolean success = new File(img.getPath()).renameTo(new File(newPath));
+						if (success) {
+							System.out.println(" update database " + img.getPath() + " to " + newPath);
+							imageDao.updatePath(newPath, img.getId());
+						}
+					} else {
+						System.out.println((j+1) + " file not move " + img.getId());
+					}
+				}
+				
+			}
+			
+			p = p+1;
+			page.setPage(p);
+		} while (p-1<page.getLast());
+		
+		return false;
 	}
 	
 	public Image getImage(int id) {

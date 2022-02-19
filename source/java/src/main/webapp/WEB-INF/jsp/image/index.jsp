@@ -29,21 +29,19 @@
                  text-color="#fff"
                  active-text-color="#ffd04b">
             <el-submenu index="1">
-              <span slot="title">相片</span>
               <%--
               <el-menu-item :index="'/albums/'+item" v-for="item in timeflow" :key="'/albums/'+item">
                 <i class="el-icon-folder"></i>
                 <span slot="title">{{item}}</span>
               </el-menu-item>
               --%>
-              <div v-for="year in timeflow2">
-                {{year}}
-                <el-menu-item :index="'/images/'+item" v-for="item in timeflow" :key="'/images/'+item" v-if="item.indexOf(year)>-1">
-                  <i class="el-icon-folder"></i>
-                  <span slot="title">{{item}}</span>
-                </el-menu-item>
-              </div>
-
+              <template slot="title">
+                <span>相片</span>
+              </template>
+              <el-submenu :index="year" :key="year" v-for="year in timeflow2">
+                <template slot="title">{{year}}</template>
+                <el-menu-item :index="'/images/'+item" v-for="item in timeflow" :key="'/images/'+item" v-if="item.indexOf(year)>-1">{{item}}</el-menu-item>
+              </el-submenu>
             </el-submenu>
             <el-submenu index="2">
               <span slot="title">相册</span>
@@ -52,6 +50,7 @@
                 <span slot="title">{{item.name}}</span>
               </el-menu-item>
             </el-submenu>
+
             <!-- <el-menu-item :index="item.path" v-for="item in menuInfo" :key="item.path">
               <i :class="item.icon"></i>
               <span slot="title">{{item.label}}</span>
@@ -92,11 +91,11 @@
   </div>
 </body>
 <!-- import Vue before Element -->
-<script src="https://unpkg.com/vue/dist/vue.js"></script>
-<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/vue-router.js"></script>
 <!-- import JavaScript -->
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="../js/index.js"></script>
+<script src="../js/axios.min.js"></script>
 <script type="x-template" id="albums">
 <div class="demo-image__preview">
   <div class="el-my-card" v-for="(img, index) in myimages" :key="index">
@@ -309,8 +308,11 @@
         handleSelect(key, keyPath) {
           //console.info(key, keyPath);
           //this.date = key.replace("/images/","");
-          this.params = key;
-          this.randomKey = Math.random();
+          var reg=new RegExp("^/albums/");
+          if(key.length==18 || reg.test(key)){
+            this.params = key;
+            this.randomKey = Math.random();
+          }
         }
 
       },

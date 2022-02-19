@@ -27,8 +27,8 @@ public interface ImageService {
 	
 	public List<Image> list(String[] ids);
 	public List<Image> listOrderBy(String orderby);
-	
-	
+	public List<Image> listRepeat(String camera_id);
+	public boolean listRepeatRemove(String[] id);
 	/*
 	 * 扫描用到
 	 */
@@ -53,6 +53,8 @@ public interface ImageService {
 	public String[] getCachePath(int listsize);
 	
 	public boolean makeCache(String source, String target);
+	
+	public boolean moveFile(Camera camera, Page page, String orderby);
 	
 	public List<Map<String, String>> groupbyCamera();
 	public List<Map<String, String>> groupbyCamera2();

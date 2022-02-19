@@ -76,7 +76,7 @@ public class AdministratorController {
 			HttpServletRequest request) throws IOException {
 		path = new String(path.getBytes("ISO8859-1"), "UTF-8");
 		
-		String image_path = URLDecoder.decode(path, "UTF-8");
+		String image_path = URLDecoder.decode(path, "UTF-8");System.out.println(image_path);
 		
 		Resource resource = new FileSystemResource(image_path);
 		byte[] fileData = FileCopyUtils.copyToByteArray(resource.getInputStream());
@@ -130,6 +130,36 @@ public class AdministratorController {
 		}
 		
 		return "/admin/image/cache";
+	}
+	
+	@RequestMapping("/admin/image/move")
+	public String imageMove(Map<String,Object> model,
+			Page page, String id,
+			HttpServletRequest request) {
+		if ("GET".equals(request.getMethod())) {
+			
+			String orderby = "time";
+			Camera camera = cameraService.getCamera(id);
+			
+			imageService.moveFile(camera, page, orderby);
+		}
+		return "/admin/image/cache";
+	}
+	
+	@RequestMapping("/admin/image/repeat")
+	public String imageRepeat(Map<String,Object> model,
+			String[] id, String camera_id,
+			HttpServletRequest request) {
+		if ("GET".equals(request.getMethod())) {
+			List<Image> list = imageService.listRepeat(camera_id);
+			model.put("list", list);
+			return "/admin/image/repeat";
+		}
+		if ("POST".equals(request.getMethod())) {
+			imageService.listRepeatRemove(id);
+			return "/image/admin_success";
+		}
+		return "/admin/image/repeat";
 	}
 	
 	@RequestMapping("/admin/image/index")

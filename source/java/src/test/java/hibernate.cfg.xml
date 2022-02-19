@@ -8,10 +8,13 @@
 		<property name="hibernate.show_sql">true</property>
 		<property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
 		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-		<property name="hibernate.connection.url">jdbc:mysql://192.168.1.129:3306/pwrl?characterEncoding=utf-8</property>
+		<property name="hibernate.connection.url">jdbc:mysql://192.168.28.34:3306/weather?characterEncoding=utf-8</property>
 		<property name="hibernate.connection.username">root</property>
 		<property name="hibernate.connection.password"></property>
 
 		<mapping class="org.hb0712.discovery.pojo.Image"/>
+		<mapping class="org.hb0712.discovery.pojo.Camera"/>
+		<mapping class="org.hb0712.discovery.pojo.Album"/>
+		<mapping class="org.hb0712.discovery.pojo.Export"/>
 	</session-factory>
 </hibernate-configuration>

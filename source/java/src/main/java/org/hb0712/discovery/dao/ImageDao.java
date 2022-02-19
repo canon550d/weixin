@@ -14,6 +14,8 @@ public interface ImageDao{
 	public List<Image> list(Page page, String orderby, Camera camera);
 	public List<Image> list(Integer[] ids);
 	public List<Image> listOrderBy(String orderby);
+	public List<Image> listRepeat(String camera_id);
+	public boolean listRepeatRemove(String[] id);
 	public List<Date> listTime();
 	public List<Image> list(Date satrt, Date end);
 	public Image getImage(int id);
@@ -22,6 +24,7 @@ public interface ImageDao{
 	public boolean update(Image image);
 	public boolean save(Image image);
 	public boolean save(Export export);
+	public boolean updatePath (String path, Integer id);
 	
 	public List<Map<String, String>> groupbyCamera();
 	public List<Map<String, String>> groupbyCamera2();
