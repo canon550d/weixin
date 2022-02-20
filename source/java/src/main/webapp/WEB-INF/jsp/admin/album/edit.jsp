@@ -17,12 +17,39 @@
   <input type="text" name="id" value="<c:out value='${album.id}'/>"/>
   <div>名称：<input type="text" name="name" value="<c:out value='${album.name}'/>"/></div>
   <div>描述：<input type="text" name="description" value="<c:out value='${album.description}'/>" style="width:400px"/></div>
-  <input type="text" name="images_id" value="2"/>
-  <input type="text" name="images_id" value="3"/>
-  <c:forEach items="${album.images}" var="v" varStatus="vs">
-  <c:out value='${v.name}'/>
-  </c:forEach>
+  <div>给照片打勾</div>
+  <div id="app">
+    <div class="el-my-card" v-for="(img, index) in photos" :key="index">
+    <input type="checkbox" name="index">
+    {{img.name}}
+    <img :src="'../image/preView2.aspx?path='+img.path" width="100px"/>
+    <input type="text" name="images_id" v-model="img.id"/>
+    </div>
+  </div>
   <input type="submit" value="提交"/>
 </form>
 </body>
+<!-- import Vue before Element -->
+<script src="../../js/vue.js"></script>
+<script type="x-template" id="albums">
+<div>test</div>
+</script>
+<script>
+
+  var vue = new Vue({
+    el: '#app',
+    data: function() {
+      return {
+        photos:[<c:forEach items="${album.images}" var="v" varStatus="vs">{
+          "id":"<c:out value='${v.id}'/>",
+          "name":"<c:out value='${v.name}'/>",
+          "path":"<c:out value='${v.URLEncoderPath}' />"
+          },</c:forEach>
+        ],
+        "pages":{"records":0, "prevPage":1, "page":1, "nextPage":1, "lastPage":1, "limit":20},
+      }
+    }
+  });
+</script>
+
 </html>
