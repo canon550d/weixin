@@ -202,4 +202,74 @@ public class ImageServiceImpl extends FileServiceImpl implements ImageService{
 	public List<Map<String, String>> groupbyCamera2() {
 		return imageDao.groupbyCamera2();
 	}
+	
+	public Collection<File> findFileNotInDB(Collection<File> files) {
+		Collection<File> notInDb = new ArrayList<File>();
+		
+		int size = files.size();
+		int circle = 1;
+		int limit = 100;
+		if (size>limit) {
+			circle = size/limit;
+			if(size%limit!=0) {
+				circle = circle+1;
+			}
+		}
+		Integer[] p = new Integer[circle];//数组下标
+		for(int i=0;i<circle;i++) {
+			if (i<circle-1) {
+				p[i] = (i+1)*limit;
+			} else {
+				p[i] = size;
+			}
+		}
+		for (int i = 0; i < p.length; i++) {
+			System.out.println(p[i]);
+		}
+
+		int d = 0;
+		int i = 0;
+		int j = 0;
+		String[] paths = new String[p[0]];
+		File[] fs = new File[p[0]];
+		for (File f:files) {
+			
+			if (i==p[d]) {
+				d = d+1;
+				int n = p[d]-(limit*d);
+				paths = new String[n];
+				fs = new File[n];
+				j = 0;
+			}
+			paths[j] = f.getPath();
+			fs[j] = f;
+			
+			if ((i+1)==p[d]) {
+				List<Image> inDB = imageDao.list(paths);
+				System.out.println(inDB.size());
+				kkk(notInDb, fs, inDB);
+			}
+			
+			i++;
+			j++;
+		}
+		return notInDb;
+	}
+
+	//把数据库中不存在的保留
+	private void kkk(Collection<File> notInDb, File[] paths, List<Image> inDB) {
+		for(File p:paths) {
+			boolean notin = true;
+			for(Image img:inDB) {
+				if (p.getPath().equals(img.getPath())) {
+					notin = false;
+					break;
+				}
+			}
+			if (notin) {
+				System.out.println(p);
+				notInDb.add(p);
+			}
+		}
+	}
 }

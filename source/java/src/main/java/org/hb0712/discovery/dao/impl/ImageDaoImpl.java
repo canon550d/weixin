@@ -193,6 +193,15 @@ public class ImageDaoImpl extends DefaultDaoImpl<Image> implements ImageDao{
 		return list;
 	}
 	
+	public List<Image> list(String[] paths) {
+		Session session = sessionFactory.openSession();
+		Query query = session.createQuery("from Image i where i.path in (:paths)");
+		query.setParameterList("paths", paths);
+		List<Image> list = query.list();
+		session.close();
+		return list;
+	}
+	
 	public Image getImageByName(String name) {
 		Session session = sessionFactory.openSession();
 		Query query = session.createQuery("from Image i where i.name = :name ");

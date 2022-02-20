@@ -13,6 +13,7 @@ public interface ImageDao{
 	public List<Image> list(Page page);
 	public List<Image> list(Page page, String orderby, Camera camera);
 	public List<Image> list(Integer[] ids);
+	public List<Image> list(String[] paths);
 	public List<Image> listOrderBy(String orderby);
 	public List<Image> listRepeat(String camera_id);
 	public boolean listRepeatRemove(String[] id);

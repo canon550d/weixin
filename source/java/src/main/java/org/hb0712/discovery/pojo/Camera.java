@@ -10,11 +10,12 @@ import javax.persistence.Table;
 @Table(name = "camera")
 public class Camera {
 	private Integer id;
-	private String maker;
-	private String model;
+	private String maker;//品牌
+	private String model;//型号
 	private String description;
 	private String path;
-	private String type;
+	private String size;//目录大小
+	private String type;//DC,mobile,SLR
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +48,12 @@ public class Camera {
 	}
 	public void setPath(String path) {
 		this.path = path;
+	}
+	public String getSize() {
+		return size;
+	}
+	public void setSize(String size) {
+		this.size = size;
 	}
 	public String getType() {
 		return type;

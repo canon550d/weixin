@@ -58,4 +58,6 @@ public interface ImageService {
 	
 	public List<Map<String, String>> groupbyCamera();
 	public List<Map<String, String>> groupbyCamera2();
+	//把目录中已经存在于数据库中的图片筛掉
+	public Collection<File> findFileNotInDB(Collection<File> files);
 }

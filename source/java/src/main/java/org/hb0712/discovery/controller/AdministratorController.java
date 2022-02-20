@@ -16,15 +16,14 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.io.FileUtils;
 import org.hb0712.discovery.dao.impl.Page;
 import org.hb0712.discovery.pojo.Album;
 import org.hb0712.discovery.pojo.Camera;
-import org.hb0712.discovery.pojo.Export;
 import org.hb0712.discovery.pojo.Image;
 import org.hb0712.discovery.service.AlbumService;
 import org.hb0712.discovery.service.CameraService;
 import org.hb0712.discovery.service.ImageService;
+import org.hb0712.discovery.service.impl.FileConfig;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
@@ -51,6 +50,8 @@ public class AdministratorController {
 	private CameraService cameraService;
 	@Autowired
 	private AlbumService albumService;
+	@Autowired
+	private FileConfig fileConfig;
 
 	@ResponseBody
 	@RequestMapping("/admin/image/preView")
@@ -106,7 +107,13 @@ public class AdministratorController {
 					for (int i=0;i<list.size();i++) {
 						if(list.get(i).getCache()==null || list.get(i).getCache().length()<1) {
 							int dindex = (page.getPage() - 1) * page.getPageSize() + i;
-							String folder = camera.getPath() + data[dindex] + "\\";
+							
+							String dirName = camera.getPath();
+							if (dirName.endsWith("\\"))
+								dirName = dirName.substring(0, dirName.length()-1);
+							dirName = dirName.substring(dirName.lastIndexOf("\\")+1);
+							
+							String folder = fileConfig.getCachePath() + dirName + "\\" + data[dindex] + "\\";
 							File file = new File(folder);
 							if(!file.exists()){
 								file.mkdir();
@@ -251,12 +258,16 @@ public class AdministratorController {
 	
 	public static void main(String[] args) {
 		String path = "D:\\Sya\\Pictures\\WorkSpace\\Camera\\70D";
-		File directory = new File(path);
-		File[] s = directory.listFiles();
-		for(int i=0;i<s.length;i++) {
-			
-			System.out.println(s[i]);
-		}
+		if (path.endsWith("\\"))
+			path = path.substring(0, path.length()-1);
+		path = path.substring(path.lastIndexOf("\\")+1);
+		System.out.println(path);
+//		File directory = new File(path);
+//		File[] s = directory.listFiles();
+//		for(int i=0;i<s.length;i++) {
+//			
+//			System.out.println(s[i]);
+//		}
 //		String[] extensions = new String[] {"jpg", "jpeg", "JPG", "png", "gif", "GIF"};
 //		Collection<File> listFiles = FileUtils.listFiles(directory, extensions, true);
 		System.out.println(123);
@@ -304,6 +315,38 @@ public class AdministratorController {
 			model.put("list", list);System.out.println(list.size());
 		}
 		return "/admin/image/scan";
+	}
+	
+	@RequestMapping("/admin/image/scan4camera")
+	public String imageScanForCamera(Map<String,Object> model,
+			String id, 
+			HttpServletRequest request) {
+		
+		Camera c = cameraService.getCamera(id);
+		String dir = c.getPath();
+		
+		Collection<File> files = imageService.scan(dir);
+		files = imageService.findFileNotInDB(files);
+		for(File file:files) {
+			Map<String, String> m = getMetadata(file);
+			if (m==null || m.get("time")==null || m.get("time").length()<1
+					|| m.get("make")==null || m.get("make").length()<1
+					|| m.get("model")==null || m.get("model").length()<1) {
+				System.out.println("not photo:"+file.getPath());
+				continue;
+			}
+			Image image = new Image();
+			image.setName(file.getName());
+			image.setTime(getTime(m.get("time")));
+			image.setPath(file.getPath());
+			image.setBucket_id(1);
+			Camera camera = cameraService.getCamera(m.get("make"), m.get("model"));
+			if(camera!=null) {
+				image.setCamera(camera);
+			}
+			imageService.update(image);
+		}
+		return "/image/admin_success";
 	}
 	
 	@RequestMapping("/admin/image/savescan")
