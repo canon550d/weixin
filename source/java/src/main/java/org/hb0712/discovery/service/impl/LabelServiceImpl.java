@@ -17,4 +17,7 @@ public class LabelServiceImpl implements LabelService{
 		return labelDao.list();
 	}
 
+	public Label getLabel(String id) {
+		return labelDao.getLabel(id);
+	}
 }

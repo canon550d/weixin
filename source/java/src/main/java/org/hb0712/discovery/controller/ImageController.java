@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.hb0712.discovery.pojo.Album;
 import org.hb0712.discovery.pojo.Image;
+import org.hb0712.discovery.pojo.Label;
 import org.hb0712.discovery.service.AlbumService;
 import org.hb0712.discovery.service.ImageService;
 import org.hb0712.discovery.service.LabelService;
@@ -26,6 +27,8 @@ public class ImageController {
 	private ImageService imageService;
 	@Autowired
 	private AlbumService albumService;
+	@Autowired
+	private LabelService labelService;
 	
 //	@InitBinder
 //	public void initBinder(WebDataBinder binder) {
@@ -42,7 +45,7 @@ public class ImageController {
 	
 	@RequestMapping("/image/list")
 	public String list(Map<String,Object> model,
-			String date, String album,
+			String date, String album, String label,
 			HttpServletRequest request) throws UnsupportedEncodingException {
 		
 		List<Image> list = null;
@@ -52,6 +55,12 @@ public class ImageController {
 			Album obj_album = albumService.getAlbum(album);
 			if (obj_album!=null) {
 				list = obj_album.getImages();
+			}
+		}
+		if(StringUtils.isNotEmpty(label)) {
+			Label obj_label = labelService.getLabel(label);
+			if (obj_label!=null) {
+				list = obj_label.getImages();
 			}
 		}
 		for(Image l:list) {

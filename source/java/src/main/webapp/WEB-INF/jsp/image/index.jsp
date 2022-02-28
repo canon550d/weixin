@@ -211,6 +211,78 @@
         
         template: "#albums"
   }
+  const Label = {
+        data: function() {
+            return {
+              myimages: [],//图片列表，小图、预览图
+              bigImages:[],
+              id:1
+            }
+          },
+          methods: {
+            getImages() {
+              axios.get("list.aspx?label="+this.id)
+                .then(response => {
+                  this.myimages = response.data.images;
+                  this.bigImages = this.srclist2(0);
+                }).catch(function (error) {
+                  console.log(error);
+                });
+            },
+            setBigimages(index){
+              console.info(index);
+              this.bigImages = this.srclist2(index);
+            },
+            srclist2(index) {
+              var srcs = [];//大图
+              for (j in this.myimages){
+                srcs[j] = this.myimages[j].src;
+              }
+              if (index == 0)
+                return srcs;
+              let start = srcs.splice(index);
+              let remain = srcs.splice(0, index);
+              let new_srclist = start.concat(remain);console.info(new_srclist);
+              return new_srclist;
+            },
+            getData2() {
+              console.info("俺来了");
+            }
+          },
+          computed: {
+            srclist: function(){
+              var srcs = [];//大图
+              for (j in this.myimages){
+                srcs[j] = this.myimages[j].src;
+              }
+              return srcs;
+            }
+          },
+          mounted () {
+            console.info("this.route:"+this.$route.path);
+            this.id = this.$route.path.replace("/label/","");
+            this.getImages();
+
+          },
+          props:["partInfo","params"],
+          
+          watch:{
+            $route(to, from) {
+                //console.info(this.$route.path +"|"+this.partInfo.length);
+            },
+            partInfo(){
+                this.myimages = this.partInfo;
+                
+            },
+            params(val){
+                console.info("params:"+val);
+                this.id = val.replace("/albums/","");
+                this.getImages();
+            }
+          },
+          
+          template: "#albums"
+  }
   const Images = {
         data: function() {return {
           myimages: [],//图片列表，小图、预览图
@@ -278,6 +350,7 @@
   const routes = [
      { path:'/', component: Home},
      { path:'/albums/:id', component:Albums, props:true},
+     { path:'/label/:id', component:Label, props:true},
      { path:'/images/:date', component:Images, props:true}
   ]
   const router = new VueRouter({

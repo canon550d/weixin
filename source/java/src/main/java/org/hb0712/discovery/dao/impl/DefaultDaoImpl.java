@@ -105,6 +105,13 @@ public class DefaultDaoImpl<T> {
 		return list.get(0);
 	}
 	
+	public T get(Session session, String id) {
+		String name = getSimpleName();
+		Query query = session.createQuery("from "+name+" i where i.id="+id);
+		List<T> list = query.list();
+		return list.get(0);
+	}
+	
 	private String getSimpleName() {
 		ParameterizedType pt = (ParameterizedType) this.getClass().getGenericSuperclass();
 		Class<T> c = (Class<T>) pt.getActualTypeArguments()[0];
