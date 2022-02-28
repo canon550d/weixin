@@ -58,6 +58,7 @@
 				<value>org.hb0712.discovery.pojo.Camera</value>
 				<value>org.hb0712.discovery.pojo.Album</value>
 				<value>org.hb0712.discovery.pojo.Export</value>
+				<value>org.hb0712.discovery.pojo.Label</value>
 			</list>
 		</property>
 	</bean>

@@ -14,6 +14,7 @@ public class Camera {
 	private String model;//型号
 	private String description;
 	private String path;
+	private Integer path_length;//相片的路径长度
 	private String size;//目录大小
 	private String type;//DC,mobile,SLR
 	
@@ -49,6 +50,12 @@ public class Camera {
 	public void setPath(String path) {
 		this.path = path;
 	}
+	public Integer getPath_length() {
+		return path_length;
+	}
+	public void setPath_length(Integer path_length) {
+		this.path_length = path_length;
+	}
 	public String getSize() {
 		return size;
 	}
@@ -60,5 +67,9 @@ public class Camera {
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+	
+	public String toString() {
+		return "id:"+this.id;
 	}
 }

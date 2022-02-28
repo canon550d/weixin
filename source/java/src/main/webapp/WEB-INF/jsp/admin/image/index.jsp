@@ -6,6 +6,17 @@
 
 <a target="_blank" href="create.aspx">添加</a>
 <a target="_blank" href="scan.aspx">扫描</a>
+<div id="app">
+<select @change="selectFn($event)">
+  <option v-for="item in items" :value="item.id">{{item.name}}</option>
+</select>
+<div class="page">
+  <a href="?page=1">第一页</a>
+  <a href="?page=<c:out value='${page.previous}'/>">上一页</a>
+  <a href="?page=<c:out value='${page.next}'/>">下一页</a>
+  <a href="?page=<c:out value='${page.last}'/>">最后一页</a>
+</div>
+</div>
 <table border="1">
   <tr>
     <td>ID</td>
@@ -35,8 +46,28 @@
 </table>
 
 <div class="page">
-  <a href="?page=1">第一页</a>
-  <a href="?page=<c:out value='${page.previous}'/>">上一页</a>
-  <a href="?page=<c:out value='${page.next}'/>">下一页</a>
-  <a href="?page=<c:out value='${page.last}'/>">最后一页</a>
+  <a href="?page=1<c:if test='${camera_id!=null}'>&camera_id=<c:out value='${camera_id}'/></c:if>">第一页</a>
+  <a href="?page=<c:out value='${page.previous}'/><c:if test='${camera_id!=null}'>&camera_id=<c:out value='${camera_id}'/></c:if>">上一页</a>
+  <a href="?page=<c:out value='${page.next}'/><c:if test='${camera_id!=null}'>&camera_id=<c:out value='${camera_id}'/></c:if>">下一页</a>
+  <a href="?page=<c:out value='${page.last}'/><c:if test='${camera_id!=null}'>&camera_id=<c:out value='${camera_id}'/></c:if>">最后一页</a>
 </div>
+
+<script src="../../js/vue.js"></script>
+<script>
+var vue = new Vue({
+    el: '#app',
+    data: function() {
+        return {
+            items: [{'id':0, 'name':'全部'}<c:forEach items="${cameras}" var="v" varStatus="vs">,{'id':<c:out value='${v.id}' />, 'name':'<c:out value="${v.model}" />'}</c:forEach>]
+        }
+    },
+    methods: {
+        selectFn(e) {
+            //window.location.href='';
+            var url = window.location.origin + window.location.pathname;
+            url = url + "?camera_id="+ e.target.value
+            window.location.href = url;
+        }
+    }
+});
+</script>

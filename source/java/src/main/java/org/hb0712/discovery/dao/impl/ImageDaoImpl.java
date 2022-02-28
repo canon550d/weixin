@@ -49,6 +49,13 @@ public class ImageDaoImpl extends DefaultDaoImpl<Image> implements ImageDao{
 		query.setMaxResults(page.getPageSize());
 		List<Image> list = query.list();
 
+		for (Image i:list) {
+			Hibernate.initialize(i.getCamera());
+			for (Export e:i.getExports()) {
+				Hibernate.initialize(e);
+			}
+		}
+
 		session.close();
 		return list;
 	}
@@ -150,7 +157,7 @@ public class ImageDaoImpl extends DefaultDaoImpl<Image> implements ImageDao{
 		 * 因为Image里的fetch使用了FetchType.LAZY，所以为了避免N+1的问题，需要在hql的join后面增加fetch来查询
 		 * select distinct i 如果没有的话，会产生多条结果
 		 */
-		Query query = session.createQuery("select distinct i from Image i join fetch i.camera c left join fetch i.exports e where i.time between :start and :end order by time");
+		Query query = session.createQuery("select distinct i from Image i join fetch i.camera c left join fetch i.exports e where i.time between :start and :end and i.state = 0 order by time");
 		query.setParameter("start", satrt);
 		query.setParameter("end", end);
 		List<Image> list = query.getResultList();

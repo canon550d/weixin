@@ -9,7 +9,7 @@
 	"path" : "/albums/2020-11-12",
 	"time" : "2020-11-13",
 	"images" : [ <c:forEach items="${list}" var="v" varStatus="vs">{
-		"name" : "<c:out value='${v.name}' />",
+		"name" : "<c:out value='${v.name}' />","camera_type" : "<c:out value='${v.camera.type}' />",
 		"src" : "/discovery/admin/image/preView2.aspx?path=<c:out value="${v.path}" />",
 		"cache" : "/discovery/admin/image/preView2.aspx?path=<c:choose><c:when test="${v.cache==null}"><c:out value="${v.path}" /></c:when><c:otherwise><c:out value="${v.cache}" /></c:otherwise></c:choose>",
 		"time" : "<fmt:formatDate value="${v.time}" pattern="yyyy-MM-dd HH:mm"/>",

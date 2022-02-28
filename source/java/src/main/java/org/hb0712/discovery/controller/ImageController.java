@@ -12,6 +12,7 @@ import org.hb0712.discovery.pojo.Album;
 import org.hb0712.discovery.pojo.Image;
 import org.hb0712.discovery.service.AlbumService;
 import org.hb0712.discovery.service.ImageService;
+import org.hb0712.discovery.service.LabelService;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

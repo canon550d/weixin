@@ -256,19 +256,19 @@ public class ImageServiceImpl extends FileServiceImpl implements ImageService{
 		return notInDb;
 	}
 
-	//把数据库中不存在的保留
-	private void kkk(Collection<File> notInDb, File[] paths, List<Image> inDB) {
-		for(File p:paths) {
+	//把数据库中不存在的保留，比较files和images，把
+	private void kkk(Collection<File> notInDb, File[] files, List<Image> images) {
+		for(File f:files) {
 			boolean notin = true;
-			for(Image img:inDB) {
-				if (p.getPath().equals(img.getPath())) {
+			for(Image img:images) {
+				if (f.getPath().equals(img.getPath())) {
 					notin = false;
 					break;
 				}
 			}
 			if (notin) {
-				System.out.println(p);
-				notInDb.add(p);
+				logger.info("pre insert into db:"+f.getPath());
+				notInDb.add(f);
 			}
 		}
 	}

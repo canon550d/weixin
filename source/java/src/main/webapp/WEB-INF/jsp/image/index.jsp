@@ -50,6 +50,13 @@
                 <span slot="title">{{item.name}}</span>
               </el-menu-item>
             </el-submenu>
+            <el-submenu index="3">
+              <span slot="title">标签</span>
+              <el-menu-item :index="'/label/'+item.id" v-for="item in labels" :key="'/label/'+item.id">
+                <i class="el-icon-collection-tag"></i>
+                <span slot="title">{{item.name}}</span>
+              </el-menu-item>
+            </el-submenu>
 
             <!-- <el-menu-item :index="item.path" v-for="item in menuInfo" :key="item.path">
               <i :class="item.icon"></i>
@@ -108,8 +115,12 @@
       <span v-else-if="index<100 && index>=9" style="width:30px;display:inline-block;">0{{index+1}}</span>
       <span v-else style="width:30px;display:inline-block;">{{index+1}}</span>
       <span style="font-size:12px;display:inline-block;">{{img.name}}</span>
-      <div style="font-size:12px;margin-left:34px;">{{img.time}}</div>
+      <div style="padding-left:10px;">
+        <i v-if="img.camera_type=='camera'||img.camera_type=='DC'" class="el-icon-camera"></i>
+        <i v-else-if="img.camera_type=='mobile'" class="el-icon-mobile"></i>
+        <div style="margin-left: 2px;font-size:12px;display:inline-block;">{{img.time}}</div></div>
       <el-rate v-model="img.rate"></el-rate>
+      
       {{img.description}}
     </div>
   </div>
@@ -292,6 +303,7 @@
           date:"",//准备删除
           //影集
           albums:[],
+          labels:[],
           //分页数据
           "pages":{"records":0, "prevPage":1, "page":1, "nextPage":1, "lastPage":1, "limit":20},
           "list": []
@@ -322,6 +334,7 @@
               this.timeflow = response.data.timeflow;
               this.timeflow2 = response.data.timeflow2;
               this.albums = response.data.albums;
+              this.labels = response.data.labels;
               //this.date = this.$route.path.replace("/images/","");
               //this.params = this.$route.path;
 

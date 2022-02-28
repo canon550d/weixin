@@ -6,6 +6,7 @@
 <a target="_blank" href="create.aspx">添加</a>
 <table border="1">
   <tr>
+    <td></td>
     <td>ID</td>
     <td>类型</td>
     <td>品牌</td>
@@ -20,6 +21,7 @@
 <c:forEach items="${list}" var="v" varStatus="vs">
   <tr>
     <td><c:out value="${vs.index+1}" /></td>
+    <td><c:out value="${v.id}" /></td>
     <td><c:out value="${v.type}" /></td>
     <td><c:out value="${v.maker}" /></td>
     <td><div style="width:300px;white-space:nowrap;overflow:hidden"><c:out value="${v.model}" /></div></td>
@@ -43,7 +45,9 @@
     <td></td>
     <td></td>
     <td></td>
+    <td></td>
     <td><c:out value="${total}" /></td>
+    <td></td>
     <td></td>
     <td></td>
     <td></td>

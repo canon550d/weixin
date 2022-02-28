@@ -6,5 +6,6 @@
 {
 "timeflow":[<c:forEach items="${list}" var="v" varStatus="vs">"<c:out value="${v}"/>"<c:if test="${!vs.last}">,</c:if></c:forEach>],
 "timeflow2":[<c:forEach items="${year}" var="v" varStatus="vs">"<c:out value="${v}"/>"<c:if test="${!vs.last}">,</c:if></c:forEach>],
-"albums":[<c:forEach items="${albums}" var="v" varStatus="vs">{"id":<c:out value='${v.id}'/>,"name":"<c:out value='${v.name}'/>"}<c:if test="${!vs.last}">,</c:if></c:forEach>]
+"albums":[<c:forEach items="${albums}" var="v" varStatus="vs">{"id":<c:out value='${v.id}'/>,"name":"<c:out value='${v.name}'/>"}<c:if test="${!vs.last}">,</c:if></c:forEach>],
+"labels":[<c:forEach items="${labels}" var="v" varStatus="vs">{"id":<c:out value='${v.id}'/>,"name":"<c:out value='${v.name}'/>"}<c:if test="${!vs.last}">,</c:if></c:forEach>]
 }

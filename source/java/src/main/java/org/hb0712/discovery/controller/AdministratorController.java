@@ -16,6 +16,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.hb0712.discovery.dao.impl.Page;
 import org.hb0712.discovery.pojo.Album;
 import org.hb0712.discovery.pojo.Camera;
@@ -139,6 +140,7 @@ public class AdministratorController {
 		return "/admin/image/cache";
 	}
 	
+	//整理：对已经扫描到数据库中的照片按照拍摄时间排列，并按100个照片存放到文件夹
 	@RequestMapping("/admin/image/move")
 	public String imageMove(Map<String,Object> model,
 			Page page, String id,
@@ -171,17 +173,26 @@ public class AdministratorController {
 	
 	@RequestMapping("/admin/image/index")
 	public String imageIndex(Map<String,Object> model,
-			String orderby, Page page,
+			String orderby, Page page, String camera_id,
 			HttpServletRequest request) {
-		logger.info(orderby);
 		if(orderby==null) {
 			if(page==null) {
 				page = new Page();
 			}
 			model.put("page", page);
 			
-			List<Image> list = imageService.list(page);
+			List<Image> list = null;
+			if(StringUtils.isNotEmpty(camera_id)) {
+				model.put("camera_id", camera_id);
+				Camera camera = cameraService.getCamera(camera_id);
+				list = imageService.list(page, "id", camera);
+			} else {
+				list = imageService.list(page);
+			}
 			model.put("list", list);
+			
+			List<Camera> cameras = cameraService.cameralist();
+			model.put("cameras", cameras);
 		} else {//if("time".equals(orderby)) 
 			List<Image> list = imageService.listOrderBy(orderby);
 			model.put("list", list);
@@ -317,15 +328,26 @@ public class AdministratorController {
 		return "/admin/image/scan";
 	}
 	
+	//扫描：对相机的目录扫描，如有数据库中没有的新照片，加入数据库
 	@RequestMapping("/admin/image/scan4camera")
 	public String imageScanForCamera(Map<String,Object> model,
 			String id, 
 			HttpServletRequest request) {
 		
 		Camera c = cameraService.getCamera(id);
+		if (c==null) {
+			return "/admin/error";
+		}
 		String dir = c.getPath();
+		if (StringUtils.isEmpty(dir)) {
+			return "/admin/error";
+		}
 		
 		Collection<File> files = imageService.scan(dir);
+		if (files==null || files.size()<1) {
+			return "/admin/error";
+		}
+		
 		files = imageService.findFileNotInDB(files);
 		for(File file:files) {
 			Map<String, String> m = getMetadata(file);
@@ -401,6 +423,8 @@ public class AdministratorController {
 		for(Map<String, String> d:data) {
 			i = i + Integer.valueOf(d.get("count"));
 		}
+		model.put("total", i);
+		fileConfig.getCachePath();
 		model.put("total", i);
 		return "/admin/camera/index";
 	}
