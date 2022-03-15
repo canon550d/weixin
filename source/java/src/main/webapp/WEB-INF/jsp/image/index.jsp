@@ -116,7 +116,7 @@
       <span v-else style="width:30px;display:inline-block;">{{index+1}}</span>
       <span style="font-size:12px;display:inline-block;">{{img.name}}</span>
       <div style="padding-left:10px;">
-        <i v-if="img.camera_type=='camera'||img.camera_type=='DC'" class="el-icon-camera"></i>
+        <i v-if="img.camera_type=='SLR'||img.camera_type=='DC'" class="el-icon-camera"></i>
         <i v-else-if="img.camera_type=='mobile'" class="el-icon-mobile"></i>
         <div style="margin-left: 2px;font-size:12px;display:inline-block;">{{img.time}}</div></div>
       <el-rate v-model="img.rate"></el-rate>
