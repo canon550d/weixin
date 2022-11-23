@@ -25,6 +25,8 @@ public interface ImageService {
 	
 	public Image getImage(String id);
 	
+	public Image getImageByMd5(String md5);
+	
 	public List<Image> list(String[] ids);
 	public List<Image> listOrderBy(String orderby);
 	public List<Image> listRepeat(String camera_id);

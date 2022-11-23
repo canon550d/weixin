@@ -30,8 +30,10 @@
 	
 	<mvc:annotation-driven />
 	<bean id="fileConfig" class="org.hb0712.discovery.service.impl.FileConfig">
-		<property name="cachePath" value="D:\\Sya\\Pictures\\Cache\\" />
+		<property name="cachePath" value="D:\Sya\Pictures\Cache\" />
+		<property name="workSpace" value="D:\Sya\Pictures\WorkSpace\" />
 	</bean>
+	
 
 
 </beans>

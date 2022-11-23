@@ -21,6 +21,7 @@ public interface ImageDao{
 	public List<Image> list(Date satrt, Date end);
 	public Image getImage(int id);
 	public Image getImageByName(String name);
+	public Image getImage(String md5);
 	public Image getImage(String name, String path);
 	public boolean update(Image image);
 	public boolean save(Image image);

@@ -67,7 +67,7 @@ var vue = new Vue({
                 "model":"<c:out value='${meta.model}'/>",
                 "description":"",
                 "path":"<c:out value='${fn:replace(v.path, a, b)}'/>",
-                "checked": <c:if test="${meta.time==null}">false</c:if><c:if test="${meta.time!=null}">true</c:if>
+                "checked": <c:choose><c:when test="${vs.index>3183 && meta.model=='iPhone 5c'}">true</c:when><c:otherwise>false</c:otherwise></c:choose>
             },</c:forEach>]
         }
     },

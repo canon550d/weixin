@@ -60,3 +60,32 @@
 <div>整理：对已经扫描到数据库中的照片按照拍摄时间排列，并按100个照片存放到文件夹</div>
 <div>缓存：对已经扫描到数据库中的照片生成低分辨率缩略图</div>
 </div>
+
+<script src="../../js/echarts.min.js"></script>
+<div id="main" style="width: 600px;height:400px;"></div>
+<script type="text/javascript">
+// 基于准备好的dom，初始化echarts实例
+var myChart = echarts.init(document.getElementById('main'));
+
+// 指定图表的配置项和数据
+var option = {
+  title: {
+    text: '拍摄数量统计'
+  },
+  tooltip: {},
+  series: [
+    {
+      name: '销量',
+      type: 'pie',
+      data: [<c:forEach items="${list}" var="v" varStatus="vs">{<c:set var="myCount" value="0"/>
+        <c:forEach items="${data}" var="d" varStatus="ds"><c:if test="${d.id==v.id}"><c:set var="myCount" value="${d.count}"/></c:if></c:forEach>
+        "value":"<c:out value="${myCount}" />",
+        "name":"<c:out value="${v.model}" />"
+      },</c:forEach>]
+    }
+  ]
+};
+
+// 使用刚指定的配置项和数据显示图表。
+myChart.setOption(option);
+</script>

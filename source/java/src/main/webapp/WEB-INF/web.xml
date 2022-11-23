@@ -45,6 +45,7 @@
   <servlet-mapping>
     <servlet-name>discovery</servlet-name>
     <url-pattern>*.aspx</url-pattern>
+    <url-pattern>/image/view/*</url-pattern>
   </servlet-mapping>
   
   <listener>

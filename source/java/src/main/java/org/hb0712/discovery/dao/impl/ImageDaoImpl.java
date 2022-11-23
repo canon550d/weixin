@@ -12,6 +12,7 @@ import org.hb0712.discovery.dao.ImageDao;
 import org.hb0712.discovery.pojo.Camera;
 import org.hb0712.discovery.pojo.Export;
 import org.hb0712.discovery.pojo.Image;
+import org.hb0712.discovery.pojo.Label;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -29,6 +30,9 @@ public class ImageDaoImpl extends DefaultDaoImpl<Image> implements ImageDao{
 			Hibernate.initialize(i.getCamera());
 			for (Export e:i.getExports()) {
 				Hibernate.initialize(e);
+			}
+			for (Label l:i.getLabels()) {
+				Hibernate.initialize(l);
 			}
 		}
 		session.close();
@@ -53,6 +57,9 @@ public class ImageDaoImpl extends DefaultDaoImpl<Image> implements ImageDao{
 			Hibernate.initialize(i.getCamera());
 			for (Export e:i.getExports()) {
 				Hibernate.initialize(e);
+			}
+			for (Label l:i.getLabels()) {
+				Hibernate.initialize(l);
 			}
 		}
 
@@ -237,6 +244,21 @@ public class ImageDaoImpl extends DefaultDaoImpl<Image> implements ImageDao{
 		return list.get(0);
 	}
 	
+	/*
+	 * 查询某目录下某文件
+	 */
+	public Image getImage(String md5) {
+		Session session = sessionFactory.openSession();
+		Query query = session.createQuery("from Image i where i.md5 = :md5 ");
+		query.setParameter("md5", md5);
+		List<Image> list = query.list();
+		session.close();
+		if(list==null || list.size()<1)
+			return null;
+		
+		return list.get(0);
+	}
+	
 	public boolean update(Image image){
 		logger.info("my name:" + image);
 		super.update(image);
@@ -288,7 +310,7 @@ public class ImageDaoImpl extends DefaultDaoImpl<Image> implements ImageDao{
 			Object[] line = (Object[]) m;
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("id", line[0].toString());
-			map.put("count", line[1].toString());
+			map.put("count", line[1]==null?"0":line[1].toString());
 			data.add(map);
 		}
 		session.close();

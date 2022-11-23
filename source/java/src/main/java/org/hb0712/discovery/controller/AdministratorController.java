@@ -1,6 +1,8 @@
 package org.hb0712.discovery.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -16,14 +18,18 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hb0712.discovery.dao.impl.Page;
 import org.hb0712.discovery.pojo.Album;
 import org.hb0712.discovery.pojo.Camera;
 import org.hb0712.discovery.pojo.Image;
+import org.hb0712.discovery.pojo.Label;
 import org.hb0712.discovery.service.AlbumService;
 import org.hb0712.discovery.service.CameraService;
 import org.hb0712.discovery.service.ImageService;
+import org.hb0712.discovery.service.LabelService;
 import org.hb0712.discovery.service.impl.FileConfig;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +57,8 @@ public class AdministratorController {
 	private CameraService cameraService;
 	@Autowired
 	private AlbumService albumService;
+	@Autowired
+	private LabelService labelService;
 	@Autowired
 	private FileConfig fileConfig;
 
@@ -87,18 +95,18 @@ public class AdministratorController {
 	
 	@RequestMapping("/admin/image/cache")
 	public String imageCache(Map<String,Object> model,
-			Page page, String id,
+			Page page, String id, String cover,
 			HttpServletRequest request) {
 		if ("GET".equals(request.getMethod())) {
 			String[] data = null;
 			
-			String orderby = "name";
+			String orderby = "time";
 			Camera camera = cameraService.getCamera(id);
 			
 			int p = 1;
 			page.setPage(p);
 			do {
-				List<Image> list = imageService.list(page, orderby, camera);
+				List<Image> list = imageService.list(page, orderby, camera);//TODO 肯定不能by name啊
 				
 				if(p==1) {
 					data = imageService.getCachePath(page.getTotal());
@@ -106,7 +114,7 @@ public class AdministratorController {
 				
 				if(data!=null) {
 					for (int i=0;i<list.size();i++) {
-						if(list.get(i).getCache()==null || list.get(i).getCache().length()<1) {
+						if(list.get(i).getCache()==null || list.get(i).getCache().length()<1 || "cover".equals(cover)) {
 							int dindex = (page.getPage() - 1) * page.getPageSize() + i;
 							
 							String dirName = camera.getPath();
@@ -175,28 +183,32 @@ public class AdministratorController {
 	public String imageIndex(Map<String,Object> model,
 			String orderby, Page page, String camera_id,
 			HttpServletRequest request) {
-		if(orderby==null) {
-			if(page==null) {
-				page = new Page();
-			}
-			model.put("page", page);
-			
-			List<Image> list = null;
-			if(StringUtils.isNotEmpty(camera_id)) {
-				model.put("camera_id", camera_id);
-				Camera camera = cameraService.getCamera(camera_id);
-				list = imageService.list(page, "id", camera);
-			} else {
-				list = imageService.list(page);
-			}
-			model.put("list", list);
-			
-			List<Camera> cameras = cameraService.cameralist();
-			model.put("cameras", cameras);
-		} else {//if("time".equals(orderby)) 
-			List<Image> list = imageService.listOrderBy(orderby);
-			model.put("list", list);
+		
+		if(page==null) {
+			page = new Page();
 		}
+		model.put("page", page);
+		
+		if(orderby==null) {
+			orderby = "id";
+		}model.put("orderby", orderby);
+		
+		List<Image> list = null;
+		if(StringUtils.isNotEmpty(camera_id)) {
+			model.put("camera_id", camera_id);
+			Camera camera = cameraService.getCamera(camera_id);
+			list = imageService.list(page, orderby, camera);
+		} else {
+			list = imageService.list(page);
+		}
+		model.put("list", list);
+		
+		List<Camera> cameras = cameraService.cameralist();
+		model.put("cameras", cameras);
+		
+		List<Label> labels = labelService.list();
+		model.put("labels", labels);
+		
 		
 		return "/admin/image/index";
 	}
@@ -238,6 +250,7 @@ public class AdministratorController {
 			}
 			edit_image.setName(image.getName());
 			edit_image.setPath(image.getPath());
+			edit_image.setCache(image.getCache());
 			edit_image.setRate(image.getRate());
 			edit_image.setDescription(image.getDescription());
 			imageService.save(edit_image);
@@ -281,7 +294,10 @@ public class AdministratorController {
 //		}
 //		String[] extensions = new String[] {"jpg", "jpeg", "JPG", "png", "gif", "GIF"};
 //		Collection<File> listFiles = FileUtils.listFiles(directory, extensions, true);
-		System.out.println(123);
+		String str = "Mobile/iPhone5c/141/tomove/IMG_0272_20181202204011.JPG";
+		String regex = "^Mobile.*";
+		boolean flag = str.matches(regex);
+		System.out.println(flag);
 	}
 	
 	@RequestMapping("/admin/image/scan")
@@ -362,6 +378,7 @@ public class AdministratorController {
 			image.setTime(getTime(m.get("time")));
 			image.setPath(file.getPath());
 			image.setBucket_id(1);
+			image.setState(0);
 			Camera camera = cameraService.getCamera(m.get("make"), m.get("model"));
 			if(camera!=null) {
 				image.setCamera(camera);
@@ -374,21 +391,29 @@ public class AdministratorController {
 	@RequestMapping("/admin/image/savescan")
 	public String imageSaveScan(String next, String nextPath, String bucket_id,
 			String[] index, String[] name, String[] time, String[] maker, String[] model, String[] description, String[] path,
-			HttpServletRequest request) throws UnsupportedEncodingException {
+			HttpServletRequest request) throws UnsupportedEncodingException, FileNotFoundException, IOException {
 		int i = 0;
-		Image image;
+		Image image;String md5;
 		String _a , _b , _c, _d = null;
 		for(String j:index) {
 			_a = name[i];
 			_b = path[i];
 			_c = time==null||time.length<1?null:time[i];
 			_d = description==null||description.length<1?null:description[i];
-			image = imageService.getImage(_a, _b);
+			File file = new File(_b);
+			if (file.exists()) {
+				md5 = DigestUtils.md5Hex(IOUtils.toByteArray(new FileInputStream(file)));
+				image = imageService.getImageByMd5(md5);
+			} else {
+				continue;
+			}
 			if(image==null) {
 				image = new Image();
 				image.setName(_a);
 				image.setTime(getTime(_c));
 				image.setPath(_b);
+				image.setState(0);
+				image.setMd5(md5);
 				image.setDescription(_d);
 				image.setBucket_id(Integer.valueOf(bucket_id));
 //				System.out.println(image);
@@ -495,6 +520,14 @@ public class AdministratorController {
 			return "/image/admin_success";
 		}
 		return "/admin/album/edit";
+	}
+	
+	@RequestMapping("/admin/label/create")
+	public String labelCreate(Map<String,Object> model,
+			String label_id, String image_id,
+			HttpServletRequest request) {
+		labelService.addLabelImage(label_id, image_id);
+		return "/image/admin_success";
 	}
 	
 	private Date getTime(String date) {

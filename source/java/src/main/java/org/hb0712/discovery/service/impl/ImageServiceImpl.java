@@ -43,6 +43,10 @@ public class ImageServiceImpl extends FileServiceImpl implements ImageService{
 		return imageDao.getImage(int_id);
 	}
 	
+	public Image getImageByMd5(String md5) {
+		return imageDao.getImage(md5);
+	}
+	
 	public boolean update(Image image) {
 		return imageDao.update(image);
 	}

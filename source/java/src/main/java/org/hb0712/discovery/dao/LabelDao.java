@@ -8,4 +8,8 @@ public interface LabelDao {
 	public List<Label> list();
 	
 	public Label getLabel(String id);
+	
+	public boolean addLabelImage(String lid, String iid);
+	
+	public Label searchLabel(String name);
 }

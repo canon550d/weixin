@@ -20,4 +20,13 @@ public class LabelServiceImpl implements LabelService{
 	public Label getLabel(String id) {
 		return labelDao.getLabel(id);
 	}
+	
+	public boolean addLabelImage(String lid, String iid) {
+		labelDao.addLabelImage(lid, iid);
+		return true;
+	}
+	
+	public Label searchLabel(String name) {
+		return labelDao.searchLabel(name);
+	}
 }

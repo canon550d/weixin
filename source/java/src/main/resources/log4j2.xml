@@ -8,7 +8,7 @@
 
     <loggers>
         <root level="trace">
-            <appender-ref ref="Console"/>
+            <!-- appender-ref ref="Console"/ -->
         </root>
     </loggers>
 </configuration>

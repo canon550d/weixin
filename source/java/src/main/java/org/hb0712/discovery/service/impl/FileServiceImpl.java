@@ -1,6 +1,10 @@
 package org.hb0712.discovery.service.impl;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -31,8 +35,21 @@ public class FileServiceImpl {
 		if(FileUtils.getFile(target).exists()) {
 			return true;
 		}
+		File file = new File(source);
 		try {
-			Thumbnails.of(source).scale(0.20f).toFile(target);
+			BufferedImage image = ImageIO.read(file);
+			int cacheSize = 160;
+			int width = 0;
+			int height = 0;
+			if (image.getWidth() > image.getHeight()) {//横拍
+				width = image.getWidth() * cacheSize / image.getHeight();
+				height = cacheSize;
+			} else {//竖拍
+				width = image.getHeight() * cacheSize / image.getWidth();
+				height = cacheSize;
+			}
+			Thumbnails.of(source).size(width, height).toFile(target);
+			image = null;
 			return true;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -61,8 +78,21 @@ public class FileServiceImpl {
 		System.out.println(11);
 		//先实验图片压缩后的效果
 		String jpg ="D:\\Sya\\Pictures\\WorkSpace\\Camera\\LX5\\100\\P1030357.JPG";
-		String out = "D:\\Sya\\Pictures\\Cache\\LX5\\100\\P1030357.JPG";
-		Thumbnails.of(jpg).scale(0.20f).toFile(out);
+		String out = "D:\\Sya\\Pictures\\Cache\\LX5\\101\\P1030357.JPG";
+		
+		File file = new File(jpg);
+		BufferedImage image = ImageIO.read(file);
+		int cacheSize = 160;
+		int width = 0;
+		int height = 0;
+		if (image.getWidth() > image.getHeight()) {//横拍
+			width = image.getWidth() * cacheSize / image.getHeight();
+			height = cacheSize;
+		} else {//竖拍
+			width = image.getHeight() * cacheSize / image.getWidth();
+			height = cacheSize;
+		}
+		Thumbnails.of(file).size(width, height).toFile(out);
 		//压缩的还可以，但是拍摄信息都没有了
 	}
 	

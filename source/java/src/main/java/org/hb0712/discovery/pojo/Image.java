@@ -10,8 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -28,12 +27,14 @@ public class Image {
 	private String description;
 	private String path;//路径
 	private String cache;
+	private String md5;
 	private Integer rate;//评分
 	private Integer state;
 	private Integer bucket_id;
 	private Camera camera;//相机
 	private Album album;
 	private List<Export> exports;
+	private List<Label> labels;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -80,6 +81,12 @@ public class Image {
 	public void setCache(String cache) {
 		this.cache = cache;
 	}
+	public String getMd5() {
+		return md5;
+	}
+	public void setMd5(String md5) {
+		this.md5 = md5;
+	}
 	public Integer getRate() {
 		return rate;
 	}
@@ -121,6 +128,14 @@ public class Image {
 	public void setExports(List<Export> exports) {
 		this.exports = exports;
 	}
+	@ManyToMany(mappedBy = "images", fetch = FetchType.LAZY)
+	public List<Label> getLabels() {
+		return labels;
+	}
+	public void setLabels(List<Label> labels) {
+		this.labels = labels;
+	}
+	
 	@Transient
 	public boolean getGxports() {
 		if(this.exports==null)

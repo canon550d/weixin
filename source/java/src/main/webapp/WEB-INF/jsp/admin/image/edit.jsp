@@ -20,7 +20,8 @@ bucket_id:<c:out value='${image.bucket_id}'/>
 <form method="post">
   <%-- <input type="text" name="id" value="<c:out value='${image.id}'/>"/> --%>
   <div>名称：<input type="text" name="name" value="<c:out value='${image.name}'/>"/></div>
-  <div>地址：<input type="text" name="path" value="<c:out value='${image.path}'/>" style="width:500px"/><c:out value='${image.cache}'/></div>
+  <div>地址：<input type="text" name="path" value="<c:out value='${image.path}'/>" style="width:500px"/></div>
+  <div>地址：<input type="text" name="cache" value="<c:out value='${image.cache}'/>" style="width:500px"/></div>
   <div>描述：<input type="text" name="description" value="<c:out value='${image.description}'/>" style="width:400px"/></div>
   <div>时间：<input type="text" name="time" value="<fmt:formatDate value="${image.time}" pattern="yyyy-MM-dd HH:mm:ss"/>"/></div>
   <div>评分：<input type="text" name="rate" value="<c:out value='${image.rate}'/>"/></div>
