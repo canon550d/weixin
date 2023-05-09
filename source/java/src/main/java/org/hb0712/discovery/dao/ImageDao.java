@@ -6,8 +6,8 @@ import java.util.Map;
 
 import org.hb0712.discovery.dao.impl.Page;
 import org.hb0712.discovery.pojo.Camera;
-import org.hb0712.discovery.pojo.Export;
 import org.hb0712.discovery.pojo.Image;
+import org.hb0712.discovery.pojo.ImageFile;
 
 public interface ImageDao{
 	public List<Image> list(Page page);
@@ -25,7 +25,7 @@ public interface ImageDao{
 	public Image getImage(String name, String path);
 	public boolean update(Image image);
 	public boolean save(Image image);
-	public boolean save(Export export);
+	public boolean save(ImageFile file);
 	public boolean updatePath (String path, Integer id);
 	
 	public List<Map<String, String>> groupbyCamera();

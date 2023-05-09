@@ -69,8 +69,8 @@ public class AdministratorController {
 			HttpServletRequest request) throws IOException {
 		Image image = imageService.getImage(Integer.valueOf(id));
 		String imgpath = null;
-		if(image.getExportsIsNotEmpty()) {
-			imgpath = image.getExports().get(0).getPath();
+		if(image.getFilesIsNotEmpty()) {
+			imgpath = image.getFiles().get(0).getPath();
 		} else {
 			imgpath = image.getPath();
 		}
@@ -249,7 +249,7 @@ public class AdministratorController {
 //				imageService.save(e);
 //				edit_image.getExports().add(e);
 			} else {
-				edit_image.setExports(null);
+				edit_image.setFiles(null);
 			}
 			edit_image.setName(image.getName());
 			edit_image.setPath(image.getPath());
