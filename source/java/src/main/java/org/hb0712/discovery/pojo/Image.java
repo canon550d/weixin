@@ -33,7 +33,7 @@ public class Image {
 	private Integer bucket_id;
 	private Camera camera;//相机
 	private Album album;
-	private List<Export> exports;
+	private List<Export> copies;//副本
 	private List<Label> labels;
 	
 	@Id
@@ -123,10 +123,10 @@ public class Image {
 	
 	@OneToMany(mappedBy = "image", fetch=FetchType.LAZY)
 	public List<Export> getExports() {
-		return exports;
+		return copies;
 	}
-	public void setExports(List<Export> exports) {
-		this.exports = exports;
+	public void setExports(List<Export> copies) {
+		this.copies = copies;
 	}
 	@ManyToMany(mappedBy = "images", fetch = FetchType.LAZY)
 	public List<Label> getLabels() {
@@ -138,9 +138,9 @@ public class Image {
 	
 	@Transient
 	public boolean getGxports() {
-		if(this.exports==null)
+		if(this.copies==null)
 			return false;
-		if(this.exports.size()>0) {
+		if(this.copies.size()>0) {
 			return true;
 		}
 		return false;
@@ -151,11 +151,11 @@ public class Image {
 	}
 	@Transient
 	public boolean getExportsIsNotEmpty() {
-		if(this.exports==null)
+		if(this.copies==null)
 			return false;
-		if(this.exports.size()>0) {
+		if(this.copies.size()>0) {
 			boolean notEmptyPath = false;
-			for(Export e:exports) {
+			for(Export e:copies) {
 				if(e.getPath()!=null && e.getPath().length()>0) {
 					notEmptyPath = true;
 					return notEmptyPath;
