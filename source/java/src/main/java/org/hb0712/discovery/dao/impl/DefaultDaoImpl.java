@@ -50,6 +50,20 @@ public class DefaultDaoImpl<T> {
 		return list;
 	}
 	
+	public List<T> list(Session session, Page page, String orderby){
+		String name = getSimpleName();
+		Query querycount = session.createQuery("select count(*) from "+name);
+		Long total = (Long) querycount.uniqueResult();
+		page.setTotal(total.intValue());
+		
+		Query query = session.createQuery("from "+name+" order by orderby".replace("orderby", orderby));
+		query.setFirstResult(page.getStartPosition());
+		query.setMaxResults(page.getPageSize());
+		List<T> list = query.list();
+		
+		return list;
+	}
+	
 	public List<T> list2(Session session, Page page){
 		String name = getSimpleName();
 		Query querycount = session.createQuery("select count(*) from "+name);
