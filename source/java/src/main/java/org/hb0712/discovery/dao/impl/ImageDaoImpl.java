@@ -10,8 +10,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hb0712.discovery.dao.ImageDao;
 import org.hb0712.discovery.pojo.Camera;
-import org.hb0712.discovery.pojo.Export;
 import org.hb0712.discovery.pojo.Image;
+import org.hb0712.discovery.pojo.ImageFile;
 import org.hb0712.discovery.pojo.Label;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
@@ -28,7 +28,7 @@ public class ImageDaoImpl extends DefaultDaoImpl<Image> implements ImageDao{
 		List<Image> list = super.list2(session, page);
 		for (Image i:list) {
 			Hibernate.initialize(i.getCamera());
-			for (Export e:i.getExports()) {
+			for (ImageFile e:i.getFiles()) {
 				Hibernate.initialize(e);
 			}
 			for (Label l:i.getLabels()) {
@@ -55,7 +55,7 @@ public class ImageDaoImpl extends DefaultDaoImpl<Image> implements ImageDao{
 
 		for (Image i:list) {
 			Hibernate.initialize(i.getCamera());
-			for (Export e:i.getExports()) {
+			for (ImageFile e:i.getFiles()) {
 				Hibernate.initialize(e);
 			}
 			for (Label l:i.getLabels()) {
@@ -189,7 +189,7 @@ public class ImageDaoImpl extends DefaultDaoImpl<Image> implements ImageDao{
 		List<Image> list = super.SQLQuery(session, sql, map, Image.class);
 		for (Image i:list) {
 			Hibernate.initialize(i.getCamera());
-			for (Export e:i.getExports()) {
+			for (ImageFile e:i.getFiles()) {
 				Hibernate.initialize(e);
 			}
 		}
@@ -291,11 +291,11 @@ public class ImageDaoImpl extends DefaultDaoImpl<Image> implements ImageDao{
 		return false;
 	}
 	
-	public boolean save(Export export) {
+	public boolean save(ImageFile file) {
 		Session session = sessionFactory.openSession();
 		Transaction ts = session.beginTransaction();
-		logger.info("my name:" + export);
-		session.save(export);
+		logger.info("my name:" + file);
+		session.save(file);
 		ts.commit();
 		session.close();
 		return true;

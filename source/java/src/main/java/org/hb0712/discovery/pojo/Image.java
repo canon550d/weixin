@@ -33,7 +33,7 @@ public class Image {
 	private Integer bucket_id;
 	private Camera camera;//相机
 	private Album album;
-	private List<Export> exports;
+	private List<ImageFile> files;
 	private List<Label> labels;
 	
 	@Id
@@ -122,11 +122,11 @@ public class Image {
 //	}
 	
 	@OneToMany(mappedBy = "image", fetch=FetchType.LAZY)
-	public List<Export> getExports() {
-		return exports;
+	public List<ImageFile> getFiles() {
+		return files;
 	}
-	public void setExports(List<Export> exports) {
-		this.exports = exports;
+	public void setFiles(List<ImageFile> files) {
+		this.files = files;
 	}
 	@ManyToMany(mappedBy = "images", fetch = FetchType.LAZY)
 	public List<Label> getLabels() {
@@ -138,24 +138,24 @@ public class Image {
 	
 	@Transient
 	public boolean getGxports() {
-		if(this.exports==null)
+		if(this.files==null)
 			return false;
-		if(this.exports.size()>0) {
+		if(this.files.size()>0) {
 			return true;
 		}
 		return false;
 	}
 	@Transient
-	public boolean getExportsIsEmpty() {
-		return !getExportsIsNotEmpty();
+	public boolean getFilesIsEmpty() {
+		return !getFilesIsNotEmpty();
 	}
 	@Transient
-	public boolean getExportsIsNotEmpty() {
-		if(this.exports==null)
+	public boolean getFilesIsNotEmpty() {
+		if(this.files==null)
 			return false;
-		if(this.exports.size()>0) {
+		if(this.files.size()>0) {
 			boolean notEmptyPath = false;
-			for(Export e:exports) {
+			for(ImageFile e:files) {
 				if(e.getPath()!=null && e.getPath().length()>0) {
 					notEmptyPath = true;
 					return notEmptyPath;
@@ -165,8 +165,8 @@ public class Image {
 		return false;
 	}
 	@Transient
-	public Export getFirstExport() {
-		return this.getExports().get(0);
+	public ImageFile getFirstFile() {
+		return this.getFiles().get(0);
 	}
 	
 	@Transient

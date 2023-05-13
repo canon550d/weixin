@@ -69,8 +69,8 @@ public class AdministratorController {
 			HttpServletRequest request) throws IOException {
 		Image image = imageService.getImage(Integer.valueOf(id));
 		String imgpath = null;
-		if(image.getExportsIsNotEmpty()) {
-			imgpath = image.getExports().get(0).getPath();
+		if(image.getFilesIsNotEmpty()) {
+			imgpath = image.getFiles().get(0).getPath();
 		} else {
 			imgpath = image.getPath();
 		}
@@ -187,6 +187,9 @@ public class AdministratorController {
 		if(page==null) {
 			page = new Page();
 		}
+		if(camera_id==null) {
+			camera_id = "0";
+		}
 		model.put("page", page);
 		
 		if(orderby==null) {
@@ -194,7 +197,7 @@ public class AdministratorController {
 		}model.put("orderby", orderby);
 		
 		List<Image> list = null;
-		if(StringUtils.isNotEmpty(camera_id)) {
+		if(StringUtils.isNotEmpty(camera_id) && !"0".equals(camera_id)) {
 			model.put("camera_id", camera_id);
 			Camera camera = cameraService.getCamera(camera_id);
 			list = imageService.list(page, orderby, camera);
@@ -209,7 +212,7 @@ public class AdministratorController {
 		List<Label> labels = labelService.list();
 		model.put("labels", labels);
 		
-		
+		model.put("camera_id", camera_id);
 		return "/admin/image/index";
 	}
 	
@@ -246,7 +249,7 @@ public class AdministratorController {
 //				imageService.save(e);
 //				edit_image.getExports().add(e);
 			} else {
-				edit_image.setExports(null);
+				edit_image.setFiles(null);
 			}
 			edit_image.setName(image.getName());
 			edit_image.setPath(image.getPath());

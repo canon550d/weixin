@@ -11,9 +11,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+/*
+ * 副本，其实就是一个File
+ */
 @Entity
 @Table(name = "export")
-public class Export {
+public class ImageFile {
 	private Integer id;
 	private String path;
 	private Image image;
