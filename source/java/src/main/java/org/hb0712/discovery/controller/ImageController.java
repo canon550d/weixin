@@ -66,7 +66,7 @@ public class ImageController {
 			String date, String album, String label, String keyword,
 			HttpServletRequest request) throws UnsupportedEncodingException {
 		
-		List<Image> list = null;System.out.println("222");
+		List<Image> list = null;
 		if(StringUtils.isNotEmpty(date)) {logger.info(date);
 			list = imageService.list(date);
 		} else if (StringUtils.isNotEmpty(album)) {logger.info(album);
