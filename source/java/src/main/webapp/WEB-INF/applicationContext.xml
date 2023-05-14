@@ -59,6 +59,7 @@
 				<value>org.hb0712.discovery.pojo.Album</value>
 				<value>org.hb0712.discovery.pojo.ImageFile</value>
 				<value>org.hb0712.discovery.pojo.Label</value>
+				<value>org.hb0712.discovery.pojo.Blog</value>
 			</list>
 		</property>
 	</bean>

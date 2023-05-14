@@ -87,6 +87,9 @@ public class AdministratorController {
 		path = new String(path.getBytes("ISO8859-1"), "UTF-8");
 		
 		String image_path = URLDecoder.decode(path, "UTF-8");System.out.println(image_path);
+		if (!image_path.contains(fileConfig.getWorkSpace())) {
+			image_path = fileConfig.getWorkSpace() + image_path;
+		}
 		
 		Resource resource = new FileSystemResource(image_path);
 		byte[] fileData = FileCopyUtils.copyToByteArray(resource.getInputStream());

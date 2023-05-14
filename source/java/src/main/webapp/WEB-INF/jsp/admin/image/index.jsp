@@ -38,7 +38,7 @@
       <td><fmt:formatDate value="${v.time}" pattern="yyyy-MM-dd"/></td><!--日期-->
       <td><c:out value="${v.description}" /></td><!--描述-->
       <td>
-        <div @click="sshowImage($event, <c:out value="${vs.index}" />, '<c:out value="${v.URLEncoderPath}" />')"><c:out value="${v.path}" /></div><c:forEach items="${v.exports}" var="ev" varStatus="evs">
+        <div @click="sshowImage($event, <c:out value="${vs.index}" />, '<c:out value="${v.URLEncoderPath}" />')"><c:out value="${v.path}" /></div><c:forEach items="${v.files}" var="ev" varStatus="evs">
         <div @click="sshowImage($event, <c:out value="${vs.index}" />, '<c:out value="${ev.URLEncoderPath}" />')"><c:out value="${ev.path}" /></div>
       </c:forEach></td><!--副本-->
       <td><img :src="showPath(<c:out value="${vs.index}" />)" width="100px" height=""/></td>

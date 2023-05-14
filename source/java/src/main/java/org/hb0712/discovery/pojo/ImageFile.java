@@ -44,6 +44,9 @@ public class ImageFile {
 	}
 	@Transient
 	public String getURLEncoderPath () throws UnsupportedEncodingException {
+		if (getPath() == null) {
+			return null;
+		}
 		return URLEncoder.encode(getPath(), "UTF-8");
 	}
 }
