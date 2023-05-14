@@ -76,12 +76,13 @@ public class Image {
 		this.path = path;
 	}
 	public String getCache() {
-		return cache;
-	}
-	public void setCache(String cache) {
 		int x = name.indexOf(".");
 		String newName = name.substring(0, x) + ".160x160" + name.substring(x);
 		this.cache = path.replace(name, newName);
+		return cache;
+	}
+	public void setCache(String cache) {
+		this.cache = cache;
 	}
 	public String getMd5() {
 		return md5;
