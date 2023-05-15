@@ -80,7 +80,7 @@ public class ImageController {
 				list = obj_label.getImages();
 			}
 		} else if (StringUtils.isNotEmpty(keyword)) {
-			String _keyword = URLDecoder.decode(keyword, "UTF-8");System.out.println(_keyword);
+			String _keyword = URLDecoder.decode(keyword, "UTF-8");
 			Label obj_label = labelService.searchLabel(_keyword);
 			if (obj_label!=null) {
 				list = obj_label.getImages();
@@ -88,14 +88,8 @@ public class ImageController {
 		}
 		for(Image l:list) {
 //			String p = URLEncoder.encode(l.getPath(), "UTF-8");
-			String p = l.getPath().replace(fileConfig.getWorkSpace(), "").replace("\\", "/");
+			String p = l.getPath().replace("\\", "/");
 			l.setPath(p);
-			if (l.getCache()!=null && l.getCache().length()>0) {
-//				String c = URLEncoder.encode(l.getCache(), "UTF-8");
-				System.out.println(l.getCache());
-				String c = l.getCache().replace(fileConfig.getCachePath(), "").replace("\\", "/");
-				l.setCache(c);System.out.println(l.getCache());
-			}
 		}
 		
 		model.put("list", list);
