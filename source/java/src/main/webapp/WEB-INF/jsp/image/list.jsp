@@ -11,7 +11,7 @@
 	"images" : [ <c:forEach items="${list}" var="v" varStatus="vs">{
 		"name" : "<c:out value='${v.name}' />","camera_type" : "<c:out value='${v.camera.type}' />",
 		"src" : "/discovery/image/view<c:out value="${v.path}" />",
-		"cache" : "/discovery/image/view/cache/<c:out value="${v.cache}" />",
+		"cache" : "/discovery/image/view/cache<c:out value="${v.cache}" />",
 		"time" : "<fmt:formatDate value="${v.time}" pattern="yyyy-MM-dd HH:mm"/>",
 		"rate" : <c:choose><c:when test="${v.rate==null}">0</c:when><c:otherwise><c:out value='${v.rate}' /></c:otherwise></c:choose>,
 		"description" : "<c:out value="${v.description}" />"

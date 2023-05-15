@@ -108,8 +108,8 @@ public class ImageController {
 	 * 
 	 */
 	@ResponseBody
-	@RequestMapping({"{ptype:\\S+}/{pmodel:\\S+}/{pindex:\\S+}/tomove/{pname:\\S+}.JPG",
-		"{ptype:\\S+}/{pmodel:\\S+}/{pindex:\\S+}/tomove/{pname:\\S+}.jpg",
+	@RequestMapping({"cache/{ptype:\\S+}/{pmodel:\\S+}/{pindex:\\S+}/{pname:\\S+}.JPG",
+		"cache/{ptype:\\S+}/{pmodel:\\S+}/{pindex:\\S+}/{pname:\\S+}.jpg",
 		"{ptype:\\S+}/{pmodel:\\S+}/{pindex:\\S+}/{pname:\\S+}.JPG",
 		"{ptype:\\S+}/{pmodel:\\S+}/{pindex:\\S+}/{pname:\\S+}.jpg"})
 	public byte[] view(Map<String,Object> model,
@@ -117,7 +117,6 @@ public class ImageController {
 			HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		path = request.getPathInfo().substring(1);
-		System.out.println(path);
 		String newPath = null;
 		if (path.startsWith("cache")) {
 			path = path.substring(6);
@@ -126,7 +125,6 @@ public class ImageController {
 			newPath = fileConfig.getWorkSpace().replace("\\", "/") + path;
 		}
 		
-		System.out.println("newPath:"+newPath);
 		Resource resource = new FileSystemResource(newPath);
 		if (!resource.exists()) {
 			resource = new ClassPathResource("404.jpg");
