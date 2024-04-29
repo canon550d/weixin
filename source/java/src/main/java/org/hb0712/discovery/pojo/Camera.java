@@ -1,13 +1,8 @@
 package org.hb0712.discovery.pojo;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
-@Entity
-@Table(name = "camera")
 public class Camera {
 	private Integer id;
 	private String maker;//品牌
@@ -18,8 +13,6 @@ public class Camera {
 	private String size;//目录大小
 	private String type;//DC,mobile,SLR
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Integer getId() {
 		return id;
 	}
@@ -67,6 +60,10 @@ public class Camera {
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+	
+	public String getURLEncoderPath () throws UnsupportedEncodingException {
+		return URLEncoder.encode(getPath(), "UTF-8");
 	}
 	
 	public String toString() {

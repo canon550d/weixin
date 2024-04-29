@@ -1,27 +1,22 @@
 package org.hb0712.discovery.pojo;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 /*
  * 图库，桶，一个容器
  */
-@Entity
 public class Bucket {
 	private Integer id;
 	private String name;
+	private String path;
 	//所有者
 	private User user;
 	//多个相册
 	private List<Album> albums;
 	private List<Image> images;
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Integer getId() {
 		return id;
 	}
@@ -33,6 +28,12 @@ public class Bucket {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public String getPath() {
+		return path;
+	}
+	public void setPath(String path) {
+		this.path = path;
 	}
 	public User getUser() {
 		return user;
@@ -52,5 +53,9 @@ public class Bucket {
 	}
 	public void setImages(List<Image> images) {
 		this.images = images;
+	}
+	
+	public String getURLEncoderPath () throws UnsupportedEncodingException {
+		return URLEncoder.encode(getPath(), "UTF-8");
 	}
 }

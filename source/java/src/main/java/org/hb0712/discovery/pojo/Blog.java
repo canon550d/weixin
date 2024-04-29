@@ -1,22 +1,16 @@
 package org.hb0712.discovery.pojo;
 
-import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 /*
  * 微博、朋友圈等
  */
-@Entity
-@Table(name = "blog")
 public class Blog {
     private Integer id;
     private String note;
     private Date time;
     private String jsonobject;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
         return id;
     }

@@ -5,21 +5,9 @@ import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
 import org.springframework.format.annotation.DateTimeFormat;
 
-@Entity
-@Table(name = "image")
+
 public class Image {
 	private Integer id;
 	private String name;//文件名
@@ -30,14 +18,13 @@ public class Image {
 	private String md5;
 	private Integer rate;//评分
 	private Integer state;
-	private Integer bucket_id;
+	private Bucket bucket;
 	private Camera camera;//相机
 	private Album album;
+	private String numname;
 	private List<ImageFile> files;
 	private List<Label> labels;
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Integer getId() {
 		return id;
 	}
@@ -76,9 +63,6 @@ public class Image {
 		this.path = path;
 	}
 	public String getCache() {
-		int x = name.indexOf(".");
-		String newName = name.substring(0, x) + ".160x160" + name.substring(x);
-		this.cache = path.replace(name, newName);
 		return cache;
 	}
 	public void setCache(String cache) {
@@ -102,13 +86,18 @@ public class Image {
 	public void setState(Integer state) {
 		this.state = state;
 	}
-	public Integer getBucket_id() {
-		return bucket_id;
+	public String getNumname() {
+		return numname;
 	}
-	public void setBucket_id(Integer bucket_id) {
-		this.bucket_id = bucket_id;
+	public void setNumname(String numname) {
+		this.numname = numname;
 	}
-	@ManyToOne(fetch = FetchType.LAZY)
+	public Bucket getBucket() {
+		return bucket;
+	}
+	public void setBucket(Bucket bucket) {
+		this.bucket = bucket;
+	}
 	public Camera getCamera() {
 		return camera;
 	}
@@ -123,23 +112,19 @@ public class Image {
 //	public void setAlbum(Album album) {
 //		this.album = album;
 //	}
-	
-	@OneToMany(mappedBy = "image", fetch=FetchType.LAZY)
 	public List<ImageFile> getFiles() {
 		return files;
 	}
 	public void setFiles(List<ImageFile> files) {
 		this.files = files;
 	}
-	@ManyToMany(mappedBy = "images", fetch = FetchType.LAZY)
 	public List<Label> getLabels() {
 		return labels;
 	}
 	public void setLabels(List<Label> labels) {
 		this.labels = labels;
 	}
-	
-	@Transient
+
 	public boolean getGxports() {
 		if(this.files==null)
 			return false;
@@ -148,11 +133,11 @@ public class Image {
 		}
 		return false;
 	}
-	@Transient
+
 	public boolean getFilesIsEmpty() {
 		return !getFilesIsNotEmpty();
 	}
-	@Transient
+
 	public boolean getFilesIsNotEmpty() {
 		if(this.files==null)
 			return false;
@@ -167,12 +152,12 @@ public class Image {
 		}
 		return false;
 	}
-	@Transient
+
 	public ImageFile getFirstFile() {
 		return this.getFiles().get(0);
 	}
 	
-	@Transient
+
 	public String getURLEncoderPath () throws UnsupportedEncodingException {
 		return URLEncoder.encode(getPath(), "UTF-8");
 	}
