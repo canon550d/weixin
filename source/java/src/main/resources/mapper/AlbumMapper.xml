@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC 
+  "-//mybatis.org/DTD Mapper 3.0//EN" 
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.hb0712.discovery.mapper.AlbumMapper">
+	<select id="list" resultType="Album">
+		select * from album
+	</select>
+	
+	<select id="getAlbum" resultType="Album">
+		select * from album
+	</select>
+	
+	<update id="update">
+		update set name = #{name}, description = #{description}, path = #{path}, time = #{time} where id = #{id}
+	</update>
+	
+	<insert id="save">
+		insert into album (name, description, path, time) values (#{name}, #{description}, #{path}, #{time}) 
+	</insert>
+</mapper>

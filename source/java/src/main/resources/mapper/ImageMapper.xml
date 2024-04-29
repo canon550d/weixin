@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC 
+  "-//mybatis.org/DTD Mapper 3.0//EN" 
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.hb0712.discovery.mapper.ImageMapper">
+
+	<resultMap type="Image" id="imageAndChild">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="description" column="description"/>
+		<result property="path" column="path"/>
+		<result property="time" column="time"/>
+		<result property="rate" column="rate"/>
+		<!-- <result property="album_id" column="album_id"/> -->
+		<result property="cache" column="cache"/>
+		<!-- <result property="bucket_id" column="bucket_id"/> -->
+		<result property="state" column="state"/>
+		<result property="md5" column="md5"/>
+		<result property="numname" column="numname"/>
+		<association property="camera" column="camera_id" select="org.hb0712.discovery.mapper.CameraMapper.getCamera" />
+		<association property="bucket" column="bucket_id" select="org.hb0712.discovery.mapper.BucketMapper.getBucket" />
+	</resultMap>
+	
+	<resultMap type="Image" id="imageAndChild2">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="description" column="description"/>
+		<result property="path" column="path"/>
+		<result property="time" column="time"/>
+		<result property="rate" column="rate"/>
+		<association property="camera" javaType="org.hb0712.discovery.pojo.Camera">
+			<id property="id" column="camera_id"/>
+			<result property="path" column="camera_path"/>
+			<result property="type" column="camera_type"/>
+		</association>
+		<association property="bucket" javaType="org.hb0712.discovery.pojo.Bucket">
+			<id property="id" column="bucket_id"/>
+			<result property="name" column="bucket_name"/>
+			<result property="path" column="bucket_path"/>
+		</association>
+	</resultMap>
+	
+	<select id="getCount" resultType="Integer" >
+		select count(*) from image i where i.state = 0
+		<if test="camera!=null">
+			and camera_id = #{camera.id}
+		</if>
+	</select>
+	
+	<select id="getImages" resultMap="imageAndChild" >
+		select * from image i where i.state = 0 
+		<if test="camera!=null">
+			and camera_id = #{camera.id}
+		</if>
+		<if test="orderby!=null">
+			order by #{orderby}
+		</if>
+		limit ${page.startPosition}, ${page.pageSize}
+	</select>
+	
+	<!-- public List<Image> getImagesByCameraId(String camera_id) -->
+	<select id="getImagesByCameraId" resultType="Image" >
+		select * from image i where camera_id = #{camera_id}
+	</select>
+	
+	<!-- public List<Image> getImagesByCameraId7time(String camera_id) -->
+	<select id="getImagesByCameraId7time" resultType="Image" >
+		select * from image i where camera_id = #{camera_id} and state = 0 order by time
+	</select>
+	
+	<select id="getImagesByIds" resultType="Image" >
+		select * from image i where i.id in 
+		<foreach collection="ids" item="id" open="(" separator="," close=")" >
+			#{id}
+		</foreach>
+	</select>
+	
+	<!-- public Image getImageById(Integer id) -->
+	<select id="getImageById" resultMap="imageAndChild" >
+		select * from image i where i.id = #{id}
+	</select>
+	
+	<!-- public Image getImageByName(String name) -->
+	<select id="getImageByName" resultType="Image" >
+		select * from image i where i.name = #{name}
+	</select>
+	
+	<!-- public List<Image> queryImagesByName(String[] md5s); -->
+	<select id="queryImagesByFullpaths" resultType="Image" >
+		select * from image i where i.state = 0 and 
+		<foreach collection="md5s" item="m" open="(" separator="or" close=")" >
+			(`name` = #{m.name} and `path` = #{m.path})
+		</foreach>
+	</select>
+	
+	<!-- public List<Image> getImagesByTimes(@Param("start") String start, @Param("end") String end); -->
+	<select id="getImagesByTimes" resultMap="imageAndChild2">
+		select i.name, i.description,i.path,i.time,i.rate,b.name as bucket_name,b.path as bucket_path,c.path as camera_path,c.type as camera_type 
+		from image i 
+		join bucket b on b.id = i.bucket_id 
+		join camera c on c.id = i.camera_id
+		where i.time between #{start} and #{end} 
+		and i.state = 0 
+		order by i.time
+	</select>
+	
+	<select id="getImageByNamePath" resultType="Image" >
+		select * from image i where i.name = #{name} and i.path= #{path}
+	</select>
+	
+	<select id="getImageByMD5" resultType="Image" >
+		select * from image i where i.md5 = #{md5}
+	</select>
+	
+	<select id="listRepeat" resultType="Image" >
+		select * from image i where camera_id = #{camera_id}
+	</select>
+	
+	<!-- public List<Map<String, Long>> groupbyCamera() -->
+	<select id="groupbyCamera" resultType="Map">
+		select camera_id as id, count(*) as count from image where state = 0 group by camera_id
+	</select>
+	
+	<select id="groupbyCamera2" resultType="Map">
+		select camera_id as id, count(*) as count from image where state = 0 and cache is NULL group by camera_id
+	</select>
+	
+	<select id="listTime" resultType="Object">
+		select date(i.time) from image i
+	</select>
+	
+	<update id="update"><!-- album_id = #{album_id}, bucket_id = #{bucket_id}, camera_id = #{camera_id}, -->
+		update image set name = #{name}, description = #{description} , path = #{path}, 
+			time = #{time}, rate = #{rate}, cache = #{cache}, state = #{state}, md5 = #{md5}, numname = #{numname}
+		where id = #{id}
+	</update>
+	
+	<update id="updatePath">
+		update image set path = #{path} where id = #{id}
+	</update>
+	
+	<update id="updateState">
+		update image set state = 1 where id in ("+ids+")
+	</update>
+	
+	<update id="updateNumname">
+		update image set numname = #{numname} where id = #{id}
+	</update>
+	
+	<update id="updateCache">
+		update image set cache = NULL where id = #{id}
+	</update>
+	
+	<insert id="save">
+		insert into image (`name`, `description`, `path`, `time`, 
+			`camera_id`, `album_id`, `bucket_id`, `state`, `md5`) values (#{name}, #{description}, #{path}, #{time}, 
+			#{camera.id}, '1', '1', 0, #{md5})
+	</insert>
+</mapper>
