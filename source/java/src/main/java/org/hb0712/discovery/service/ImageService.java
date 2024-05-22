@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.hb0712.discovery.dao.impl.Page;
 import org.hb0712.discovery.pojo.Camera;
-import org.hb0712.discovery.pojo.ImageFile;
 import org.hb0712.discovery.pojo.Image;
 
 public interface ImageService {
@@ -21,14 +20,14 @@ public interface ImageService {
 	
 	public boolean save(Image image);
 	
-	public Image getImage(int id);
+//	public Image getImage(int id);
 	
 	public Image getImage(String id);
 	
 	public Image getImageByMd5(String md5);
 	
 	public List<Image> list(String[] ids);
-	public List<Image> listOrderBy(String orderby);
+//	public List<Image> listOrderBy(String orderby);
 	public List<Image> listRepeat(String camera_id);
 	public boolean listRepeatRemove(String[] id);
 	/*
@@ -36,7 +35,7 @@ public interface ImageService {
 	 */
 	public Collection<File> scan(String path);
 	public Collection<File> scan(File directory);
-	public Image getImage(String name, String path);
+//	public Image getImage(String name, String path);
 	public Image getImageByName(String name);
 
 	/*
@@ -49,17 +48,21 @@ public interface ImageService {
 	//获取某一天的所有照片
 	public List<Image> list(String date);
 	
-	public boolean save(ImageFile file);
+//	public boolean save(ImageFile file);
 	
 	
-	public String[] getCachePath(int listsize);
+//	public String[] getCachePath(int listsize);
 	
 	public boolean makeCache(String source, String target);
 	
-	public boolean moveFile(Camera camera, Page page, String orderby);
+	public boolean moveFiles(Camera camera, Page page, String orderby);
 	
-	public List<Map<String, String>> groupbyCamera();
-	public List<Map<String, String>> groupbyCamera2();
+	public List<Map<String, Long>> groupbyCamera();
+	public List<Map<String, Long>> groupbyCamera2();
 	//把目录中已经存在于数据库中的图片筛掉
-	public Collection<File> findFileNotInDB(Collection<File> files);
+	public Collection<File> findFileNotInDB(Collection<File> files, String dir);
+	
+//	public String getFileSavePath(File file);
+	public String getImagePath(String dir, File file);
+	
 }

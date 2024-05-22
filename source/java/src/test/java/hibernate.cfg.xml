@@ -15,6 +15,8 @@
 		<mapping class="org.hb0712.discovery.pojo.Image"/>
 		<mapping class="org.hb0712.discovery.pojo.Camera"/>
 		<mapping class="org.hb0712.discovery.pojo.Album"/>
-		<mapping class="org.hb0712.discovery.pojo.Export"/>
+		<mapping class="org.hb0712.discovery.pojo.ImageFile"/>
+		<mapping class="org.hb0712.discovery.pojo.Label"/>
+		<mapping class="org.hb0712.discovery.pojo.Blog"/>
 	</session-factory>
 </hibernate-configuration>

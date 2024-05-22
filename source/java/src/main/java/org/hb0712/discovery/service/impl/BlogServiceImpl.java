@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 public class BlogServiceImpl implements BlogService {
-    @Autowired
+//    @Autowired
     public BlogDao blogDao;
 
     public List<Blog> list(Page page) {

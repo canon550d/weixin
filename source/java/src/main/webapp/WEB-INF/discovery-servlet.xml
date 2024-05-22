@@ -12,10 +12,8 @@
 				http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.2.xsd">
 
 	<context:component-scan base-package="org.hb0712.discovery.controller"/>
-	<context:component-scan base-package="org.hb0712.discovery.component"/>
 	<context:component-scan base-package="org.hb0712.discovery.service.impl"/>
 	<!--  <context:component-scan base-package="org.hb0712.discovery.dao.impl"/> -->
-	<context:component-scan base-package="org.hb0712.discovery.action"/>
 
 <!-- 
 	<bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">

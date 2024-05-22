@@ -6,7 +6,9 @@ import org.hb0712.discovery.pojo.Camera;
 
 public interface CameraService {
 	
-	public List<Camera> cameralist();
+	public List<Camera> list();
+	
+	public Camera getCamera(Integer id);
 	
 	public Camera getCamera(String id);
 	
@@ -15,4 +17,6 @@ public interface CameraService {
 	public boolean update(Camera camera);
 	
 	public boolean save(Camera camera);
+	
+	public String getPath(Camera camera);
 }

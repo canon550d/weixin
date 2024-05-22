@@ -7,13 +7,13 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.coobird.thumbnailator.Thumbnails;
 
 public class FileServiceImpl {
-	private Logger logger = LogManager.getLogger(FileServiceImpl.class);
+	private Logger logger = LoggerFactory.getLogger(FileServiceImpl.class);
 	
 	public String[] getCachePath(int listsize){
 		String[] data = new String[listsize];
@@ -38,17 +38,11 @@ public class FileServiceImpl {
 		File file = new File(source);
 		try {
 			BufferedImage image = ImageIO.read(file);
-			int cacheSize = 160;
-			int width = 0;
-			int height = 0;
-			if (image.getWidth() > image.getHeight()) {//横拍
-				width = image.getWidth() * cacheSize / image.getHeight();
-				height = cacheSize;
-			} else {//竖拍
-				width = image.getHeight() * cacheSize / image.getWidth();
-				height = cacheSize;
-			}
-			Thumbnails.of(source).size(width, height).toFile(target);
+			
+			int width = Sample.Small.getCalculatedWidth(image);
+			int height = Sample.Small.getFixedHeight();
+			
+			Thumbnails.of(source).size(width, height).outputQuality(0.4).toFile(target);
 			image = null;
 			return true;
 		} catch (IOException e) {
@@ -57,46 +51,57 @@ public class FileServiceImpl {
 		}
 		return false;
 	}
-
-	public void test2() {
-		String t = "D:\\Sya\\Pictures\\WorkSpace\\Camera\\LX5\\";
-		String s = "D:\\Sya\\Pictures\\Cache\\";
+	
+	public enum Sample {
+		Small(160, 0.4, "缩略图"),
+		Middle(2592, 0.8,"浏览大图");
 		
-		int listsize = 1000;
-		int j = 100;//每个文件夹100个
-		int k = 100;//文件夹起始编号
-		for(int i=0;i<listsize;i++) {
-			System.out.println("file:"+(i+1)+"|path:"+s+k+"\\sss.jpg");
-			if ((i+1)%j==0) {
-				k = k+1;
+		private Integer longSide;
+		private Double quality;
+		private String name;
+		
+		Sample(Integer longSide, Double quality, String name){
+			this.longSide = longSide;
+			this.quality = quality;
+			this.name = name;
+		}
+		
+		public Integer getWidth(BufferedImage image) {
+			if (image.getWidth() > image.getHeight()) {//横拍
+				return longSide;
+			} else {//竖拍
+				return image.getWidth() * this.longSide / image.getHeight();
 			}
 		}
-	}
-	
-	public void test1() throws IOException {
-		// 通常来说，我们需要对图片做缓存
-		System.out.println(11);
-		//先实验图片压缩后的效果
-		String jpg ="D:\\Sya\\Pictures\\WorkSpace\\Camera\\LX5\\100\\P1030357.JPG";
-		String out = "D:\\Sya\\Pictures\\Cache\\LX5\\101\\P1030357.JPG";
 		
-		File file = new File(jpg);
-		BufferedImage image = ImageIO.read(file);
-		int cacheSize = 160;
-		int width = 0;
-		int height = 0;
-		if (image.getWidth() > image.getHeight()) {//横拍
-			width = image.getWidth() * cacheSize / image.getHeight();
-			height = cacheSize;
-		} else {//竖拍
-			width = image.getHeight() * cacheSize / image.getWidth();
-			height = cacheSize;
+		public Integer getHeight(BufferedImage image) {
+			if (image.getWidth() > image.getHeight()) {//横拍
+				return image.getHeight() * this.longSide / image.getWidth();
+			} else {//竖拍
+				return longSide;
+			}
 		}
-		Thumbnails.of(file).size(width, height).toFile(out);
-		//压缩的还可以，但是拍摄信息都没有了
+		
+		public Integer getCalculatedWidth(BufferedImage image) {
+			if (image.getWidth() > image.getHeight()) {//横拍
+				return image.getWidth() * this.longSide / image.getHeight();
+			} else {//竖拍
+				return image.getHeight() * this.longSide / image.getWidth();
+			}
+		}
+		
+		public Integer getFixedHeight() {
+			return longSide;
+		}
+
+		public Double getQuality() {
+			return quality;
+		}
+
+		public String getName() {
+			return name;
+		}
 	}
 	
-	public static void main(String[] args) throws IOException{
-		new FileServiceImpl().test1();
-	}
+	
 }

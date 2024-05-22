@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <!-- import CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <link rel="stylesheet" href="../css/index.element.css">
   <link rel="stylesheet" href="../css/base.css">
   <title>图片管理</title>
 </head>
@@ -157,6 +157,24 @@
 }
 .wocaoimg{
   background-color:#f0F0F0;margin: 4px 4px;
+}
+
+.infinite-list-wrapper .list-item + .list-item {
+  margin-top: 10px;
+}
+.infinite-list-wrapper .list-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  background: #fff6f6;
+  color: #ff8484;
+}
+.infinite-list-wrapper .list {
+  list-style: none;
+}
+.infinite-list-wrapper {
+  text-align: center;
 }
 </style>
 
