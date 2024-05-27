@@ -1,0 +1,6 @@
+/target/
+/src/main/java/org/hb0712/discovery/component
+/src/test
+.settings
+.classpath
+.project
