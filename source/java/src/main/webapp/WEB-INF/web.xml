@@ -33,6 +33,15 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
+  <filter>
+    <filter-name>AccessControl</filter-name>
+    <filter-class>org.hb0712.discovery.filter.AccessControl</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>AccessControl</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
