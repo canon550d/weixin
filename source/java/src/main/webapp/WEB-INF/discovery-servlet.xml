@@ -39,7 +39,7 @@
 	
 	<mvc:interceptors>
 		<mvc:interceptor>
-			<mvc:mapping path="/image/**" />
+			<mvc:mapping path="/admin/image/**" />
 			<bean id="AllowOriginIntercepter" class="org.hb0712.discovery.interceptor.AllowOriginIntercepter"/>
 		</mvc:interceptor>
 	</mvc:interceptors>
