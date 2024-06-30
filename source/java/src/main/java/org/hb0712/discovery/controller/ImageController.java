@@ -32,6 +32,7 @@ import org.hb0712.discovery.service.BucketService;
 import org.hb0712.discovery.service.CameraService;
 import org.hb0712.discovery.service.ImageService;
 import org.hb0712.discovery.service.LabelService;
+import org.hb0712.discovery.service.impl.CommonServiceImpl;
 import org.hb0712.discovery.service.impl.FileConfig;
 import org.hb0712.discovery.service.impl.FileServiceImpl.Sample;
 import org.slf4j.Logger;
@@ -175,6 +176,49 @@ public class ImageController {
 			return "/image/admin_success";
 		}
 		return "/admin/image/repeat";
+	}
+	
+	@ResponseBody
+	@RequestMapping("/admin/image/list")
+	public String imageList(Page page,HttpServletRequest request) throws UnsupportedEncodingException {
+		if(page==null) {
+			page = new Page();
+		}
+		List<Image> list = null;
+		list = imageService.list(page);
+		StringBuffer result = new StringBuffer();
+		result.append("{").append("\"code\":\"200\",");
+		result.append("\"data\":").append("{");
+		
+		result.append("\"previous\":").append(page.getPrevious()).append(",");
+		result.append("\"page\":").append(page.getPage()).append(",");
+		result.append("\"next\":").append(page.getNext()).append(",");
+		result.append("\"last\":").append(page.getLast()).append(",");
+		result.append("\"pageSize\":").append(page.getPageSize()).append(",");
+		result.append("\"total\":").append(page.getTotal()).append(",");
+		
+		result.append("\"list\":").append("[");
+		for (int i=0;i<list.size();i++) {
+			result.append("{");
+			result.append("\"id\":").append(list.get(i).getId()).append(",");
+			result.append("\"md5\":\"").append(list.get(i).getMd5()).append("\",");
+			result.append("\"time\":\"").append(CommonServiceImpl.getStrTime(list.get(i).getTime())).append("\",");
+			result.append("\"name\":\"").append(list.get(i).getName()).append("\",");
+			result.append("\"path\":\"").append(URLEncoder.encode(list.get(i).getPath(), "UTF-8")).append("\",");
+			result.append("\"description\":\"").append(list.get(i).getDescription()).append("\",");
+			result.append("\"src\":\"")
+				.append(list.get(i).getBucket().getURLEncoderPath())
+				.append(list.get(i).getCamera().getURLEncoderPath())
+				.append(list.get(i).getURLEncoderPath()).append("%5c")
+				.append(list.get(i).getName()).append("\"");
+			result.append("}");
+			if (i<list.size()-1)
+				result.append(",");
+		}
+		result.append("]");
+		
+		result.append("}").append("}");
+		return result.toString();
 	}
 	
 	// checked
