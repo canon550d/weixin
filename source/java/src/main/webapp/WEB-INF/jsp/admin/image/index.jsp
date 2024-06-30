@@ -30,10 +30,8 @@
   </div>
   
   <div class="example-pagination-block">
-    <el-pagination layout="prev, pager, next" :total="search.total" 
-      @current-change="handleCurrentChange"
-      @prev-click="handlePrevClick"
-      @next-click="handleNextClick"/>
+    <el-pagination background layout="prev, pager, next, jumper" :total="search.total" v-model:current-page="search.page"
+      @current-change="handleCurrentChange" />
   </div>
   
   <table border="1">
@@ -55,7 +53,7 @@
       <td>{{image.time}}</td>
       <td>{{image.description}}</td>
       <td>{{decodeURI(image.path)}}</td>
-      <td><img :src="'preView2.aspx?path='+image.src" width="100px" height=""/></td>
+      <td><img :src="showPath(index)" width="100px" height=""/></td>
       <td></td>
       <td><a :href="'edit.aspx?id='+image.id" target="_blank">修改</a></td>
     </tr><%-- <c:forEach items="${list}" var="v" varStatus="vs">
@@ -117,7 +115,7 @@ const App = {
       images2:[],
       search:{
         "previous":1,
-        "page":1,
+        "page":<c:out value='${page.page}'/>,
         "next":1,
         "last":1,
         "pageSize":10,
@@ -138,6 +136,9 @@ const App = {
         this.search.last = resp.data.data.last;
         this.search.pageSize = resp.data.data.pageSize;
         this.search.total = resp.data.data.total;
+        for (let i=0;i<resp.data.data.list.length;i++){
+          this.images[i] = resp.data.data.list[i].src;
+        }
       }).catch(resp=>{
         console.log('failure');
       });
