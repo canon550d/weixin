@@ -26,9 +26,9 @@ bucket_id:<c:out value='${image.bucket_id}'/>
   <div>时间：<input type="text" name="time" value="<fmt:formatDate value="${image.time}" pattern="yyyy-MM-dd HH:mm:ss"/>"/></div>
   <div>评分：<input type="text" name="rate" value="<c:out value='${image.rate}'/>"/></div>
   <div>相机：<input type="text" name="camera_id" value="<c:out value='${image.camera.id}'/>"/></div>
-  <div>输出：<c:forEach items="${image.exports}" var="ev" varStatus="evs"><c:out value="${ev.path}" /><br/></c:forEach>
+  <%-- <div>输出：<c:forEach items="${image.exports}" var="ev" varStatus="evs"><c:out value="${ev.path}" /><br/></c:forEach>
     <input type="text" name="export_path" value=""/>
-  </div>
+  </div> --%>
   <input type="submit" value="提交"/>
 </form>
 </body>
