@@ -8,7 +8,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <!-- import CSS -->
-  <link rel="stylesheet" href="../../css/element-plus-index.css">
+  <link rel="stylesheet" href="http://192.168.28.34/css/element-plus-index.css">
   <title>图片管理</title>
 </head>
 <body>
@@ -45,6 +45,7 @@
       <td>查看</td>
       <td>标签</td>
       <td>修改</td>
+      <td>修改</td>
     </tr>
     <tr v-for="(image, index) in images2">
       <td>{{image.id}}</td>
@@ -56,6 +57,9 @@
       <td><img :src="showPath(index)" width="100px" height=""/></td>
       <td></td>
       <td><a :href="'edit.aspx?id='+image.id" target="_blank">修改</a></td>
+      <td>
+        <el-button type="primary" plain @click="dialogVisible = true">编辑</el-button>
+      </td>
     </tr><%-- <c:forEach items="${list}" var="v" varStatus="vs">
     <tr>
       <td><c:out value="${v.id}" /></td>
@@ -75,6 +79,40 @@
       <td><a href="edit.aspx?id=${v.id}" target="_blank">修改</a></td>
     </tr></c:forEach> --%>
   </table>
+
+  <el-dialog v-model="dialogVisible" title="编辑" width="500" :before-close="handleClose">
+    <el-form :model="form">
+      <el-form-item label="名称" :label-width="formLabelWidth">
+        <el-input v-model="form.name" autocomplete="off" />
+      </el-form-item>
+      <el-form :model="form">
+      <el-form-item label="地址" :label-width="formLabelWidth">
+        <el-input v-model="form.path" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="描述" :label-width="formLabelWidth">
+        <el-input v-model="form.description" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="时间" :label-width="formLabelWidth">
+        <el-input v-model="form.time" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="评分" :label-width="formLabelWidth">
+        <el-input v-model="form.rate" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="相机" :label-width="formLabelWidth">
+        <el-input v-model="form.camera.id" autocomplete="off" />
+      </el-form-item>
+    </el-form>
+    
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">
+          提交
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
+
 </div>
 
 <div class="page">
@@ -84,24 +122,53 @@
   <a href="?page=<c:out value='${page.last}'/><c:if test='${camera_id!=null}'>&camera_id=<c:out value='${camera_id}'/></c:if><c:if test='${orderby!=null}'>&orderby=<c:out value='${orderby}'/></c:if>">最后一页</a>
 </div>
 
+
+
 </body>
 <!-- Vue 3 -->
-<script src="../../js/vue3.js"></script>
-<script src="../../js/axios.min.js"></script>
+<script src="http://192.168.28.34/js/vue3.js"></script>
+<script src="http://192.168.28.34/js/axios.min.js"></script>
 <!-- element-plus -->
-<script src="../../js/element-plus.js"></script>
+<script src="http://192.168.28.34/js/element-plus.js"></script>
 <script>
 const { createApp, onMounted, ref, reactive } = Vue
-const { ElTable, ElTableColumn } = ElementPlus;
+const { ElTable, ElTableColumn, ElMessageBox } = ElementPlus;
 
 const App = {
   setup() {
     const message = ref('Hello Vue!');
 
     const tableData = ref([]);
-
+    
+    const dialogVisible = ref(false);
+    
+    const handleClose = () => {
+      ElMessageBox.confirm('Are you sure to close this dialog?')
+        .then(() => {
+          
+        })
+        .catch(() => {
+        // catch error
+        })
+    };
+    
+    const form = reactive({
+      name: '',
+      path: '',
+      cache: '',
+      description: '',
+      time: '',
+      rate: '',
+      camera: {
+        id: '',
+        name: ''
+      }
+    })
+    
+    const formLabelWidth = '140px'
+    
     return {
-      message, tableData
+      message, tableData, dialogVisible, handleClose, form, formLabelWidth
       
     }
   },
@@ -110,7 +177,7 @@ const App = {
     return {
       message: "Hello Element Plus",
       camera_id : <c:out value='${camera_id}'/>,
-      cameras: [{'id':0, 'name':'全部'}<c:forEach items="${cameras}" var="v" varStatus="vs">,{'id':<c:out value='${v.id}' />, 'name':'<c:out value="${v.model}" />'}</c:forEach>],
+      cameras: [],
       images:[<c:forEach items="${list}" var="v" varStatus="vs">"<c:out value='${v.bucket.URLEncoderPath}' /><c:out value='${v.camera.URLEncoderPath}' /><c:out value='${v.URLEncoderPath}' />%5c<c:out value='${v.name}' />",</c:forEach>],
       images2:[],
       search:{
@@ -126,6 +193,18 @@ const App = {
   methods: {
     showPath(i){
       return "preView2.aspx?path="+this.images[i];
+    },
+    cameralist() {
+      axios.post("../camera/list.aspx").then(resp=>{
+        this.cameras.push({'id':0, 'name':'全部'});
+        const camears = resp.data.data.list;
+        for (var i=0;i<camears.length;i++) {
+          this.cameras.push({'id':camears[i].id, 'name':camears[i].model});
+        }
+      }).catch(resp=>{
+          console.log('failure');
+      });
+      
     },
     list() {
       axios.post("list.aspx", "page="+this.search.page).then(resp=>{
@@ -155,6 +234,7 @@ const App = {
     }
   },
   mounted () {
+    this.cameralist();
     this.list();
   }
 };
