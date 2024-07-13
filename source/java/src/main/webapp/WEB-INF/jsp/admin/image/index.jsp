@@ -14,25 +14,27 @@
 <body>
 <%@ include file="../menu.jsp"%>
 
-<a target="_blank" href="create.aspx">添加</a>
-<a target="_blank" href="scan.aspx">扫描</a>
+<div id="app"><el-container>
+  <a target="_blank" href="create.aspx">添加</a>
+  <a target="_blank" href="scan.aspx">扫描</a>
 
-<div id="app">
-  <select v-model="camera_id" @change="selectFn($event)">
-    <option v-for="camera in cameras" :value="camera.id">{{camera.name}}</option>
-  </select>
+  <el-header>
+    <select v-model="camera_id" @change="selectFn($event)">
+      <option v-for="camera in cameras" :value="camera.id">{{camera.name}}</option>
+    </select>
 
-  <div class="page">
-    <a href="?page=1<c:if test='${camera_id!=null}'>&camera_id=<c:out value='${camera_id}'/></c:if><c:if test='${orderby!=null}'>&orderby=<c:out value='${orderby}'/></c:if>">第一页</a>
-    <a href="?page=<c:out value='${page.previous}'/><c:if test='${camera_id!=null}'>&camera_id=<c:out value='${camera_id}'/></c:if><c:if test='${orderby!=null}'>&orderby=<c:out value='${orderby}'/></c:if>">上一页</a>
-    <a href="?page=<c:out value='${page.next}'/><c:if test='${camera_id!=null}'>&camera_id=<c:out value='${camera_id}'/></c:if><c:if test='${orderby!=null}'>&orderby=<c:out value='${orderby}'/></c:if>">下一页</a>
-    <a href="?page=<c:out value='${page.last}'/><c:if test='${camera_id!=null}'>&camera_id=<c:out value='${camera_id}'/></c:if><c:if test='${orderby!=null}'>&orderby=<c:out value='${orderby}'/></c:if>">最后一页</a>
-  </div>
+    <div class="page">
+      <a href="?page=1<c:if test='${camera_id!=null}'>&camera_id=<c:out value='${camera_id}'/></c:if><c:if test='${orderby!=null}'>&orderby=<c:out value='${orderby}'/></c:if>">第一页</a>
+      <a href="?page=<c:out value='${page.previous}'/><c:if test='${camera_id!=null}'>&camera_id=<c:out value='${camera_id}'/></c:if><c:if test='${orderby!=null}'>&orderby=<c:out value='${orderby}'/></c:if>">上一页</a>
+      <a href="?page=<c:out value='${page.next}'/><c:if test='${camera_id!=null}'>&camera_id=<c:out value='${camera_id}'/></c:if><c:if test='${orderby!=null}'>&orderby=<c:out value='${orderby}'/></c:if>">下一页</a>
+      <a href="?page=<c:out value='${page.last}'/><c:if test='${camera_id!=null}'>&camera_id=<c:out value='${camera_id}'/></c:if><c:if test='${orderby!=null}'>&orderby=<c:out value='${orderby}'/></c:if>">最后一页</a>
+    </div>
   
-  <div class="example-pagination-block">
-    <el-pagination background layout="prev, pager, next, jumper" :total="search.total" v-model:current-page="search.page"
-      @current-change="handleCurrentChange" />
-  </div>
+    <div class="example-pagination-block">
+      <el-pagination background layout="prev, pager, next, jumper" :total="search.total" v-model:current-page="search.page"
+        @current-change="handleCurrentChange" />
+    </div>
+  </el-header>
 
   <el-main>
     <div class="el-table--fit el-table--border el-table--group el-table--enable-row-hover el-table el-table--layout-fixed is-scrolling-none" style="width: 100%;" data-prefix="el">
@@ -126,7 +128,7 @@
     </footer>
   </el-dialog>
 
-</div>
+</el-container></div>
 
 <div class="page">
   <a href="?page=1<c:if test='${camera_id!=null}'>&camera_id=<c:out value='${camera_id}'/></c:if><c:if test='${orderby!=null}'>&orderby=<c:out value='${orderby}'/></c:if>">第一页</a>
