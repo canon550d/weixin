@@ -14,14 +14,10 @@
 <body>
 <%@ include file="../menu.jsp"%>
 
-<div id="app"><el-container>
   <a target="_blank" href="create.aspx">添加</a>
   <a target="_blank" href="scan.aspx">扫描</a>
 
-  <el-header>
-    <select v-model="camera_id" @change="selectFn($event)">
-      <option v-for="camera in cameras" :value="camera.id">{{camera.name}}</option>
-    </select>
+
 
     <div class="page">
       <a href="?page=1<c:if test='${camera_id!=null}'>&camera_id=<c:out value='${camera_id}'/></c:if><c:if test='${orderby!=null}'>&orderby=<c:out value='${orderby}'/></c:if>">第一页</a>
@@ -29,14 +25,30 @@
       <a href="?page=<c:out value='${page.next}'/><c:if test='${camera_id!=null}'>&camera_id=<c:out value='${camera_id}'/></c:if><c:if test='${orderby!=null}'>&orderby=<c:out value='${orderby}'/></c:if>">下一页</a>
       <a href="?page=<c:out value='${page.last}'/><c:if test='${camera_id!=null}'>&camera_id=<c:out value='${camera_id}'/></c:if><c:if test='${orderby!=null}'>&orderby=<c:out value='${orderby}'/></c:if>">最后一页</a>
     </div>
-  
-    <div class="example-pagination-block">
-      <el-pagination background layout="prev, pager, next, jumper" :total="search.total" v-model:current-page="search.page"
-        @current-change="handleCurrentChange" />
-    </div>
+
+<div id="app"><el-container>
+
+
+  <el-header>
+
   </el-header>
 
   <el-main>
+    <el-form :model="form" label-width="auto" style="max-width: 600px">
+    
+      <el-form-item label="相机">
+        <el-select v-model="camera_id" @change="selectFn($event)">
+          <el-option v-for="camera in cameras" :key="camera.id" :label="camera.name" :value="camera.id" />
+        </el-select>
+      </el-form-item>
+    </el-form>
+
+
+    <div style="margin-bottom: 16px;">
+      <el-pagination background layout="prev, pager, next, jumper" :total="search.total" v-model:current-page="search.page"
+        @current-change="handleCurrentChange" />
+    </div>
+
     <div class="el-table--fit el-table--border el-table--group el-table--enable-row-hover el-table el-table--layout-fixed is-scrolling-none" style="width: 100%;" data-prefix="el">
       <div class="el-table__inner-wrapper">
         <div class="1el-table__header-wrapper">
@@ -93,8 +105,6 @@
         </div>
       </div>
     </div>
-  </el-main>
-
 
   <el-dialog v-model="dialogVisible" title="编辑" width="500" :before-close="handleClose">
     <el-form :model="form">
@@ -127,6 +137,7 @@
       </div>
     </footer>
   </el-dialog>
+  </el-main>
 
 </el-container></div>
 
@@ -221,6 +232,9 @@ const App = {
           console.log('failure');
       });
       
+    },
+    selectFn(e) {
+        
     },
     list() {
       axios.post("list.aspx", "page="+this.search.page).then(resp=>{
