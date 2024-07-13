@@ -41,6 +41,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -205,6 +206,7 @@ public class ImageController {
 			result.append("\"name\":\"").append(list.get(i).getName()).append("\",");
 			result.append("\"path\":\"").append(URLEncoder.encode(list.get(i).getPath(), "UTF-8")).append("\",");
 			result.append("\"description\":\"").append(list.get(i).getDescription()).append("\",");
+			result.append("\"rate\":\"").append(list.get(i).getRate()).append("\",");
 			result.append("\"src\":\"")
 				.append(list.get(i).getBucket().getURLEncoderPath())
 				.append(list.get(i).getCamera().getURLEncoderPath())
@@ -267,6 +269,28 @@ public class ImageController {
 			imageService.update(image);
 		}
 		return "/admin/image/create";
+	}
+	
+	@PostMapping
+	@ResponseBody
+	@RequestMapping("/read")
+	public String read(String id) throws UnsupportedEncodingException {
+		Image image = imageService.getImage(id);
+		
+		StringBuffer result = new StringBuffer();
+		result.append("{").append("\"code\":\"200\",");
+		result.append("\"data\":").append("{");
+		result.append("\"id\":\"").append(image.getId()).append("\",");
+		result.append("\"name\":\"").append(image.getName()).append("\",");
+		result.append("\"time\":\"").append(image.getTime()).append("\",");
+		result.append("\"description\":\"").append(image.getDescription()).append("\",");
+		result.append("\"path\":\"").append(URLEncoder.encode(image.getPath(), "UTF-8")).append("\",");
+		result.append("\"cache\":\"").append(image.getCache()==null?"":image.getCache()).append("\",");
+		result.append("\"md5\":\"").append(image.getMd5()).append("\",");
+		result.append("\"rate\":\"").append(image.getRate()==null?"":image.getRate()).append("\",");
+		result.append("\"state\":\"").append(image.getState()).append("\"");
+		result.append("}").append("}");
+		return result.toString();
 	}
 	
 	// checked

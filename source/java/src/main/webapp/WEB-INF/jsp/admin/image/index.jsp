@@ -14,7 +14,7 @@
 <body>
 <%@ include file="../menu.jsp"%>
 
-  <a target="_blank" href="create.aspx">添加</a>
+  <a target="_blank" href="create.aspx">添加</a> 
   <a target="_blank" href="scan.aspx">扫描</a>
 
 
@@ -42,7 +42,10 @@
         </el-select>
       </el-form-item>
     </el-form>
-
+    
+    <div style="margin-bottom: 16px;">
+      <el-button>添加</el-button>
+    </div>
 
     <div style="margin-bottom: 16px;">
       <el-pagination background layout="prev, pager, next, jumper" :total="search.total" v-model:current-page="search.page"
@@ -60,11 +63,12 @@
               <th class="el-table_1_column_3 is-leaf el-table__cell"><div class="cell">名称</div></th>
               <th class="el-table_1_column_4 is-leaf el-table__cell"><div class="cell">日期</div></th>
               <th class="el-table_1_column_5 is-leaf el-table__cell"><div class="cell">描述</div></th>
-              <th class="el-table_1_column_6 is-leaf el-table__cell"><div class="cell">副本</div></th>
+              <th class="el-table_1_column_6 is-leaf el-table__cell"><div class="cell">路径</div></th>
               <th class="el-table_1_column_7 is-leaf el-table__cell"><div class="cell">查看</div></th>
-              <th class="el-table_1_column_8 is-leaf el-table__cell"><div class="cell">标签</div></th>
-              <th class="el-table_1_column_9 is-leaf el-table__cell"><div class="cell">修改</div></th>
+              <th class="el-table_1_column_8 is-leaf el-table__cell"><div class="cell">星级</div></th>
+              <th class="el-table_1_column_9 is-leaf el-table__cell"><div class="cell">标签</div></th>
               <th class="el-table_1_column_10 is-leaf el-table__cell"><div class="cell">修改</div></th>
+              <th class="el-table_1_column_11 is-leaf el-table__cell"><div class="cell">修改</div></th>
             </tr>
             </thead>
             <tbody>
@@ -75,11 +79,18 @@
               <td class="el-table_1_column_4 el-table__cell"><div class="cell">{{image.time}}</div></td>
               <td class="el-table_1_column_5 el-table__cell"><div class="cell">{{image.description}}</div></td>
               <td class="el-table_1_column_6 el-table__cell"><div class="cell">{{decodeURI(image.path)}}</div></td>
-              <td class="el-table_1_column_7 el-table__cell"><div class="cell"><img :src="showPath(index)" width="100px" height=""/></div></td>
-              <td class="el-table_1_column_8 el-table__cell"></td>
+              <td class="el-table_1_column_7 el-table__cell"><div class="cell">
+                <img :src="showPath(index)" width="100px" height=""/></div>
+              </td>
+              <td class="el-table_1_column_8 el-table__cell"><div class="cell">
+                <el-rate v-model="image.rate"></el-rate></div>
+              </td>
+              <td class="el-table_1_column_8 el-table__cell"><div class="cell">
+                <el-tag type="primary">Tag 1</el-tag></div>
+              </td>
               <td class="el-table_1_column_9 el-table__cell"><div class="cell"><a :href="'edit.aspx?id='+image.id" target="_blank">修改</a></div></td>
               <td class="el-table_1_column_10 el-table__cell">
-                <div class="cell"><el-button type="primary" plain @click="dialogVisible = true">编辑</el-button></div>
+                <div class="cell"><el-button type="primary" plain @click="handleEdit(image.id)">编辑</el-button></div>
               </td>
             </tr>
             </tbody>
@@ -157,6 +168,8 @@
 <!-- element-plus -->
 <script src="http://192.168.28.34/js/element-plus.js"></script>
 <script src="http://192.168.28.34/js/element-plus-locale-zh-cn.js"></script>
+<script src="http://192.168.28.34/js/element-plus-icons-vue.js"></script>
+
 <script>
 const { createApp, onMounted, ref, reactive } = Vue
 const { ElTable, ElTableColumn, ElMessageBox } = ElementPlus;
@@ -179,6 +192,19 @@ const App = {
         })
     };
     
+    const handleEdit = (id) => {
+        dialogVisible.value = true;
+        axios.post("read.aspx", "id="+id).then(resp=>{
+            form.name = resp.data.data.name;
+            form.path = decodeURI(resp.data.data.path);
+            form.cache = resp.data.data.cache;
+            form.description = resp.data.data.description;
+            form.time = resp.data.data.time;
+            form.rate = resp.data.data.rate;
+        });
+    }
+    
+    
     const form = reactive({
       name: '',
       path: '',
@@ -195,7 +221,7 @@ const App = {
     const formLabelWidth = '140px';
     
     return {
-      message, tableData, dialogVisible, handleClose, form, formLabelWidth
+      message, tableData, dialogVisible, handleClose, handleEdit, form, formLabelWidth
       
     }
   },
@@ -272,6 +298,9 @@ const app = createApp(App);
 app.use(ElementPlus, {
     locale: ElementPlusLocaleZhCn,
 });
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+    app.component(key, component)
+}
 app.mount("#app");
 <%--
 var vue = new Vue({
