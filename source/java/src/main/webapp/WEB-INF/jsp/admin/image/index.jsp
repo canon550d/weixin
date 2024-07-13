@@ -33,52 +33,66 @@
     <el-pagination background layout="prev, pager, next, jumper" :total="search.total" v-model:current-page="search.page"
       @current-change="handleCurrentChange" />
   </div>
-  
-  <table border="1">
-    <tr>
-      <td>ID</td>
-      <td>MD5</td>
-      <td>名称</td>
-      <td>日期</td>
-      <td>描述</td>
-      <td>副本</td>
-      <td>查看</td>
-      <td>标签</td>
-      <td>修改</td>
-      <td>修改</td>
-    </tr>
-    <tr v-for="(image, index) in images2">
-      <td>{{image.id}}</td>
-      <td>{{image.md5}}</td>
-      <td>{{image.name}}</td>
-      <td>{{image.time}}</td>
-      <td>{{image.description}}</td>
-      <td>{{decodeURI(image.path)}}</td>
-      <td><img :src="showPath(index)" width="100px" height=""/></td>
-      <td></td>
-      <td><a :href="'edit.aspx?id='+image.id" target="_blank">修改</a></td>
-      <td>
-        <el-button type="primary" plain @click="dialogVisible = true">编辑</el-button>
-      </td>
-    </tr><%-- <c:forEach items="${list}" var="v" varStatus="vs">
-    <tr>
-      <td><c:out value="${v.id}" /></td>
-      <td><c:out value="${v.md5}" /></td>
-      <td><c:out value="${v.name}" /></td><!--名称-->
-      <td><fmt:formatDate value="${v.time}" pattern="yyyy-MM-dd"/></td><!--日期-->
-      <td><c:out value="${v.description}" /></td><!--描述-->
-      <td>
-        <div @click="sshowImage($event, <c:out value="${vs.index}" />, '<c:out value="${v.URLEncoderPath}" />')"><c:out value="${v.path}" /></div><c:forEach items="${v.files}" var="ev" varStatus="evs">
-        <div @click="sshowImage($event, <c:out value="${vs.index}" />, '<c:out value="${ev.URLEncoderPath}" />')"><c:out value="${ev.path}" /></div>
-      </c:forEach></td><!--副本-->
-      <td><img :src="showPath(<c:out value="${vs.index}" />)" width="100px" height=""/></td>
-      <td>
-        <c:forEach items="${v.labels}" var="la" varStatus="las"><c:out value="${la.name}" /></c:forEach>
-        <div><span>+</span><c:forEach items="${labels}" var="la" varStatus="las"><a href="../label/create.aspx?label_id=${la.id}&image_id=${v.id}" target="_blank"><c:out value="${la.name}" /></a></c:forEach></div>
-      </td>
-      <td><a href="edit.aspx?id=${v.id}" target="_blank">修改</a></td>
-    </tr></c:forEach> --%>
-  </table>
+
+  <el-main>
+    <div class="el-table--fit el-table--border el-table--group el-table--enable-row-hover el-table el-table--layout-fixed is-scrolling-none" style="width: 100%;" data-prefix="el">
+      <div class="el-table__inner-wrapper">
+        <div class="1el-table__header-wrapper">
+          <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">
+            <thead>
+            <tr>
+              <th class="el-table_1_column_1 is-leaf el-table__cell"><div class="cell">ID</div></th>
+              <th class="el-table_1_column_2 is-leaf el-table__cell"><div class="cell">MD5</div></th>
+              <th class="el-table_1_column_3 is-leaf el-table__cell"><div class="cell">名称</div></th>
+              <th class="el-table_1_column_4 is-leaf el-table__cell"><div class="cell">日期</div></th>
+              <th class="el-table_1_column_5 is-leaf el-table__cell"><div class="cell">描述</div></th>
+              <th class="el-table_1_column_6 is-leaf el-table__cell"><div class="cell">副本</div></th>
+              <th class="el-table_1_column_7 is-leaf el-table__cell"><div class="cell">查看</div></th>
+              <th class="el-table_1_column_8 is-leaf el-table__cell"><div class="cell">标签</div></th>
+              <th class="el-table_1_column_9 is-leaf el-table__cell"><div class="cell">修改</div></th>
+              <th class="el-table_1_column_10 is-leaf el-table__cell"><div class="cell">修改</div></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(image, index) in images2">
+              <td class="el-table_1_column_1 el-table__cell"><div class="cell">{{image.id}}</div></td>
+              <td class="el-table_1_column_2 el-table__cell"><div class="cell">{{image.md5}}</div></td>
+              <td class="el-table_1_column_3 el-table__cell"><div class="cell">{{image.name}}</div></td>
+              <td class="el-table_1_column_4 el-table__cell"><div class="cell">{{image.time}}</div></td>
+              <td class="el-table_1_column_5 el-table__cell"><div class="cell">{{image.description}}</div></td>
+              <td class="el-table_1_column_6 el-table__cell"><div class="cell">{{decodeURI(image.path)}}</div></td>
+              <td class="el-table_1_column_7 el-table__cell"><div class="cell"><img :src="showPath(index)" width="100px" height=""/></div></td>
+              <td class="el-table_1_column_8 el-table__cell"></td>
+              <td class="el-table_1_column_9 el-table__cell"><div class="cell"><a :href="'edit.aspx?id='+image.id" target="_blank">修改</a></div></td>
+              <td class="el-table_1_column_10 el-table__cell">
+                <div class="cell"><el-button type="primary" plain @click="dialogVisible = true">编辑</el-button></div>
+              </td>
+            </tr>
+            </tbody>
+            <%-- <c:forEach items="${list}" var="v" varStatus="vs">
+            <tr>
+              <td><c:out value="${v.id}" /></td>
+              <td><c:out value="${v.md5}" /></td>
+              <td><c:out value="${v.name}" /></td><!--名称-->
+              <td><fmt:formatDate value="${v.time}" pattern="yyyy-MM-dd"/></td><!--日期-->
+              <td><c:out value="${v.description}" /></td><!--描述-->
+              <td>
+                <div @click="sshowImage($event, <c:out value="${vs.index}" />, '<c:out value="${v.URLEncoderPath}" />')"><c:out value="${v.path}" /></div><c:forEach items="${v.files}" var="ev" varStatus="evs">
+                <div @click="sshowImage($event, <c:out value="${vs.index}" />, '<c:out value="${ev.URLEncoderPath}" />')"><c:out value="${ev.path}" /></div>
+              </c:forEach></td><!--副本-->
+              <td><img :src="showPath(<c:out value="${vs.index}" />)" width="100px" height=""/></td>
+              <td>
+                <c:forEach items="${v.labels}" var="la" varStatus="las"><c:out value="${la.name}" /></c:forEach>
+                <div><span>+</span><c:forEach items="${labels}" var="la" varStatus="las"><a href="../label/create.aspx?label_id=${la.id}&image_id=${v.id}" target="_blank"><c:out value="${la.name}" /></a></c:forEach></div>
+              </td>
+              <td><a href="edit.aspx?id=${v.id}" target="_blank">修改</a></td>
+            </tr></c:forEach> --%>
+          </table>
+        </div>
+      </div>
+    </div>
+  </el-main>
+
 
   <el-dialog v-model="dialogVisible" title="编辑" width="500" :before-close="handleClose">
     <el-form :model="form">
@@ -102,15 +116,14 @@
         <el-input v-model="form.camera.id" autocomplete="off" />
       </el-form-item>
     </el-form>
-    
-    <template #footer>
-      <div class="dialog-footer">
+    <footer class="el-dialog__footer">
+      <div slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取消</el-button>
         <el-button type="primary" @click="dialogVisible = false">
           提交
         </el-button>
       </div>
-    </template>
+    </footer>
   </el-dialog>
 
 </div>
@@ -130,6 +143,7 @@
 <script src="http://192.168.28.34/js/axios.min.js"></script>
 <!-- element-plus -->
 <script src="http://192.168.28.34/js/element-plus.js"></script>
+<script src="http://192.168.28.34/js/element-plus-locale-zh-cn.js"></script>
 <script>
 const { createApp, onMounted, ref, reactive } = Vue
 const { ElTable, ElTableColumn, ElMessageBox } = ElementPlus;
@@ -165,7 +179,7 @@ const App = {
       }
     })
     
-    const formLabelWidth = '140px'
+    const formLabelWidth = '140px';
     
     return {
       message, tableData, dialogVisible, handleClose, form, formLabelWidth
@@ -239,7 +253,9 @@ const App = {
   }
 };
 const app = createApp(App);
-app.use(ElementPlus);
+app.use(ElementPlus, {
+    locale: ElementPlusLocaleZhCn,
+});
 app.mount("#app");
 <%--
 var vue = new Vue({
