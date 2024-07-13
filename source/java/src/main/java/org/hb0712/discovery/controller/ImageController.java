@@ -32,6 +32,7 @@ import org.hb0712.discovery.service.CameraService;
 import org.hb0712.discovery.service.ImageService;
 import org.hb0712.discovery.service.LabelService;
 import org.hb0712.discovery.service.impl.CommonServiceImpl;
+import org.hb0712.discovery.service.impl.EntityService;
 import org.hb0712.discovery.service.impl.FileConfig;
 import org.hb0712.discovery.service.impl.FileServiceImpl.Sample;
 import org.slf4j.Logger;
@@ -67,6 +68,8 @@ public class ImageController {
 	private CameraService cameraService;
 	@Autowired
 	private BucketService bucketService;
+	@Autowired
+	private EntityService entityService;
 	@Autowired
 	private FileConfig fileConfig;
 	
@@ -275,20 +278,13 @@ public class ImageController {
 	@ResponseBody
 	@RequestMapping("/read")
 	public String read(String id) throws UnsupportedEncodingException {
-		Image image = imageService.getImage(id);
-		
 		StringBuffer result = new StringBuffer();
 		result.append("{").append("\"code\":\"200\",");
 		result.append("\"data\":").append("{");
-		result.append("\"id\":\"").append(image.getId()).append("\",");
-		result.append("\"name\":\"").append(image.getName()).append("\",");
-		result.append("\"time\":\"").append(image.getTime()).append("\",");
-		result.append("\"description\":\"").append(image.getDescription()).append("\",");
-		result.append("\"path\":\"").append(URLEncoder.encode(image.getPath(), "UTF-8")).append("\",");
-		result.append("\"cache\":\"").append(image.getCache()==null?"":image.getCache()).append("\",");
-		result.append("\"md5\":\"").append(image.getMd5()).append("\",");
-		result.append("\"rate\":\"").append(image.getRate()==null?"":image.getRate()).append("\",");
-		result.append("\"state\":\"").append(image.getState()).append("\"");
+		
+		Image image = imageService.getImage(id);
+		entityService.set(image, result);
+		
 		result.append("}").append("}");
 		return result.toString();
 	}
