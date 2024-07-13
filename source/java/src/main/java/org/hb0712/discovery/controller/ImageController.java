@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
@@ -38,7 +37,6 @@ import org.hb0712.discovery.service.impl.FileServiceImpl.Sample;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
@@ -54,6 +52,7 @@ import com.drew.metadata.exif.ExifIFD0Directory;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 
 @Controller
+@RequestMapping("/admin/image")
 public class ImageController {
 	private Logger logger = LoggerFactory.getLogger(ImageController.class);
 	
@@ -71,8 +70,8 @@ public class ImageController {
 	private FileConfig fileConfig;
 	
 	@ResponseBody
-	@RequestMapping("/admin/image/preView")
-	public byte[] imagePreView(Map<String,Object> model,
+	@RequestMapping("/preView")
+	public byte[] preView(Map<String,Object> model,
 			String id,
 			HttpServletRequest request) throws IOException {
 		Image image = imageService.getImage(id);
@@ -88,8 +87,8 @@ public class ImageController {
 	}
 	
 	@ResponseBody
-	@RequestMapping("/admin/image/preView2")
-	public byte[] imagePreView2(Map<String,Object> model,
+	@RequestMapping("/preView2")
+	public byte[] preView2(Map<String,Object> model,
 			String path, String bucket,
 			HttpServletRequest request) throws IOException {
 		path = new String(path.getBytes("ISO8859-1"), "UTF-8");
@@ -104,8 +103,8 @@ public class ImageController {
 	}
 	
 	// checked
-	@RequestMapping("/admin/image/cache")
-	public String imageCache(Map<String,Object> model,
+	@RequestMapping("/cache")
+	public String cache(Map<String,Object> model,
 			Page page, String id, String cover,
 			HttpServletRequest request) {
 		if ("GET".equals(request.getMethod())) {
@@ -148,8 +147,8 @@ public class ImageController {
 	}
 	
 	//整理：对已经扫描到数据库中的照片按照拍摄时间排列，并按100个照片存放到文件夹
-	@RequestMapping("/admin/image/move")
-	public String imageMove(Map<String,Object> model,
+	@RequestMapping("/move")
+	public String move(Map<String,Object> model,
 			Page page, String id,
 			HttpServletRequest request) {
 		if ("GET".equals(request.getMethod())) {
@@ -162,8 +161,8 @@ public class ImageController {
 		return "/admin/image/cache";
 	}
 	
-	@RequestMapping("/admin/image/repeat")
-	public String imageRepeat(Map<String,Object> model,
+	@RequestMapping("/repeat")
+	public String repeat(Map<String,Object> model,
 			String[] id, String camera_id,
 			HttpServletRequest request) {
 		if ("GET".equals(request.getMethod())) {
@@ -179,8 +178,8 @@ public class ImageController {
 	}
 	
 	@ResponseBody
-	@RequestMapping("/admin/image/list")
-	public String imageList(Page page,HttpServletRequest request) throws UnsupportedEncodingException {
+	@RequestMapping("/list")
+	public String list(Page page,HttpServletRequest request) throws UnsupportedEncodingException {
 		if(page==null) {
 			page = new Page();
 		}
@@ -222,8 +221,8 @@ public class ImageController {
 	}
 	
 	// checked
-	@RequestMapping("/admin/image/index")
-	public String imageIndex(Map<String,Object> model,
+	@RequestMapping("/index")
+	public String index(Map<String,Object> model,
 			String orderby, Page page, String camera_id,
 			HttpServletRequest request) {
 		
@@ -259,8 +258,8 @@ public class ImageController {
 		return "/admin/image/index";
 	}
 	
-	@RequestMapping("/admin/image/create")
-	public String imageCreate(Map<String,Object> model,
+	@RequestMapping("/create")
+	public String create(Map<String,Object> model,
 			Image image,
 			HttpServletRequest request) {
 		if("POST".equals(request.getMethod())) {
@@ -271,8 +270,8 @@ public class ImageController {
 	}
 	
 	// checked
-	@RequestMapping("/admin/image/edit")
-	public String imageEdit(Map<String,Object> model,
+	@RequestMapping("/edit")
+	public String edit(Map<String,Object> model,
 			Image image, String id, String export_path, String camera_id,
 			HttpServletRequest request) {
 		if ("GET".equals(request.getMethod())) {
@@ -306,8 +305,8 @@ public class ImageController {
 		return "/admin/image/edit";
 	}
 	
-	@RequestMapping("/admin/image/rescan")
-	public String imageReScan(Map<String,Object> model,
+	@RequestMapping("/rescan")
+	public String reScan(Map<String,Object> model,
 			String path,
 			HttpServletRequest request) {
 		if ("GET".equals(request.getMethod())) {
@@ -327,8 +326,8 @@ public class ImageController {
 		return "/admin/image/scan";
 	}
 	
-	@RequestMapping("/admin/image/scan")
-	public String imageScan(Map<String,Object> model,
+	@RequestMapping("/scan")
+	public String scan(Map<String,Object> model,
 			String path, String next,
 			HttpServletRequest request) {
 		
@@ -372,8 +371,8 @@ public class ImageController {
 	}
 	
 	// checked 扫描：对相机的目录扫描，如有数据库中没有的新照片，加入数据库
-	@RequestMapping("/admin/image/scan4camera")
-	public String imageScanForCamera(Map<String,Object> model,
+	@RequestMapping("/scan4camera")
+	public String scanForCamera(Map<String,Object> model,
 			String id, 
 			HttpServletRequest request) throws UnsupportedEncodingException, FileNotFoundException, IOException {
 		
@@ -434,8 +433,8 @@ public class ImageController {
 		return "/image/admin_success";
 	}
 	
-	@RequestMapping("/admin/image/savescan")
-	public String imageSaveScan(String next, String nextPath, String bucket_id,
+	@RequestMapping("/savescan")
+	public String saveScan(String next, String nextPath, String bucket_id,
 			String[] index, String[] name, String[] time, String[] maker, String[] model, String[] description, String[] path,
 			HttpServletRequest request) throws UnsupportedEncodingException, FileNotFoundException, IOException {
 		int i = 0;
@@ -564,42 +563,5 @@ public class ImageController {
 			return lines;
 		}
 		return null;
-	}
-	
-	
-	/*
-	 * 虽然这么写优点不优雅，但是暂时够用了；后面还是交给nginx或者apache来吧
-	 * /discovery/image/view/cache/160/WorkSpace/Camera/LX5/2023/2023-11/2023-11-26/P1040559.JPG
-	 *                      /cache/num/   group /type/model/year/month  /date      /name
-	 * 
-	 * /discovery/image/view/WorkSpace/Camera/LX5/2023/2023-11/2023-11-26/P1040559.JPG
-	 *                          group /type/model/year/month  /date      /name
-	 *
-	 */
-	@ResponseBody
-	@RequestMapping({"cache/{pnumber:\\S+}/{pgroup:\\S+}/{ptype:\\S+}/{pmodel:\\S+}/{pyear:\\S+}/{pmonth:\\S+}/{pdate:\\S+}/{pname:\\S+}.JPG",
-		"cache/{pnumber:\\S+}/{pgroup:\\S+}/{ptype:\\S+}/{pmodel:\\S+}/{pyear:\\S+}/{pmonth:\\S+}/{pdate:\\S+}/{pname:\\S+}.jpg",
-		"{pgroup:\\S+}/{ptype:\\S+}/{pmodel:\\S+}/{pyear:\\S+}/{pmonth:\\S+}/{pdate:\\S+}/{pname:\\S+}.JPG",
-		"{pgroup:\\S+}/{ptype:\\S+}/{pmodel:\\S+}/{pyear:\\S+}/{pmonth:\\S+}/{pdate:\\S+}/{pname:\\S+}.jpg"})
-	public byte[] view(Map<String,Object> model,
-			String path, String type,
-			HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
-		path = request.getPathInfo().substring(1);System.out.println(path);
-		
-		String newPath = null;
-		if (path.startsWith("cache")) {
-			path = path.substring(6);
-			newPath = fileConfig.getCachePath().replace("\\", "/") + path;
-		} else {
-			newPath = fileConfig.getBasePath().replace("\\", "/") +"/"+ path;
-		}
-		
-		Resource resource = new FileSystemResource(newPath);
-		if (!resource.exists()) {
-			resource = new ClassPathResource("../../img/404.jpg");
-		}
-		byte[] fileData = IOUtils.toByteArray(resource.getInputStream());
-		return fileData;
 	}
 }
