@@ -204,6 +204,7 @@ const App = {
         });
         */
         });
+        form.id = image.id;
         form.name = image.name;
         form.path = decodeURI(image.path);
         form.cache = image.cache;
@@ -217,6 +218,7 @@ const App = {
             const result = resp.data.data;
             if (result) {
                 ElementPlus.ElMessage.success('修改成功');
+                console.info(this);
                 dialogVisible.value = false;
             } else {
                 ElementPlus.ElMessage.error('修改失败');

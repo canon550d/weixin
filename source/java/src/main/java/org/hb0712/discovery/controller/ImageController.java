@@ -22,7 +22,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hb0712.discovery.dao.impl.Page;
-import org.hb0712.discovery.dto.ImageDto;
 import org.hb0712.discovery.pojo.Bucket;
 import org.hb0712.discovery.pojo.Camera;
 import org.hb0712.discovery.pojo.Image;
@@ -268,9 +267,25 @@ public class ImageController {
 	public String edit(Map<String,Object> model, @RequestBody Image image, 
 			String id, String export_path, String camera_id,
 			HttpServletRequest request) {
-		logger.info(id);
-		logger.info("a: "+(image==null));
-		System.out.println("a: "+(image.getName()));
+		if (image.getId() == null) {
+			return ("{\"code\":\"200\",\"data\":false}");
+		}
+		
+		Image edit_image = imageService.getImage(image.getId().toString());
+		edit_image.setName(image.getName());
+		edit_image.setPath(image.getPath());
+		edit_image.setCache(image.getCache());
+		edit_image.setRate(image.getRate());
+		edit_image.setDescription(image.getDescription());
+		imageService.update(edit_image);
+		
+		StringBuffer result = new StringBuffer();
+		result.append("{").append("\"code\":\"200\",");
+		
+		result.append("\"data\":true");
+		
+		result.append("}");
+		return result.toString();
 		/*
 		if ("GET".equals(request.getMethod())) {
 			Image edit_image = imageService.getImage(id);
@@ -302,14 +317,6 @@ public class ImageController {
 		}
 		return "/admin/image/edit";
 		*/
-		
-		StringBuffer result = new StringBuffer();
-		result.append("{").append("\"code\":\"200\",");
-		
-		result.append("\"data\":true");
-		
-		result.append("}");
-		return result.toString();
 	}
 	
 	@RequestMapping("/rescan")
