@@ -90,7 +90,7 @@
               </td>
               <td class="el-table_1_column_9 el-table__cell"><div class="cell"><a :href="'edit.aspx?id='+image.id" target="_blank">修改</a></div></td>
               <td class="el-table_1_column_10 el-table__cell">
-                <div class="cell"><el-button type="primary" plain @click="handleEdit(image.id)">编辑</el-button></div>
+                <div class="cell"><el-button type="primary" plain @click="handleView(image)">编辑</el-button></div>
               </td>
             </tr>
             </tbody>
@@ -142,9 +142,7 @@
     <footer class="el-dialog__footer">
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">
-          提交
-        </el-button>
+        <el-button type="primary" @click="handleEdit()">提交</el-button>
       </div>
     </footer>
   </el-dialog>
@@ -192,8 +190,10 @@ const App = {
         })
     };
     
-    const handleEdit = (id) => {
+    const handleView = (image) => {
         dialogVisible.value = true;
+        axios.post("read.aspx", "id="+image.id).then(resp=>{
+        /*
         axios.post("read.aspx", "id="+id).then(resp=>{
             form.name = resp.data.data.name;
             form.path = decodeURI(resp.data.data.path);
@@ -201,6 +201,27 @@ const App = {
             form.description = resp.data.data.description;
             form.time = resp.data.data.time;
             form.rate = resp.data.data.rate;
+        });
+        */
+        });
+        form.name = image.name;
+        form.path = decodeURI(image.path);
+        form.cache = image.cache;
+        form.description = image.description;
+        form.time = image.time;
+        form.rate = image.rate;
+    }
+    
+    const handleEdit = () => {
+        axios.post("edit.aspx", form).then(resp=>{
+            const result = resp.data.data;
+            if (result) {
+                ElementPlus.ElMessage.success('修改成功');
+                dialogVisible.value = false;
+            } else {
+                ElementPlus.ElMessage.error('修改失败');
+            }
+
         });
     }
     
@@ -210,7 +231,8 @@ const App = {
       cache: '',
       description: '',
       time: '',
-      rate: '',
+      rate: 0,
+      src: '',
       camera: {
         id: '',
         name: ''
@@ -221,7 +243,7 @@ const App = {
     
     return {
       message, tableData, dialogVisible,
-      handleClose, handleEdit,
+      handleClose, handleView, handleEdit,
       form, formLabelWidth
       
     }

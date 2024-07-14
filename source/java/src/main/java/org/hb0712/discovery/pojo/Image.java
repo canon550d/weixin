@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 public class Image {
 	private Integer id;
@@ -38,6 +40,7 @@ public class Image {
 		this.name = name;
 	}
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date getTime() {
 		return time;
 	}

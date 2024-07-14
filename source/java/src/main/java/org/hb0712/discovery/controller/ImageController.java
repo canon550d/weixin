@@ -22,6 +22,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hb0712.discovery.dao.impl.Page;
+import org.hb0712.discovery.dto.ImageDto;
 import org.hb0712.discovery.pojo.Bucket;
 import org.hb0712.discovery.pojo.Camera;
 import org.hb0712.discovery.pojo.Image;
@@ -31,7 +32,6 @@ import org.hb0712.discovery.service.BucketService;
 import org.hb0712.discovery.service.CameraService;
 import org.hb0712.discovery.service.ImageService;
 import org.hb0712.discovery.service.LabelService;
-import org.hb0712.discovery.service.impl.CommonServiceImpl;
 import org.hb0712.discovery.service.impl.EntityService;
 import org.hb0712.discovery.service.impl.FileConfig;
 import org.hb0712.discovery.service.impl.FileServiceImpl.Sample;
@@ -43,6 +43,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -191,29 +192,10 @@ public class ImageController {
 		list = imageService.list(page);
 		StringBuffer result = new StringBuffer();
 		result.append("{").append("\"code\":\"200\",");
-		result.append("\"data\":").append("{");
 		
-		result.append("\"previous\":").append(page.getPrevious()).append(",");
-		result.append("\"page\":").append(page.getPage()).append(",");
-		result.append("\"next\":").append(page.getNext()).append(",");
-		result.append("\"last\":").append(page.getLast()).append(",");
-		result.append("\"pageSize\":").append(page.getPageSize()).append(",");
-		result.append("\"total\":").append(page.getTotal()).append(",");
+		entityService.setData(page, list, result);
 		
-		result.append("\"list\":").append("[");
-		for (int i=0;i<list.size();i++) {
-			result.append("{");
-			
-			Image image = list.get(i);
-			entityService.set(image, result);
-			
-			result.append("}");
-			if (i<list.size()-1)
-				result.append(",");
-		}
-		result.append("]");
-		
-		result.append("}").append("}");
+		result.append("}");
 		return result.toString();
 	}
 	
@@ -270,22 +252,26 @@ public class ImageController {
 	@ResponseBody
 	@RequestMapping("/read")
 	public String read(String id) throws UnsupportedEncodingException {
+		Image image = imageService.getImage(id);
 		StringBuffer result = new StringBuffer();
 		result.append("{").append("\"code\":\"200\",");
-		result.append("\"data\":").append("{");
 		
-		Image image = imageService.getImage(id);
-		entityService.set(image, result);
+		entityService.setData(image, result);
 		
-		result.append("}").append("}");
+		result.append("}");
 		return result.toString();
 	}
 	
-	// checked
+	@PostMapping
+	@ResponseBody
 	@RequestMapping("/edit")
-	public String edit(Map<String,Object> model,
-			Image image, String id, String export_path, String camera_id,
+	public String edit(Map<String,Object> model, @RequestBody Image image, 
+			String id, String export_path, String camera_id,
 			HttpServletRequest request) {
+		logger.info(id);
+		logger.info("a: "+(image==null));
+		System.out.println("a: "+(image.getName()));
+		/*
 		if ("GET".equals(request.getMethod())) {
 			Image edit_image = imageService.getImage(id);
 			model.put("image", edit_image);
@@ -315,6 +301,15 @@ public class ImageController {
 			return "/image/admin_success";
 		}
 		return "/admin/image/edit";
+		*/
+		
+		StringBuffer result = new StringBuffer();
+		result.append("{").append("\"code\":\"200\",");
+		
+		result.append("\"data\":true");
+		
+		result.append("}");
+		return result.toString();
 	}
 	
 	@RequestMapping("/rescan")
