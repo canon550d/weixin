@@ -203,18 +203,10 @@ public class ImageController {
 		result.append("\"list\":").append("[");
 		for (int i=0;i<list.size();i++) {
 			result.append("{");
-			result.append("\"id\":").append(list.get(i).getId()).append(",");
-			result.append("\"md5\":\"").append(list.get(i).getMd5()).append("\",");
-			result.append("\"time\":\"").append(CommonServiceImpl.getStrTime(list.get(i).getTime())).append("\",");
-			result.append("\"name\":\"").append(list.get(i).getName()).append("\",");
-			result.append("\"path\":\"").append(URLEncoder.encode(list.get(i).getPath(), "UTF-8")).append("\",");
-			result.append("\"description\":\"").append(list.get(i).getDescription()).append("\",");
-			result.append("\"rate\":\"").append(list.get(i).getRate()).append("\",");
-			result.append("\"src\":\"")
-				.append(list.get(i).getBucket().getURLEncoderPath())
-				.append(list.get(i).getCamera().getURLEncoderPath())
-				.append(list.get(i).getURLEncoderPath()).append("%5c")
-				.append(list.get(i).getName()).append("\"");
+			
+			Image image = list.get(i);
+			entityService.set(image, result);
+			
 			result.append("}");
 			if (i<list.size()-1)
 				result.append(",");

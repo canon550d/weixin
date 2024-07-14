@@ -204,7 +204,6 @@ const App = {
         });
     }
     
-    
     const form = reactive({
       name: '',
       path: '',
@@ -221,7 +220,9 @@ const App = {
     const formLabelWidth = '140px';
     
     return {
-      message, tableData, dialogVisible, handleClose, handleEdit, form, formLabelWidth
+      message, tableData, dialogVisible,
+      handleClose, handleEdit,
+      form, formLabelWidth
       
     }
   },
