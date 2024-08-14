@@ -27,13 +27,23 @@
     </div>
 
 <div id="app"><el-container>
-
-
   <el-header>
-
+    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" :ellipsis="false" @select="handleSelect">
+      <el-menu-item index="1">相机</el-menu-item>
+      <el-menu-item index="2">相片</el-menu-item>
+      <el-menu-item index="3">相册</el-menu-item>
+      <el-sub-menu index="4">
+        <template #title>Workspace</template>
+        <el-menu-item index="2-1">item one</el-menu-item>
+        <el-menu-item index="2-2">item two</el-menu-item>
+        <el-menu-item index="2-3">item three</el-menu-item>
+      </el-sub-menu>
+      <el-menu-item index="5" disabled>Info</el-menu-item>
+      <el-menu-item index="6">Orders</el-menu-item>
+    </el-menu>
   </el-header>
-
   <el-main>
+    
     <el-form :model="form" label-width="auto" style="max-width: 600px">
     
       <el-form-item label="相机">
@@ -52,102 +62,68 @@
         @current-change="handleCurrentChange" />
     </div>
 
-    <div class="el-table--fit el-table--border el-table--group el-table--enable-row-hover el-table el-table--layout-fixed is-scrolling-none" style="width: 100%;" data-prefix="el">
-      <div class="el-table__inner-wrapper">
-        <div class="1el-table__header-wrapper">
-          <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">
-            <thead>
-            <tr>
-              <th class="el-table_1_column_1 is-leaf el-table__cell"><div class="cell">ID</div></th>
-              <th class="el-table_1_column_2 is-leaf el-table__cell"><div class="cell">MD5</div></th>
-              <th class="el-table_1_column_3 is-leaf el-table__cell"><div class="cell">名称</div></th>
-              <th class="el-table_1_column_4 is-leaf el-table__cell"><div class="cell">日期</div></th>
-              <th class="el-table_1_column_5 is-leaf el-table__cell"><div class="cell">描述</div></th>
-              <th class="el-table_1_column_6 is-leaf el-table__cell"><div class="cell">路径</div></th>
-              <th class="el-table_1_column_7 is-leaf el-table__cell"><div class="cell">查看</div></th>
-              <th class="el-table_1_column_8 is-leaf el-table__cell"><div class="cell">星级</div></th>
-              <th class="el-table_1_column_9 is-leaf el-table__cell"><div class="cell">标签</div></th>
-              <th class="el-table_1_column_10 is-leaf el-table__cell"><div class="cell">修改</div></th>
-              <th class="el-table_1_column_11 is-leaf el-table__cell"><div class="cell">修改</div></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="(image, index) in images2">
-              <td class="el-table_1_column_1 el-table__cell"><div class="cell">{{image.id}}</div></td>
-              <td class="el-table_1_column_2 el-table__cell"><div class="cell">{{image.md5}}</div></td>
-              <td class="el-table_1_column_3 el-table__cell"><div class="cell">{{image.name}}</div></td>
-              <td class="el-table_1_column_4 el-table__cell"><div class="cell">{{image.time}}</div></td>
-              <td class="el-table_1_column_5 el-table__cell"><div class="cell">{{image.description}}</div></td>
-              <td class="el-table_1_column_6 el-table__cell"><div class="cell">{{decodeURI(image.path)}}</div></td>
-              <td class="el-table_1_column_7 el-table__cell"><div class="cell">
-                <img :src="showPath(index)" width="100px" height=""/></div>
-              </td>
-              <td class="el-table_1_column_8 el-table__cell"><div class="cell">
-                <el-rate v-model="image.rate"></el-rate></div>
-              </td>
-              <td class="el-table_1_column_8 el-table__cell"><div class="cell">
-                <el-tag type="primary">Tag 1</el-tag></div>
-              </td>
-              <td class="el-table_1_column_9 el-table__cell"><div class="cell"><a :href="'edit.aspx?id='+image.id" target="_blank">修改</a></div></td>
-              <td class="el-table_1_column_10 el-table__cell">
-                <div class="cell"><el-button type="primary" plain @click="handleView(image)">编辑</el-button></div>
-              </td>
-            </tr>
-            </tbody>
-            <%-- <c:forEach items="${list}" var="v" varStatus="vs">
-            <tr>
-              <td><c:out value="${v.id}" /></td>
-              <td><c:out value="${v.md5}" /></td>
-              <td><c:out value="${v.name}" /></td><!--名称-->
-              <td><fmt:formatDate value="${v.time}" pattern="yyyy-MM-dd"/></td><!--日期-->
-              <td><c:out value="${v.description}" /></td><!--描述-->
-              <td>
-                <div @click="sshowImage($event, <c:out value="${vs.index}" />, '<c:out value="${v.URLEncoderPath}" />')"><c:out value="${v.path}" /></div><c:forEach items="${v.files}" var="ev" varStatus="evs">
-                <div @click="sshowImage($event, <c:out value="${vs.index}" />, '<c:out value="${ev.URLEncoderPath}" />')"><c:out value="${ev.path}" /></div>
-              </c:forEach></td><!--副本-->
-              <td><img :src="showPath(<c:out value="${vs.index}" />)" width="100px" height=""/></td>
-              <td>
-                <c:forEach items="${v.labels}" var="la" varStatus="las"><c:out value="${la.name}" /></c:forEach>
-                <div><span>+</span><c:forEach items="${labels}" var="la" varStatus="las"><a href="../label/create.aspx?label_id=${la.id}&image_id=${v.id}" target="_blank"><c:out value="${la.name}" /></a></c:forEach></div>
-              </td>
-              <td><a href="edit.aspx?id=${v.id}" target="_blank">修改</a></td>
-            </tr></c:forEach> --%>
-          </table>
-        </div>
-      </div>
-    </div>
+    <el-table border :data="images2">
+      <el-table-column prop="id" label="ID" width="58"></el-table-column>
+      <el-table-column prop="md5" label="MD5" width="400"></el-table-column>
+      <el-table-column prop="name" label="名称" width="165"></el-table-column>
+      <el-table-column prop="time" label="日期" width="227"></el-table-column>
+      <el-table-column prop="description" label="描述"></el-table-column>
+      <el-table-column label="路径" width="290">
+        <template #default="scope">{{decodeURI(scope.row.path)}}</template>
+      </el-table-column>
+      <el-table-column prop="date" label="查看" width="173">
+        <template #default="scope">
+          <img :src="showPath(scope.$index)" width="100px" height=""/>
+        </template>
+      </el-table-column>
+      <el-table-column prop="date" label="星级">
+        <template #default="scope">
+          <el-rate v-model="scope.row.rate"></el-rate>
+        </template>
+      </el-table-column>
+      <el-table-column prop="date" label="标签" width="105">
+        <template #default="scope">
+          <el-tag type="primary">Tag 1</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="date" label="修改" width="118">
+        <template #default="scope">
+          <el-button type="primary" plain @click="handleView(scope.row)">编辑</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    
 
-  <el-dialog v-model="dialogVisible" title="编辑" width="500" :before-close="handleClose">
-    <el-form :model="form">
-      <el-form-item label="名称" :label-width="formLabelWidth">
-        <el-input v-model="form.name" autocomplete="off" />
-      </el-form-item>
+    <el-dialog v-model="dialogVisible" title="编辑" width="500" :before-close="handleClose">
       <el-form :model="form">
-      <el-form-item label="地址" :label-width="formLabelWidth">
-        <el-input v-model="form.path" autocomplete="off" />
-      </el-form-item>
-      <el-form-item label="描述" :label-width="formLabelWidth">
-        <el-input v-model="form.description" autocomplete="off" />
-      </el-form-item>
-      <el-form-item label="时间" :label-width="formLabelWidth">
-        <el-input v-model="form.time" autocomplete="off" />
-      </el-form-item>
-      <el-form-item label="评分" :label-width="formLabelWidth">
-        <el-input v-model="form.rate" autocomplete="off" />
-      </el-form-item>
-      <el-form-item label="相机" :label-width="formLabelWidth">
-        <el-input v-model="form.camera.id" autocomplete="off" />
-      </el-form-item>
-    </el-form>
-    <footer class="el-dialog__footer">
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleEdit()">提交</el-button>
-      </div>
-    </footer>
-  </el-dialog>
+        <el-form-item label="名称" :label-width="formLabelWidth">
+          <el-input v-model="form.name" autocomplete="off" />
+        </el-form-item>
+        <el-form :model="form">
+        <el-form-item label="地址" :label-width="formLabelWidth">
+          <el-input v-model="form.path" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="描述" :label-width="formLabelWidth">
+          <el-input v-model="form.description" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="时间" :label-width="formLabelWidth">
+          <el-input v-model="form.time" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="评分" :label-width="formLabelWidth">
+          <el-input v-model="form.rate" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="相机" :label-width="formLabelWidth">
+          <el-input v-model="form.camera.id" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <footer class="el-dialog__footer">
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="handleEdit()">提交</el-button>
+        </div>
+      </footer>
+    </el-dialog>
   </el-main>
-
 </el-container></div>
 
 <div class="page">
@@ -175,6 +151,12 @@ const { ElTable, ElTableColumn, ElMessageBox } = ElementPlus;
 const App = {
   setup() {
     const message = ref('Hello Vue!');
+    
+    const activeIndex = ref('1');
+    const activeIndex2 = ref('1');
+    const handleSelect = (key, keyPath) => {
+      console.log(key, keyPath);
+    }
 
     const tableData = ref([]);
     
@@ -246,8 +228,8 @@ const App = {
     return {
       message, tableData, dialogVisible,
       handleClose, handleView, handleEdit,
-      form, formLabelWidth
-      
+      form, formLabelWidth,
+      activeIndex, activeIndex2, handleSelect
     }
   },
   //vue2传统写法还是支持的
@@ -361,4 +343,9 @@ var vue = new Vue({
 });
 --%>
 </script>
+<style>
+.el-menu--horizontal > .el-menu-item:nth-child(3) {
+  margin-right: auto;
+}
+</style>
 </html>
